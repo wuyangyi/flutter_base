@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/bean/base_bean.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
 import 'package:flutter_base/widgets/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'base_route.dart';
@@ -52,15 +54,28 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
 
   B bloc;
 
+  bool isShowFloatBtn = false;
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   @override
   void initState() {
     super.initState();
-    controller.addListener((){
-      var position = controller.position;
-      //小于10px时触发上拉加载
-      if (position.maxScrollExtent - position.pixels <= startLoadMoreHeight && loadMoreStatus == Status.success && !isLoadingMore) {
-        onLoadMore();
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      controller.addListener((){
+        var position = controller.position;
+        int offset = position.pixels.toInt();
+        //小于10px时触发上拉加载
+        if (position.maxScrollExtent - position.pixels <= startLoadMoreHeight && loadMoreStatus == Status.success && !isLoadingMore) {
+          onLoadMore();
+        }
+        if (offset < 100 && isShowFloatBtn) {
+          isShowFloatBtn = false;
+          setState(() {});
+        } else if (offset > 100 && !isShowFloatBtn) {
+          isShowFloatBtn = true;
+          setState(() {});
+        }
+      });
     });
   }
 
@@ -102,9 +117,15 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    */
   Widget buildListBody(BuildContext context, {Widget child, IndexedWidgetBuilder itemBuilder,}) {
     return buildBody(context,
-      body: RefreshIndicator(
+      body: SmartRefresher(
+        enablePullUp: false,
+        enablePullDown: true,
+        header: WaterDropHeader(
+          refresh: WaitDialogProgress(Size(50.0, 25.0), "refresh_icon_header_000", 14),
+          complete:  WaitDialogProgress(Size(50.0, 25.0), "refresh_icon_header_000", 14),
+        ),
+        controller: _refreshController,
         onRefresh: onRefresh,
-        color: MyColors.main_color,
         child: child ?? ListView.builder(
           controller: controller,
           itemCount: mListData.length + 1,
@@ -134,6 +155,9 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    * 加载完成后的回调
    */
   onLoadSuccess(List<D> data, bool hasError) {
+    if (isRefresh) {
+      _refreshController.refreshCompleted();
+    }
     if (hasError) {
       loadMoreStatus = Status.fail;
       if (mListData.isEmpty) {
@@ -213,6 +237,26 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
         break;
     }
     return text;
+  }
+
+  @override
+  Widget buildFloatingActionButton() {
+    if (controller == null || !isShowFloatBtn || !enableJumpTop) {
+      return null;
+    }
+    return new FloatingActionButton(
+        backgroundColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        foregroundColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        highlightElevation: 0.0,
+        elevation: 0.0,
+        tooltip: "返回顶部",
+        child: Image.asset(Util.getImgPath("scroll_to_top_button"), width: 40.0,),
+        onPressed: () {
+          controller.animateTo(0.0,
+              duration: new Duration(milliseconds: 300), curve: Curves.linear);
+        });
   }
 
 

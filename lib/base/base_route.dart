@@ -102,11 +102,16 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
             return _buildContext(body, context);
           }),
           backgroundColor: bodyColor,
+          floatingActionButton: buildFloatingActionButton(),
         ),
       ),
       debugShowCheckedModeBanner: AppConfig.IS_DEBUG,
     );
     return app;
+  }
+
+  Widget buildFloatingActionButton() {
+    return null;
   }
 
   //内容或者加载

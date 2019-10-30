@@ -29,6 +29,7 @@ dependencies:
   webview_flutter: ^0.3.14+1 #安卓webview增加滚动监听
   rxdart: ^0.22.3 # https://github.com/ReactiveX/rxdart
   sqflite: ^1.1.3 #数据库 https://github.com/tekartik/sqflite
+  pull_to_refresh: ^1.5.7
 
 dev_dependencies:
   flutter_test:
@@ -149,3 +150,4 @@ flutter:
     - images/refresh_icon_header_00012.png
     - images/refresh_icon_header_00013.png
     - images/refresh_icon_header_00014.png
+    - images/scroll_to_top_button.png
