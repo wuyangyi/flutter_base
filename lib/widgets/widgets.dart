@@ -101,3 +101,18 @@ class MyEmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size(0, 0);
 
 }
+
+///状态栏占位
+class AppStatusBar extends StatelessWidget {
+  final Color color;
+  final BuildContext buildContext;
+  const AppStatusBar({Key key, this.color, this.buildContext}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(buildContext).padding.top,
+      color: color,
+    );
+  }
+}

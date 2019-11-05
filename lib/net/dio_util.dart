@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flustars/flustars.dart';
 import 'package:flutter_base/config/app_config.dart';
+import 'package:flutter_base/res/index.dart';
 import 'dart:async';
 
 import 'package:flutter_base/utils/toast_util.dart';
+import 'package:flutter_base/utils/utils.dart';
 
 /*
  * 封装 restful 请求
@@ -40,7 +43,12 @@ class HttpUtils {
 
     if(mapApi != null) {
       mapApi.forEach((String name, String value) {
-        url = url + "&$name=$value";
+        if (url.contains("?")) {
+          url = url + "&$name=$value";
+        } else {
+          url = url + "?$name=$value";
+        }
+
       });
     }
 
@@ -62,16 +70,23 @@ class HttpUtils {
 
     try {
       Map<String, dynamic> _headers = new Map();
+      if (SpUtil.getString(Ids.keyAppToken) != null) {
+        _headers["Cookie"] = SpUtil.getString(Ids.keyAppToken);
+        print("传过去的cookie:${_headers["Cookie"]}");
+        dio.options.headers.addAll(_headers);
+      }
       dio.options.headers.addAll(_headers);
       Response response = await dio.request(url, data: data, options: new Options(method: method));
 
       result = response.data;
-//      ///cookie
-//      response.headers.forEach((String name, List<String> values) {
-//        if (name == "set-cookie") {
-//          String cookie = values.toString();
-//        }
-//      });
+      ///cookie
+      response.headers.forEach((String name, List<String> values) {
+        if (result["errorCode"] == 0 && name == "set-cookie") {
+          String cookie = values.toString();
+          SpUtil.putString(Ids.keyAppToken, cookie);
+          print("获得的cookie:$cookie");
+        }
+      });
 
       /// 打印响应相关信息
       print('响应数据：' + response.toString());
@@ -85,9 +100,9 @@ class HttpUtils {
     if (result["errorCode"] == 0) {
       return result;
     } else {
-      String errorMsg = result["errorMsg"] as String;
+      String errorMsg = Util.getStringByJson(result, "errorMsg", AppConfig.MSG_ERROR);
       print("返回的异常信息："+errorMsg);
-      ToastUtil.showToast(AppConfig.MSG_ERROR);
+      ToastUtil.showToast(errorMsg);
       return null;
     }
     return result;

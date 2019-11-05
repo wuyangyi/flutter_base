@@ -25,9 +25,18 @@ class Decorations {
   //无分割线
   static Decoration bottomNo = BoxDecoration(
       border: Border(bottom: BorderSide(width: 0.0, color: Colors.transparent,)));
-
+  //登录页面分割线
+  static Decoration bottom = BoxDecoration(
+    color: Colors.white,
+      border: Border(bottom: BorderSide(width: 0.5, color: MyColors.loginDriverColor,)));
+  //登录页面分割线
+  static Decoration bottomSelect = BoxDecoration(
+      border: Border(bottom: BorderSide(width: 2.0, color: MyColors.selectColor,)));
 
   //首页分割线
   static Decoration homeBottom = BoxDecoration(
       border: Border(bottom: BorderSide(width: 0.5, color: Color(0xFFF1F3F5),)));
+  //完善信息页面分割线
+  static Decoration finishBottom = BoxDecoration(
+      border: Border(bottom: BorderSide(width: 0.5, color: MyColors.finishDriverColor,)));
 }

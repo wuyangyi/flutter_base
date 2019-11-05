@@ -19,7 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -30,6 +31,14 @@ dependencies:
   rxdart: ^0.22.3 # https://github.com/ReactiveX/rxdart
   sqflite: ^1.1.3 #数据库 https://github.com/tekartik/sqflite
   pull_to_refresh: ^1.5.7
+  cached_network_image: ^0.8.0 #用于显示来自Internet的图像并将它们保存在缓存目录中。
+  shared_preferences: ^0.5.3+4 #shared_preferences本地存储
+  flustars: ^0.2.6+1 #该库包含SpUtil（单例"同步" SharedPreferences 工具类），ScreenUtil（屏幕适配），WidgetUtil（Widget渲染监听，获取Widget宽高，在屏幕上的坐标）。 https://github.com/Sky24n/flustars
+  common_utils: ^1.1.3  #该库包含TimerUtil（倒计时，定时任务），TimelineUtil（时间轴），DateUtil（日期格式化），RegexUtil（正则验证手机号，身份证，邮箱等等），RegexUtil（正则验证手机号，身份证，邮箱等等），NumUtil（保留x位小数, 精确加、减、乘、除, 防止精度丢失），MoneyUtil（元转分，分转元），ObjectUtil（判空），LogUtil（简单封装打印日志）。 https://github.com/Sky24n/common_utils
+  azlistview: ^0.1.2 #AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
+  random_string: ^1.1.0
+  image_picker: ^0.6.1+10 #图片选择或者视频选择
+  intl: ^0.15.7 #国际化
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +88,7 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
+    - jsons/city.json
     - images/ico_network_error.png
     - images/ico_data_empty.png
     - images/icon_back_white.png
@@ -151,3 +161,33 @@ flutter:
     - images/refresh_icon_header_00013.png
     - images/refresh_icon_header_00014.png
     - images/scroll_to_top_button.png
+    - images/ico_logo.png
+    - images/ico_start_top.png
+    - images/ico_start_bg.png
+    - images/ico_clear.png
+    - images/ico_login_top.png
+    - images/ico_pwd_show.png
+    - images/ico_pwd_hide.png
+    - images/ico_login_phone.png
+    - images/ico_login_password.png
+    - images/ico_login_code.png
+    - images/ico_login_image_code.png
+    - images/msg_box_succeed.png
+    - images/msg_box_remind.png
+    - images/pic_default_man.png
+    - images/pic_default_secret.png
+    - images/pic_default_woman.png
+    - images/ic_arrow_smallgrey.png
+    - images/ico_close.png
+    - images/ico_item_select.png
+    - images/ico_item_selected.png
+    - images/ico_search_empty.png
+    - images/ico_integral.png
+    - images/ico_man.png
+    - images/ico_woman.png
+    - images/ico_redact_info.png
+    - images/user_page_top_bg_01.png
+    - images/ic_book.png
+    - images/ic_music.png
+    - images/ic_notepad.png
+    - images/ic_more_app.png

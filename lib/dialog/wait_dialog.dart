@@ -12,7 +12,7 @@ showLoadingDialog(BuildContext context, {LoadCallback doLoading}) async {
     builder: (context) {
       return WillPopScope(
         onWillPop: () async {
-          return Future.value(true); //false屏蔽返回键
+          return Future.value(false); //false屏蔽返回键
         },
         child: Container(
           alignment: Alignment.center,

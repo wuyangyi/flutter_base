@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_base/config/app_config.dart';
+import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/top_hint_route.dart';
 import 'package:flutter_base/utils/toast_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
@@ -37,6 +39,9 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   //是否需要标题栏，默认为true
   bool needAppBar = true;
 
+  //appBar阴影
+  double appBarElevation = 4.0;
+
   //标题
   String title;
 
@@ -44,7 +49,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   bool centerTitle = true;
 
   //标题栏背景
-  Color titleBarBg;
+  Color titleBarBg = MyColors.main_color;
 
   //左边组件
   Widget leading;
@@ -62,7 +67,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   int loadStatus = Status.loading;
 
   //是否需要初始的加载动画
-  bool showStartCenterLoading = true;
+  bool showStartCenterLoading = false;
 
   //是否需要加载异常点击刷新 ，默认为false
   // 开启需要重写onRefresh方法
@@ -72,6 +77,8 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
    * 是否正在刷新
    */
   bool isRefresh = false;
+
+  bool isLoading = false;
 
   //创建内容栏
   Widget buildBody(BuildContext context, {Widget body}) {
@@ -84,30 +91,38 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
             leading: leading ??
                 new IconButton(
                   key: key_btn_left,
-                  icon: Image.asset(Util.getImgPath(titleBarBg == Colors.white ? "icon_back_black" : "icon_back_white")),
+                  icon: Image.asset(Util.getImgPath(titleBarBg == Colors.white ? "icon_back_black" : "icon_back_white"), height: 20.0,),
                   onPressed: (){
                     onLeftButtonClck();
                   },
                 ),
-            title: new Text(title ?? ""),
+            title: new Text(title ?? "", style: TextStyle(
+              fontSize: 16.0,
+            ),),
             centerTitle: centerTitle,
             actions: <Widget>[
               btn_border ?? new Container(width: 0, height: 0,),
               btn_right ?? new Container(width: 0, height: 0,),
             ],
             backgroundColor: titleBarBg,
+            elevation: appBarElevation,
           ) : MyEmptyAppBar(),
           body: new Builder(builder: (BuildContext context) {
             this.bodyContext = context;
             return _buildContext(body, context);
           }),
           backgroundColor: bodyColor,
+          drawer: getDrawer(),
           floatingActionButton: buildFloatingActionButton(),
         ),
       ),
       debugShowCheckedModeBanner: AppConfig.IS_DEBUG,
     );
     return app;
+  }
+
+  Widget getDrawer() {
+    return null;
   }
 
   Widget buildFloatingActionButton() {
@@ -127,7 +142,37 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
         },
       );
     } else {
-      return child;
+      return Stack(
+        children: <Widget>[
+          child,
+          Offstage(
+            offstage: !isLoading,
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.transparent,
+              alignment: Alignment.center,
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                    color: Color(0x60000000),
+                    borderRadius: BorderRadius.circular(10.0)
+                ),
+                child: Column(
+                  //控件里面内容主轴负轴居中显示
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  //主轴高度最小
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    WaitDialogProgress(Size(30.0, 30.0), "ic_loading_white_", 11),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
     }
   }
 
@@ -254,7 +299,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
    * 左边按钮点击事件
    */
   void onLeftButtonClck() {
-    Navigator.of(bodyContext).pop();
+    finish();
   }
 
   /*
@@ -338,7 +383,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
    * 隐藏软键盘
    */
   void hideSoftInput() {
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(bodyContext).requestFocus(FocusNode());
   }
 
   /*
@@ -348,4 +393,20 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
     Navigator.of(context).pop();
   }
 
+  void showTopMessage({int status, String message}) {
+    openTopReminder(bodyContext, status ?? Status.success, message: message);
+  }
+
+  //显示加载动画
+  void showWaitDialog() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+  //关闭加载动画
+  void hideWaitDialog() {
+    setState(() {
+      isLoading = false;
+    });
+  }
 }

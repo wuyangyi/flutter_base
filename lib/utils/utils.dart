@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_base/bean/userinfo_select.dart';
 import 'package:flutter_base/utils/toast_util.dart';
 
 class Util {
@@ -124,6 +125,30 @@ class Util {
       return json[key] as int;
     }
     return defaultValue;
+  }
+
+  static String getUserHeadImageName(String sex) {
+    if (sex == null) {
+      return "pic_default_secret";
+    }
+    if(sex == "男") {
+      return "pic_default_man";
+    } else if (sex == "女") {
+      return "pic_default_woman";
+    } else {
+      return "pic_default_secret";
+    }
+  }
+
+  //用户信息选择更改选择位置
+  static List<UserInfoSelectBean> upDataSelect(List<UserInfoSelectBean> list, int selected) {
+    if(list.isEmpty) {
+      return list;
+    }
+    for (int index = 0; index < list.length; index++) {
+      list[index].selected = index == selected;
+    }
+    return list;
   }
 
 }

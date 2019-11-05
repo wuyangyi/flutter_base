@@ -159,6 +159,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
       _refreshController.refreshCompleted();
     }
     if (hasError) {
+      print("异常");
       loadMoreStatus = Status.fail;
       if (mListData.isEmpty) {
         loadStatus = Status.fail;
@@ -245,14 +246,17 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
       return null;
     }
     return new FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        foregroundColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        highlightElevation: 0.0,
-        elevation: 0.0,
+        backgroundColor: MyColors.main_color,
+//        focusColor: Colors.transparent,
+//        foregroundColor: Colors.transparent,
+//        hoverColor: Colors.transparent,
+//        highlightElevation: 0.0,
+//        elevation: 0.0,
         tooltip: "返回顶部",
-        child: Image.asset(Util.getImgPath("scroll_to_top_button"), width: 40.0,),
+//        child: Image.asset(Util.getImgPath("scroll_to_top_button"), width: 40.0,),
+        child: Icon(
+          Icons.keyboard_arrow_up,
+        ),
         onPressed: () {
           controller.animateTo(0.0,
               duration: new Duration(milliseconds: 300), curve: Curves.linear);
