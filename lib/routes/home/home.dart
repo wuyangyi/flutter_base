@@ -11,6 +11,7 @@ import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/net/network.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/tally_book/tally_book_home_route.dart';
 import 'package:flutter_base/routes/user_center/user_center_route.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
@@ -27,7 +28,7 @@ class HomeRoute extends BaseRoute {
 class _HomeRouteState extends BaseRouteState<HomeRoute> {
   UserBeanEntity user;
   List<HomeAppBean> homeAppBeans = [
-    HomeAppBean("记账本", "\"小小记账本，一键记账，给你舒适的理财投资便捷享受！\"", "ic_book"),
+    HomeAppBean("记账本", "\"小小记账本，一键记账，给你舒适的理财投资便捷享受！\"", "ic_book", route: BookHomeRoute()),
     HomeAppBean("音乐播放器", "\"耳目一新的乐库，新歌速递、权威榜单、精选歌单，你要找的音乐，都在这里，开启欲罢不能的音乐之旅！\"", "ic_music"),
     HomeAppBean("备忘录", "\"一款界面优美、操作便捷的备忘录应用，可以让你每时每刻记录下每一天的好心情，让昨天的回忆变成今天的记忆！\"", "ic_notepad"),
     HomeAppBean("更多功能", "\"不断完善是我的理念，让我们一起期待更多新的功能哟~\"", "ic_more_app"),
@@ -41,7 +42,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     needAppBar = true;
     title = AppConfig.APP_NAME;
     titleBarBg = MyColors.main_color;
-    bodyColor = MyColors.home_bg;
+    bodyColor = MyColors.home_body_bg;
     appBarElevation = 0.0;
     leading = Container();
   }

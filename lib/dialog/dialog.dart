@@ -287,3 +287,122 @@ class _UserInfoSelectDialogState extends State<UserInfoSelectDialog> {
   }
 
 }
+
+
+class UserCenterBgDialog extends StatefulWidget {
+  final List<String> images;
+
+  const UserCenterBgDialog({Key key, this.images}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return _UserCenterBgDialogState();
+  }
+}
+
+class _UserCenterBgDialogState extends State<UserCenterBgDialog> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0),
+                child: Text(
+                  "背景选择",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: MyColors.title_color,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop(-1);
+                    },
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      margin: EdgeInsets.only(right: 20.0),
+                      child: Image.asset(Util.getImgPath("ico_close"), fit: BoxFit.fill, width: 15.0, height: 15.0,),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: _getListHeight(),
+            width: double.infinity,
+            margin: const EdgeInsets.only(top: 15.0),
+            constraints: BoxConstraints(
+              maxHeight: 345.0,
+            ),
+            child: ListView.builder(
+              itemCount: widget.images.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pop(index);
+                  },
+                  child: index < widget.images.length ? Container(
+                    width: double.infinity,
+                    height: 100.0,
+                    margin: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 15.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      image: DecorationImage(
+                        image: AssetImage(Util.getImgPath(widget.images[index])),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ) : Container(
+                    width: double.infinity,
+                    height: 100.0,
+                    margin: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 15.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: MyColors.home_body_bg,
+                    ),
+
+                    child: Image.asset(
+                      Util.getImgPath("ico_add_blue"),
+                      width: 50.0,
+                      height: 50.0,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  double _getListHeight() {
+    if(widget.images.length < 2) {
+      return widget.images.length * 115.0;
+    } else {
+      return 345.0;
+    }
+  }
+
+}

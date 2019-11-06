@@ -93,7 +93,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
                   key: key_btn_left,
                   icon: Image.asset(Util.getImgPath(titleBarBg == Colors.white ? "icon_back_black" : "icon_back_white"), height: 20.0,),
                   onPressed: (){
-                    onLeftButtonClck();
+                    onLeftButtonClick();
                   },
                 ),
             title: new Text(title ?? "", style: TextStyle(
@@ -114,11 +114,16 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
           backgroundColor: bodyColor,
           drawer: getDrawer(),
           floatingActionButton: buildFloatingActionButton(),
+          bottomNavigationBar: getBottomNavigationBar(),
         ),
       ),
       debugShowCheckedModeBanner: AppConfig.IS_DEBUG,
     );
     return app;
+  }
+
+  Widget getBottomNavigationBar(){
+    return null;
   }
 
   Widget getDrawer() {
@@ -298,7 +303,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   /*
    * 左边按钮点击事件
    */
-  void onLeftButtonClck() {
+  void onLeftButtonClick() {
     finish();
   }
 

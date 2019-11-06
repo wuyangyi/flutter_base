@@ -30,11 +30,21 @@ class UserDao extends BaseDBProvider {
       logo TEXT,
       coinInfo TEXT,
       synopsis TEXT,
-      age INTEGER)
+      age INTEGER,
+      info_bg TEXT)
     ''';
   }
 
   //保存用户
+  Future saveData(UserBeanEntity user) async {
+    if (findById(user.id) == null) {
+      insertData(user);
+    } else {
+      upUserInfoDate(user);
+    }
+  }
+
+  //插入用户信息
   Future<int> insertData(UserBeanEntity user) async {
     var db = await getDataBase();
     var code = db.insert(name, user.toJson());

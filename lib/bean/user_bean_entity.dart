@@ -14,6 +14,7 @@ class UserBeanEntity {
 	String synopsis;
 	int age;
 	bool isFinishInfo;
+	String infoBg;
 
 	setBirthDate(String time) {
 		this.birthDate = time;
@@ -45,6 +46,7 @@ class UserBeanEntity {
 		id = json['id'];
 		synopsis = json['synopsis'];
 		age = json['age'];
+		infoBg = json['info_bg'];
 	}
 
 	Map<String, dynamic> toJson() {
@@ -62,6 +64,7 @@ class UserBeanEntity {
 		data['id'] = this.id;
 		data['synopsis'] = this.synopsis;
 		data['age'] = this.age;
+		data['info_bg'] = this.infoBg;
 		return data;
 	}
 }

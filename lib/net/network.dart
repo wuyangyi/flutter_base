@@ -52,6 +52,7 @@ class NetClickUtil {
     if (data == null) {
       data = UserBeanEntity.upDataByLogin(username, password, id);
       data.isFinishInfo = false;
+      data.infoBg = "user_page_top_bg_01"; //设置默认背景
     } else {
       data.isFinishInfo = true;
     }
@@ -76,6 +77,7 @@ class NetClickUtil {
     if (data == null) {
       data = UserBeanEntity.upDataByLogin(username, password, id);
       data.isFinishInfo = false;
+      data.infoBg = "user_page_top_bg_01"; //设置默认背景
     } else {
       data.isFinishInfo = true;
     }

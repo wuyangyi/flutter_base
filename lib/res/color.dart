@@ -12,7 +12,9 @@ class MyColors{
   static const Color selectColor = Color(0xFF3388FF);
   static const Color buttonNoSelectColor = Color(0xFF999999);
   static const Color home_bg = Color(0xFFF1F2F3);
+  static const Color home_body_bg = Color(0xFFF0F0F0);
   static const Color finishDriverColor = Color(0xFFDEDEDE);
   static const Color citySelectColor = Color(0xFFF7F9FC);
   static const Color cityColor = Color(0xFFE6F2F8);
+  static const Color homeBottomColorNoSelect = Color(0xFF727880);
 }

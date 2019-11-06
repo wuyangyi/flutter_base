@@ -187,7 +187,10 @@ flutter:
     - images/ico_woman.png
     - images/ico_redact_info.png
     - images/user_page_top_bg_01.png
+    - images/user_page_top_bg_02.png
+    - images/user_page_top_bg_03.png
     - images/ic_book.png
     - images/ic_music.png
     - images/ic_notepad.png
     - images/ic_more_app.png
+    - images/ico_add_blue.png

@@ -373,7 +373,7 @@ class _FinishInfoRouteState extends BaseRouteState<FinishInfoRoute> {
     user.address = _addressController.text;
     user.isFinishInfo = true;
     user.setLogo(headImage);
-    UserDao().insertData(user);
+    UserDao().saveData(user);
     Provider.of<UserModel>(context, listen: false).user = user;
     Application.saveProfile(); //保存信息
     hideWaitDialog();
