@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'dao/UserDao.dart';
 
 class UserBeanEntity {
@@ -34,19 +36,19 @@ class UserBeanEntity {
 
 	UserBeanEntity({this.password, this.address, this.phone, this.sex, this.birthDate, this.name, this.logo, this.coinInfo, this.id, this.synopsis, this.age});
 
-	UserBeanEntity.fromJson(Map<String, dynamic> json) {
-		password = json['password'];
-		address = json['address'];
-		phone = json['phone'];
-		sex = json['sex'];
-		birthDate = json['birth_date'];
-		name = json['name'];
-		logo = json['logo'];
-		coinInfo = json['coinInfo'] != null ? new UserBeanCoininfo.fromJson(json['coinInfo']) : null;
-		id = json['id'];
-		synopsis = json['synopsis'];
-		age = json['age'] ?? 0;
-		infoBg = json['info_bg'];
+	UserBeanEntity.fromJson(Map<String, dynamic> jsons) {
+		password = jsons['password'];
+		address = jsons['address'];
+		phone = jsons['phone'];
+		sex = jsons['sex'];
+		birthDate = jsons['birth_date'];
+		name = jsons['name'];
+		logo = jsons['logo'];
+//		coinInfo = jsons['coinInfo'] != null ? new UserBeanCoininfo.fromJson(jsons['coinInfo']) : null;
+		id = jsons['id'];
+		synopsis = jsons['synopsis'];
+		age = jsons['age'] ?? 0;
+		infoBg = jsons['info_bg'];
 	}
 
 	Map<String, dynamic> toJson() {
@@ -77,11 +79,11 @@ class UserBeanCoininfo {
 
 	UserBeanCoininfo({this.rank, this.userId, this.coinCount, this.username});
 
-	UserBeanCoininfo.fromJson(Map<String, dynamic> json) {
-		rank = json['rank'];
-		userId = json['userId'];
-		coinCount = json['coinCount'];
-		username = json['username'];
+	UserBeanCoininfo.fromJson(Map<String, dynamic> jsons) {
+		rank = jsons['rank'];
+		userId = jsons['userId'];
+		coinCount = jsons['coinCount'];
+		username = jsons['username'];
 	}
 
 	Map<String, dynamic> toJson() {

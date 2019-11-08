@@ -33,7 +33,12 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
   UserBeanEntity user;
   double _opacity = 0.0; //顶部名字透明度
   bool isScrollTop = true; //是否在顶部
-  List<String> imageBg = ["user_page_top_bg_01", "user_page_top_bg_02", "user_page_top_bg_03"]; //所有可选的背景图片
+  List<String> imageBg = [
+    "user_page_top_bg_01",
+    "user_page_top_bg_02",
+    "user_page_top_bg_03",
+    "user_page_top_bg_04"
+  ]; //所有可选的背景图片
 
   _UserCenterRouteState(){
     needAppBar = false;

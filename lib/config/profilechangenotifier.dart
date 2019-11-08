@@ -54,4 +54,12 @@ class BookModel extends ChangeNotifier {
     _books.addAll(bookBeanEntitys);
     notifyListeners();
   }
+
+  void clearAll() {
+    _books.clear();
+  }
+
+  void removeOne(int index) {
+    _books.removeAt(index);
+  }
 }

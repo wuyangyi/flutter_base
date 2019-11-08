@@ -39,7 +39,7 @@ class NetClickUtil {
   }
 
   ///登录
-  Future<UserBeanEntity> login(String username, String password) async {
+  Future<UserBeanEntity> login(String username, String password, {Function callBack}) async {
     addMap("username", username);
     addMap("password", password);
     var response = await HttpUtils.request(USER_LOGIN, method: HttpUtils.POST, mapApi: mapApi);
@@ -58,6 +58,9 @@ class NetClickUtil {
       data.infoBg = "user_page_top_bg_01"; //设置默认背景
     } else {
       data.isFinishInfo = true;
+    }
+    if(callBack != null) {
+      callBack();
     }
     return data;
   }

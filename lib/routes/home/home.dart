@@ -52,8 +52,10 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     super.initState();
     Util.setTransAppBarDark(); //设置沉浸式状态栏 字体为黑色
     user = Provider.of<UserModel>(context, listen: false).user;
-    NetClickUtil().login(user.phone, user.password); //更新下cookie，防止很久前登陆的，cookie过期
-    NetClickUtil().getIntegral(); //获得用户积分
+    NetClickUtil().login(user.phone, user.password, callBack: (){
+      NetClickUtil().getIntegral(); //获得用户积分
+    }); //更新下cookie，防止很久前登陆的，cookie过期
+
   }
 
   @override

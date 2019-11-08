@@ -100,7 +100,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
                     onLeftButtonClick();
                   },
                 ),
-            title: new Text(title ?? "", style: TextStyle(
+            title: getTitleWidget() ?? new Text(title ?? "", style: TextStyle(
               fontSize: 16.0,
               color: titleColor,
             ),),
@@ -419,5 +419,10 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  //自定义标题控件
+  Widget getTitleWidget() {
+    return null;
   }
 }

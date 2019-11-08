@@ -39,6 +39,7 @@ class _TallyRouteState extends BaseListRouteState<TallyRoute, MyBookBeanEntity, 
   DateTime nowDate = DateTime.now();
   MyBookBeanEntity selectBookBean; //当前展示的账本
   UserBeanEntity user;
+  BookModel bookModel;
   double pay = 0.00; //当月支出
   double getMoney = 0.00; //当月收入
   bool isCanUp = false; //是否可编辑状态
@@ -47,6 +48,7 @@ class _TallyRouteState extends BaseListRouteState<TallyRoute, MyBookBeanEntity, 
   void initState() {
     super.initState();
     user = Provider.of<UserModel>(context, listen: false).user;
+    bookModel = Provider.of<BookModel>(context, listen: false);
     bus.on(EventBusString.BOOK_LOADING, (isNeed){
       onRefresh();
     });
@@ -72,8 +74,10 @@ class _TallyRouteState extends BaseListRouteState<TallyRoute, MyBookBeanEntity, 
       if (data != null && (isLoadingMore || isRefresh)) {
         if (isRefresh) {
           mListData.clear();
+          bookModel.clearAll();
         }
         mListData.addAll(data);
+        bookModel.addAll(data);
       }
       if (data == null) {
         loadMoreStatus = Status.loading;

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
+import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/blocs/MyBookBloc.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
+import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/tally_book/tally_route.dart';
+import 'package:flutter_base/utils/navigator_util.dart';
+import 'package:provider/provider.dart';
+
+import 'add_tally_route.dart';
 
 class BookHomeRoute extends BaseRoute {
   @override
@@ -15,6 +21,7 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
     needAppBar = false;
     showStartCenterLoading = false;
   }
+  List<MyBookBeanEntity> books;
 
   int _tabIndex = 0;
   var tabImages;
@@ -87,9 +94,19 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
     return _tabIndex == 3 ? null : FloatingActionButton(
       child: Icon(Icons.create),
       onPressed: (){
-        showToast("正在建设中~");
+        if (books == null || books.isEmpty) {
+          showToast("请先添加账本哟！");
+          return;
+        }
+        NavigatorUtil.pushPageByRoute(context, AddTallyRoute());
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    books = Provider.of<BookModel>(context, listen: false).books;
   }
 
 
