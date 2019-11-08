@@ -7,6 +7,7 @@ class AppConfig {
   static final String APP_NAME = "小小工具箱";
   static final String APPVERSION = "1.0.0"; //版本号
   static final String APPCLIENT = "android"; //android端
+  static final int PAGE_LIMIT = 15; //分页每页的数量
 
   //请求错误提示
   static final String MSG_ERROR = "网络异常";

@@ -228,7 +228,7 @@ class _FinishInfoRouteState extends BaseRouteState<FinishInfoRoute> {
                       onButtonCheck();
                     },
                     onTap: () {
-                      NavigatorUtil.pushPageByRoute(bodyContext, CityRoute());
+                      NavigatorUtil.pushPageByRoute(context, CityRoute());
                     },
                   ),
                   FinishInput(

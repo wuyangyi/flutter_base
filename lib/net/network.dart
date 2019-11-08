@@ -2,7 +2,10 @@
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/bean/city_bean_entity.dart';
+import 'package:flutter_base/bean/dao/MyBookDao.dart';
+import 'package:flutter_base/bean/dao/MyTallyDao.dart';
 import 'package:flutter_base/bean/dao/UserDao.dart';
+import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
@@ -126,5 +129,18 @@ class NetClickUtil {
     } else {
       return getIntegral();
     }
+  }
+
+  //保存或者修改账本信息
+  Future saveBook(MyBookBeanEntity data) async {
+    return MyBookDao().saveData(data);
+  }
+
+  //删除账本信息
+  Future removeBook(int userId, int bookId, Function onCallBack) async {
+    await MyTallyDao().removeDataByBookId(userId, bookId, callBack: () async { //删除关于此账本的账单
+      await MyBookDao().removeDataById(bookId, callBack: onCallBack); //删除账本
+    });
+
   }
 }

@@ -37,7 +37,9 @@ class UserDao extends BaseDBProvider {
 
   //保存用户
   Future saveData(UserBeanEntity user) async {
-    if (findById(user.id) == null) {
+    UserBeanEntity data = await findById(user.id);
+    print("用户bean：$data");
+    if (data == null) {
       insertData(user);
     } else {
       upUserInfoDate(user);
@@ -62,6 +64,7 @@ class UserDao extends BaseDBProvider {
   Future<UserBeanEntity> findById(int id) async {
     var db = await getDataBase();
     List<Map> result = await db.query(name, where: 'id = ?', whereArgs: [id]);
+    print("用户数据：$result");
     if (result.length > 0) {
       return UserBeanEntity.fromJson(result.first);
     }

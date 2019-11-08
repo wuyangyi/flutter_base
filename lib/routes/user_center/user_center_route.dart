@@ -89,7 +89,6 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
                       opacity: _opacity,
                       child: Container(
                         alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: 15.0),
                         child: Text(
                           user?.name ?? "个人中心",
                           style: TextStyle(
@@ -102,7 +101,6 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
                     ),
                     leading: Container(
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 15.0),
                       child: IconButton(
                         icon: Image.asset(Util.getImgPath(titleBarBg == Colors.white ? "icon_back_black" : "icon_back_white"), height: 20.0,),
                         onPressed: (){
@@ -114,11 +112,10 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
                       IconButton(
                         icon: Container(
                           alignment: Alignment.center,
-                          margin: EdgeInsets.only(top: 15.0),
                           child: Image.asset(Util.getImgPath("ico_redact_info"), width: 17.0, height: 17.0,),
                         ),
                         onPressed: (){
-                          NavigatorUtil.pushPageByRoute(bodyContext, FinishInfoRoute(false), isNeedCloseRoute: false);
+                          NavigatorUtil.pushPageByRoute(context, FinishInfoRoute(false), isNeedCloseRoute: false);
                         },
                       )
                     ],

@@ -258,6 +258,7 @@ class _CityRouteState extends BaseRouteState<CityRoute> {
                     height: double.infinity,
                     color: Colors.white,
                     child: ListView.builder(
+                      padding: EdgeInsets.all(0.0),
                       physics: BouncingScrollPhysics(),
                       itemCount: cityBean.provinceList.length,
                       itemBuilder: (context, index) {
@@ -301,6 +302,7 @@ class _CityRouteState extends BaseRouteState<CityRoute> {
                     color: MyColors.citySelectColor,
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.all(0.0),
                       controller: _controllerCenter,
                       itemCount: cityBean.provinceList[selectLeft].cityList?.length ?? 0,
                       itemBuilder: (context, index) {
@@ -342,6 +344,7 @@ class _CityRouteState extends BaseRouteState<CityRoute> {
                     color: MyColors.cityColor,
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.all(0.0),
                       controller: _controllerRight,
                       itemCount: cityBean.provinceList[selectLeft].cityList[selectCenter].countyList.length ?? 0,
                       itemBuilder: (context, index) {

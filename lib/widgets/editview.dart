@@ -19,6 +19,7 @@ class InputTextField extends StatefulWidget {
   final bool enable;
   final OnTextChange onTextChange;
   final int maxLines;
+  final TextAlign textAlign;
   InputTextField({
     this.height,
     this.leftIcon,
@@ -31,6 +32,7 @@ class InputTextField extends StatefulWidget {
     this.enable = true,
     this.onTextChange,
     this.maxLines = 1,
+    this.textAlign = TextAlign.left,
   });
   @override
   State<StatefulWidget> createState() {
@@ -62,7 +64,7 @@ class _InputTextFieldState extends State<InputTextField> {
               alignment: Alignment.centerLeft,
               child: TextField(
                 controller: widget.controller,
-                textAlign: TextAlign.start,
+                textAlign: widget.textAlign,
                 enabled: widget.enable,
                 maxLines: widget.maxLines,
                 inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
@@ -137,6 +139,7 @@ class FinishInput extends StatefulWidget {
   final bool needClear;
   final bool needBottomDriver;
   final int maxLines;
+  final TextAlign textAlign;
 
   const FinishInput({Key key,
     this.inputType = TextInputType.text,
@@ -152,6 +155,7 @@ class FinishInput extends StatefulWidget {
     this.needClear = true,
     this.needBottomDriver = true,
     this.maxLines = 1,
+    this.textAlign = TextAlign.left,
   }) : super(key: key);
   @override
   _FinishInputState createState() => _FinishInputState();
@@ -187,6 +191,7 @@ class _FinishInputState extends State<FinishInput> {
                 enable: widget.enable,
                 onTextChange: widget.onTextChange,
                 controller: widget.controller,
+                textAlign: widget.textAlign,
               ),
             ),
             Offstage(
@@ -201,6 +206,124 @@ class _FinishInputState extends State<FinishInput> {
           widget.onTap();
         }
       },
+    );
+  }
+}
+
+
+class InkWellFinishInput extends StatefulWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final bool enable;
+  final TextInputType inputType;
+  final int maxLength;
+  final String leftText;
+  final Function onTap;
+  final bool needRightImage;
+  final double height;
+  final bool needBottomDriver;
+  final int maxLines;
+  final TextAlign textAlign;
+  final Widget centerWidget;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
+  final Color bgColor;
+  final bool autofocus;
+
+  const InkWellFinishInput({Key key,
+    this.controller,
+    this.hintText,
+    this.enable = true,
+    this.inputType = TextInputType.text,
+    this.maxLength = -1,
+    this.leftText,
+    this.onTap,
+    this.needRightImage = false,
+    this.height = 55.0,
+    this.needBottomDriver = true,
+    this.maxLines = 1,
+    this.textAlign = TextAlign.right,
+    this.centerWidget,
+    this.margin = const EdgeInsets.all(0.0),
+    this.padding = const EdgeInsets.all(0.0),
+    this.bgColor = Colors.transparent,
+    this.autofocus = false,
+  }) : super(key: key);
+  @override
+  _InkWellFinishInputState createState() => _InkWellFinishInputState();
+}
+
+class _InkWellFinishInputState extends State<InkWellFinishInput> {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: widget.bgColor,
+      child: Ink(
+        child: InkWell(
+          onTap: (){
+            if (widget.onTap != null) {
+              widget.onTap();
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: widget.needBottomDriver ? BorderSide(width: 0.5, color: MyColors.loginDriverColor,) : BorderSide(width: 0.0, color: Colors.transparent,),
+              ),
+            ),
+            height: widget.height,
+            margin: widget.margin,
+            padding: widget.padding,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: <Widget>[
+                Text(
+                  widget.leftText,
+                  style: TextStyle(
+                    color: MyColors.title_color,
+                    fontSize: 15.0,
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.only(right: 5.0),
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: widget.centerWidget ?? TextField(
+                      controller: widget.controller,
+                      textAlign: widget.textAlign,
+                      enabled: widget.enable,
+                      maxLines: widget.maxLines,
+                      autofocus: widget.autofocus,
+                      inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
+                      style: TextStyle(
+                        color: MyColors.text_normal_5,
+                        fontSize: 15.0,
+                      ),
+                      scrollPadding: EdgeInsets.all(0.0),
+                      keyboardType: widget.inputType,
+                      decoration: InputDecoration( //外观样式
+                        hintText: widget.hintText,
+                        border: InputBorder.none, //去除自带的下划线
+                        hintStyle: TextStyle(
+                          color: Color(0xFFCBCDD5),
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Offstage(
+                  offstage: !widget.needRightImage,
+                  child: Image.asset(Util.getImgPath("ic_arrow_smallgrey"), height: 22.0,),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

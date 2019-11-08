@@ -45,7 +45,7 @@ class UserBeanEntity {
 		coinInfo = json['coinInfo'] != null ? new UserBeanCoininfo.fromJson(json['coinInfo']) : null;
 		id = json['id'];
 		synopsis = json['synopsis'];
-		age = json['age'];
+		age = json['age'] ?? 0;
 		infoBg = json['info_bg'];
 	}
 

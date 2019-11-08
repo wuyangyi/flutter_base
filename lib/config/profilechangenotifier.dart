@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 
@@ -33,6 +34,24 @@ class UserModel extends ProfileChangeNotifier {
   void outLogin() {
     _profile.isLogin = false;
     _profile.user = null;
+    notifyListeners();
+  }
+}
+
+//账本状态
+class BookModel extends ChangeNotifier {
+  //用于保存账本列表
+  final List<MyBookBeanEntity> _books = [];
+
+  List<MyBookBeanEntity> get books => _books;
+
+  void add(MyBookBeanEntity bookBeanEntity) {
+    _books.add(bookBeanEntity);
+    notifyListeners();
+  }
+
+  void addAll(List<MyBookBeanEntity> bookBeanEntitys) {
+    _books.addAll(bookBeanEntitys);
     notifyListeners();
   }
 }

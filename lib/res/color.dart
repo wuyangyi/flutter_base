@@ -17,4 +17,6 @@ class MyColors{
   static const Color citySelectColor = Color(0xFFF7F9FC);
   static const Color cityColor = Color(0xFFE6F2F8);
   static const Color homeBottomColorNoSelect = Color(0xFF727880);
+  static const Color text_normal_5 = Color(0xFF555555);
+  static const Color text_normal_1 = Color(0xFF111111);
 }

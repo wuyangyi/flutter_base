@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
+import 'package:flutter_base/blocs/MyBookBloc.dart';
+import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/tally_book/tally_route.dart';
 
@@ -16,7 +18,7 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
 
   int _tabIndex = 0;
   var tabImages;
-  var appBarTitles = ['账本','资产', '图表', '我的'];
+  var appBarTitles = ['账本','账单', '图表', '我的'];
   /*
    * 存储的五个页面
    */
@@ -53,8 +55,8 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
         Icon(Icons.account_balance_wallet, color: MyColors.main_color,),
       ],
       [
-        Icon(Icons.monetization_on, color: Colors.black45,),
-        Icon(Icons.monetization_on, color: MyColors.main_color,),
+        Icon(Icons.assignment, color: Colors.black45,),
+        Icon(Icons.assignment, color: MyColors.main_color,),
       ],
       [
         Icon(Icons.pie_chart, color: Colors.black45,),
@@ -67,7 +69,7 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
     ];
 
     _bodys = [
-      TallyRoute(context),
+      BlocProvider(child: TallyRoute(context), bloc: MyBookBloc(),),
       Center(
         child: Text(appBarTitles[1]),
       ),
@@ -80,6 +82,15 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
     ];
   }
 
+  @override
+  Widget buildFloatingActionButton() {
+    return _tabIndex == 3 ? null : FloatingActionButton(
+      child: Icon(Icons.create),
+      onPressed: (){
+        showToast("正在建设中~");
+      },
+    );
+  }
 
 
   @override

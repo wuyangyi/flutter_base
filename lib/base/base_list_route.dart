@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/bean/base_bean.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
+import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
@@ -20,11 +21,14 @@ abstract class BaseListRoute extends BaseRoute {
 abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B extends BlocListBase> extends BaseRouteState<T> {
   List<D> mListData = [];
   /*
-   * 是否需要上拉加载 默认为false
-   * 需要重写onLoadMore方法
-   * 下拉刷新需要重写onRefresh方法
+   * 是否需要下上拉加载 默认为true
    */
-  bool enablePullUp = false;
+  bool enablePullUp = true;
+
+  /*
+   * 是否需要下拉刷新 默认为true
+   */
+  bool enablePullDown = true;
 
   /*
    * 滑动组件的控制器
@@ -47,6 +51,11 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    */
   double startLoadMoreHeight = 10.0;
 
+  //头布局
+  List<Widget> _headView = [];
+  //尾布局
+  List<Widget> _floorView = [];
+
   /*
    * 是否正在加载更多
    */
@@ -54,8 +63,8 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
 
   B bloc;
 
-  bool isShowFloatBtn = false;
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  bool isShowFloatBtn = false; //显示悬浮按钮
+  RefreshController refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -77,6 +86,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
         }
       });
     });
+
   }
 
   @override
@@ -97,9 +107,15 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
           itemBuilder: (context, index) {
             return getItemBuilder(context, index);
           },
+          child: getListChild(),
         );
       },
     );
+  }
+
+  //自己的listView
+  Widget getListChild() {
+    return null;
   }
 
   /*
@@ -119,22 +135,34 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
     return buildBody(context,
       body: SmartRefresher(
         enablePullUp: false,
-        enablePullDown: true,
+        enablePullDown: enablePullDown,
         header: WaterDropHeader(
           refresh: WaitDialogProgress(Size(50.0, 25.0), "refresh_icon_header_000", 14),
           complete:  WaitDialogProgress(Size(50.0, 25.0), "refresh_icon_header_000", 14),
         ),
-        controller: _refreshController,
+        controller: refreshController,
         onRefresh: onRefresh,
         child: child ?? ListView.builder(
           controller: controller,
-          itemCount: mListData.length + 1,
+          itemCount: enablePullUp ? mListData.length + getHeadCount() + getFloorCount() + 1 : mListData.length + getHeadCount() + getFloorCount(),
           itemBuilder: (context, index) {
-            return index < mListData.length ? itemBuilder(context, index) : loadMoreWidget();
+            return _getItemView(itemBuilder, index);
           },
         ),
       ),
     );
+  }
+
+  _getItemView(IndexedWidgetBuilder itemBuilder, int index) {
+    if (index < getHeadCount()) {
+      return getHeadOrFloorView(true)[index];
+    } else if (index < getHeadCount()+mListData.length) {
+      return itemBuilder;
+    } else if (index < getHeadCount() + mListData.length + getFloorCount()) {
+      return getHeadOrFloorView(false)[index-getHeadCount()-mListData.length];
+    } else {
+      return loadMoreWidget();
+    }
   }
 
   /*
@@ -156,7 +184,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    */
   onLoadSuccess(List<D> data, bool hasError) {
     if (isRefresh) {
-      _refreshController.refreshCompleted();
+      refreshController.refreshCompleted();
     }
     if (hasError) {
       print("异常");
@@ -182,7 +210,11 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
           loadStatus = Status.empty;
         }
       } else {
-        loadMoreStatus = Status.success;
+        if (data.length < AppConfig.PAGE_LIMIT) {
+          loadMoreStatus = Status.empty; //没有更多了
+        } else {
+          loadMoreStatus = Status.success;
+        }
         if (isRefresh) {
           loadStatus = Status.success;
         }
@@ -261,6 +293,40 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
           controller.animateTo(0.0,
               duration: new Duration(milliseconds: 300), curve: Curves.linear);
         });
+  }
+
+  //获得头布局或者尾布局控件
+  List<Widget> getHeadOrFloorView(bool isHead) {
+    if (_headView.isEmpty) {
+      _headView.addAll(initHeadView());
+    }
+    if (_floorView.isEmpty) {
+      _floorView.addAll(initFloorView());
+    }
+    if (isHead) {
+      return _headView;
+    }
+    return _floorView;
+  }
+
+  //初始化头布局
+  List<Widget> initHeadView() {
+    return[];
+  }
+
+  //初始化尾布局
+  List<Widget> initFloorView() {
+    return[];
+  }
+
+  //头布局个数
+  int getHeadCount() {
+    return _headView.length;
+  }
+
+  //尾布局个数
+  int getFloorCount() {
+    return _floorView.length;
   }
 
 

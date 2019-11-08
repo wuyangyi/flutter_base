@@ -17,6 +17,8 @@ class Gaps {
   // 垂直间隔
   static Widget vGap5 = new SizedBox(height: 5.0);
   static Widget vGap10 = new SizedBox(height: 10.0);
+  static Widget vGap15 = new SizedBox(height: 15.0);
+  static Widget vGap20 = new SizedBox(height: 20.0);
 }
 
 

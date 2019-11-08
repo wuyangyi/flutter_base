@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/bean/userinfo_select.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
+import 'package:flutter_base/widgets/button.dart';
 import 'package:rxdart/rxdart.dart';
 
 ///dialog样式类
@@ -405,4 +406,77 @@ class _UserCenterBgDialogState extends State<UserCenterBgDialog> {
     }
   }
 
+}
+
+
+//账单编辑弹窗
+class BookUpDialog extends StatefulWidget {
+  @override
+  _BookUpDialogState createState() => _BookUpDialogState();
+}
+
+class _BookUpDialogState extends State<BookUpDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.0),
+            color: Colors.white,
+          ),
+          padding: EdgeInsets.all(20.0),
+          margin: EdgeInsets.only(left: 25.0,right: 25.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "请选择",
+                style: TextStyle(
+                  color: MyColors.text_normal_5,
+                  fontSize: 14.0,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+              Gaps.vGap20,
+              InkWellButton(
+                text: "编辑账本",
+                leftWidget: Icon(Icons.create, color: MyColors.buttonNoSelectColor,),
+                onTap: (){
+                  Navigator.pop(context, 0);
+                },
+              ),
+              Gaps.vGap10,
+              InkWellButton(
+                text: "删除账本",
+                leftWidget: Icon(Icons.delete_outline, color: MyColors.buttonNoSelectColor,),
+                onTap: (){
+                  Navigator.pop(context, 1);
+                },
+              ),
+              Gaps.vGap20,
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context, -1);
+                },
+                child: Text(
+                  "取消",
+                  style: TextStyle(
+                    color: MyColors.text_normal_5,
+                    decoration: TextDecoration.none,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

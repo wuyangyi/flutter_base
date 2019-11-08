@@ -14,3 +14,13 @@ Future showModalBottomSheetUtil(BuildContext context, T, {ShapeBorder shapeBorde
       }
   );
 }
+
+//中间普通对话框
+Future showCenterDialog(BuildContext context, T) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return T;
+    }
+  );
+}

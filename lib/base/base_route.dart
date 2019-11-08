@@ -30,11 +30,11 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   //窗口
   MaterialApp app;
 
-  //body上下文  得用这个
+  //body上下文
   BuildContext bodyContext;
 
-  //状态栏文字颜色是否是暗色, 默认为false
-  bool statusTextDarkColor = false;
+  //状态栏文字颜色是否是暗色, 默认为true
+  bool statusTextDarkColor = true;
 
   //是否需要标题栏，默认为true
   bool needAppBar = true;
@@ -44,6 +44,9 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
 
   //标题
   String title;
+
+  //标题文字颜色
+  Color titleColor = Colors.white;
 
   //是否中部标题栏 默认为true
   bool centerTitle = true;
@@ -88,6 +91,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
         child: Scaffold(
           resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           appBar: needAppBar ? AppBar(
+            brightness: statusTextDarkColor ? Brightness.dark : Brightness.light,
             leading: leading ??
                 new IconButton(
                   key: key_btn_left,
@@ -98,6 +102,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
                 ),
             title: new Text(title ?? "", style: TextStyle(
               fontSize: 16.0,
+              color: titleColor,
             ),),
             centerTitle: centerTitle,
             actions: <Widget>[
@@ -106,7 +111,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
             ],
             backgroundColor: titleBarBg,
             elevation: appBarElevation,
-          ) : MyEmptyAppBar(),
+          ) : null,
           body: new Builder(builder: (BuildContext context) {
             this.bodyContext = context;
             return _buildContext(body, context);
@@ -194,6 +199,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
    */
   onRefreshSuccess(int status) {
     loadStatus = status;
+    isRefresh = false;
   }
 
   /*
@@ -394,8 +400,8 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   /*
    * 返回上一场景
    */
-  void finish() {
-    Navigator.of(context).pop();
+  void finish({data}) {
+    Navigator.of(context).pop(data);
   }
 
   void showTopMessage({int status, String message}) {

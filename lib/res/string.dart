@@ -9,4 +9,7 @@ class Ids {
 
 class EventBusString {
   static final String CITY_SELECT = "city_select"; //城市选择
+
+  //记账本
+  static final String BOOK_LOADING = "book_loading"; //账本页面需要刷新
 }

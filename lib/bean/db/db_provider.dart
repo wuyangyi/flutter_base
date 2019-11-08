@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_base/config/app_config.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'db_manager.dart';
@@ -10,6 +11,7 @@ import 'db_manager.dart';
 ///
 abstract class BaseDBProvider {
   bool isTableExits = false; //数据表是否存在
+  int limit = AppConfig.PAGE_LIMIT; //数据库分页查询的条数
 
   //返回创建表的具体sql
   tableSqlString();
