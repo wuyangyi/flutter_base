@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/config/app_config.dart';
+import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/top_hint_route.dart';
 import 'package:flutter_base/utils/toast_util.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
 import 'package:flutter_base/widgets/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 ///
 /// 普通页面的基类
@@ -82,6 +85,14 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   bool isRefresh = false;
 
   bool isLoading = false;
+
+  UserBeanEntity user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = Provider.of<UserModel>(context, listen: false).user;
+  }
 
   //创建内容栏
   Widget buildBody(BuildContext context, {Widget body}) {

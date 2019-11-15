@@ -15,9 +15,11 @@ class MainBloc<OfficialAccountsBeanDataData> extends BlocListBase {
   }
 
   @override
-  Future getData({int page, bool isLoadMore}) {
+  Future getData({int userId, int page, bool isLoadMore}) {
+    // TODO: implement getData
     return null;
   }
+
 
 
 

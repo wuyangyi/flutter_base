@@ -69,6 +69,7 @@ class _FinishInfoRouteState extends BaseRouteState<FinishInfoRoute> {
     _phoneController.dispose();
     _addressController.dispose();
     _synopsisController.dispose();
+    bus.off(EventBusString.CITY_SELECT);
   }
 
   initData(){

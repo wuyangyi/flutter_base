@@ -104,9 +104,6 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
         onLoadSuccess(snapshot.data, snapshot.hasError);
         return buildListBody(
           context,
-          itemBuilder: (context, index) {
-            return getItemBuilder(context, index);
-          },
           child: getListChild(),
         );
       },
@@ -131,7 +128,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    * child和itemBuilder必须有一个不为空
    * 自己写child没有上拉加载功能，需要自己实现
    */
-  Widget buildListBody(BuildContext context, {Widget child, IndexedWidgetBuilder itemBuilder,}) {
+  Widget buildListBody(BuildContext context, {Widget child,}) {
     return buildBody(context,
       body: SmartRefresher(
         enablePullUp: false,
@@ -142,22 +139,22 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
         ),
         controller: refreshController,
         onRefresh: onRefresh,
-        child: child ?? ListView.builder(
+        child: child ?? ListView.separated(
           controller: controller,
           itemCount: enablePullUp ? mListData.length + getHeadCount() + getFloorCount() + 1 : mListData.length + getHeadCount() + getFloorCount(),
           itemBuilder: (context, index) {
-            return _getItemView(itemBuilder, index);
+            return getItemView(context, index);
           },
         ),
       ),
     );
   }
 
-  _getItemView(IndexedWidgetBuilder itemBuilder, int index) {
+  getItemView(BuildContext context, int index) {
     if (index < getHeadCount()) {
       return getHeadOrFloorView(true)[index];
     } else if (index < getHeadCount()+mListData.length) {
-      return itemBuilder;
+      return getItemBuilder(context, index);
     } else if (index < getHeadCount() + mListData.length + getFloorCount()) {
       return getHeadOrFloorView(false)[index-getHeadCount()-mListData.length];
     } else {
@@ -171,12 +168,12 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
   Future onLoadMore() async {
     print("加载更多");
     isLoadingMore = true;
-    bloc.onLoadMore();
+    bloc.onLoadMore(userId: user.id);
   }
   @override
   Future onRefresh() async {
     super.onRefresh();
-    bloc.onRefresh();
+    bloc.onRefresh(userId: user.id);
   }
 
   /*
@@ -232,7 +229,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
     return Container(
       width: double.infinity,
       height: 50.0,
-      color: Color(0xFFf8f8f8),
+      color: bodyColor,
       alignment: Alignment.center,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -295,6 +292,15 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
         });
   }
 
+  //每个item的分割线，默认没有
+  Widget getListDriver(BuildContext context, int index) {
+    return Container(
+      width: 0,
+      height: 0,
+      color: Colors.transparent,
+    );
+  }
+
   //获得头布局或者尾布局控件
   List<Widget> getHeadOrFloorView(bool isHead) {
     if (_headView.isEmpty) {
@@ -327,6 +333,12 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
   //尾布局个数
   int getFloorCount() {
     return _floorView.length;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 
 

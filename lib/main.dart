@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: <SingleChildCloneableWidget>[
         ChangeNotifierProvider.value(value: UserModel()),
         ChangeNotifierProvider.value(value: BookModel()),
+        ChangeNotifierProvider.value(value: TallyModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: AppConfig.IS_DEBUG,

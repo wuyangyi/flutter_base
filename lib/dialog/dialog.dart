@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_base/bean/userinfo_select.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
@@ -477,6 +478,496 @@ class _BookUpDialogState extends State<BookUpDialog> {
           ),
         ),
       ],
+    );
+  }
+}
+
+//3d滚动选择
+class WheelRollDialog extends StatefulWidget {
+  final String centerTitle; //标题
+  final List<String> list; //数据列表
+  final int selectIndex; //初始选中第几个
+
+  const WheelRollDialog({Key key,
+    this.centerTitle = "请选择",
+    this.list,
+    this.selectIndex = 0,
+  }) : super(key: key);
+
+  @override
+  _WheelRollDialogState createState() => _WheelRollDialogState(selectIndex);
+}
+
+class _WheelRollDialogState extends State<WheelRollDialog> {
+  ScrollController _scrollController;
+  _WheelRollDialogState(int selectIndex) {
+    _scrollController = new ScrollController(
+      initialScrollOffset: selectIndex * itemHeight,
+      keepScrollOffset: true,
+    );
+    this.selectIndex = selectIndex;
+  }
+
+  bool isScrollEndNotification = false; //滚动结束
+  double _startLocation;
+  double _endLocation;
+
+  double itemHeight = 40.0; //每个滑动项目的高度
+  int selectIndex = 0; //当前选中的位置
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 250.0,
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 50.0,
+            width: double.infinity,
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(left: 15.0, right: 15.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(width: 0.5, color: MyColors.loginDriverColor), bottom: BorderSide(width: 0.5, color: MyColors.loginDriverColor)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context, -1);
+                  },
+                  child: Text(
+                    "取消",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: MyColors.main_title_color,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.centerTitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: MyColors.title_color,
+                        fontSize: 15.0,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context, selectIndex);
+                  },
+                  child: Text(
+                    "确定",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: MyColors.main_title_color,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        color: Color(0x10F1F2F3),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: itemHeight,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(top: BorderSide(width: 1.0, color: MyColors.loginDriverColor), bottom: BorderSide(width: 1.0, color: MyColors.loginDriverColor)),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        color: Color(0x10F1F2F3),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: NotificationListener(
+                    onNotification: (ScrollNotification notification){
+                      if (notification is ScrollStartNotification) {
+                        isScrollEndNotification = false;
+                        _startLocation = notification.metrics.pixels;
+                        print("起始:$_startLocation");
+                      }
+                      //滚动结束监听
+                      if (notification is ScrollEndNotification && !isScrollEndNotification) {
+                        _endLocation = notification.metrics.pixels;
+                        print("结束:$_endLocation");
+                        isScrollEndNotification = true;
+                        double differ = _endLocation - _startLocation; //滑动的差距
+                        double offset = 0; //相对于起始位置，需要真实滑动的距离
+                        if (differ > 0) {
+                          offset = (differ.abs() ~/ itemHeight) * itemHeight;
+                          if (differ % itemHeight >= itemHeight / 2) {
+                            offset += itemHeight;
+                          }
+                          selectIndex = (_startLocation + offset) ~/ itemHeight; //记录当前位置
+                          _scrollController.jumpTo(_startLocation + offset);
+                        } else if (differ < 0) {
+                          differ = differ.abs();
+                          offset = ((differ ~/ itemHeight) * itemHeight);
+                          if ((differ % itemHeight) >= (itemHeight / 2)) {
+                            offset += itemHeight;
+                          }
+                          selectIndex = (_startLocation - offset) ~/ itemHeight; //记录当前位置
+                          _scrollController.jumpTo(_startLocation - offset);
+                        }
+
+                        print("索引:$selectIndex");
+                      }
+
+                      return true;
+                    },
+                    child: ListWheelScrollView(
+                      diameterRatio: 1.5,
+                      physics: BouncingScrollPhysics(),
+                      controller: _scrollController,
+                      itemExtent: itemHeight,
+                      children: widget.list.map((item){
+                        return Container(
+                          width: double.infinity,
+                          height: itemHeight,
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Text(
+                            item,
+                            style: TextStyle(
+                              color: MyColors.text_normal_5,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+//中间编辑弹窗
+class CenterTextFieldDialog extends StatefulWidget {
+  final String title;
+  final TextInputType inputType;
+  final int maxLength;
+  final String hintText;
+  final int maxLines;
+  final String text;
+
+  const CenterTextFieldDialog({Key key,
+    this.title,
+    this.inputType = TextInputType.text,
+    this.maxLength = -1,
+    this.hintText = "请输入",
+    this.maxLines = 5,
+    this.text = "",
+  }) : super(key: key);
+  @override
+  _CenterTextFieldDialogState createState() => _CenterTextFieldDialogState(text);
+}
+
+class _CenterTextFieldDialogState extends State<CenterTextFieldDialog> {
+  TextEditingController _controller = new TextEditingController();
+  _CenterTextFieldDialogState(String text){
+    _controller.text = text;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  color: Colors.white,
+                ),
+                padding: EdgeInsets.only(top: 20.0),
+                margin: EdgeInsets.only(left: 25.0,right: 25.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      widget.title ?? "填写信息",
+                      style: TextStyle(
+                        color: MyColors.text_normal_5,
+                        fontSize: 14.0,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    Gaps.vGap20,
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                      child: TextField(
+                        controller: _controller,
+                        textAlign: TextAlign.left,
+                        maxLines: widget.maxLines,
+                        autofocus: true,
+                        inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
+                        style: TextStyle(
+                          color: Color(0xFF363951),
+                          fontSize: 14.0,
+                        ),
+                        scrollPadding: EdgeInsets.all(0.0),
+                        keyboardType: widget.inputType,
+                        decoration: InputDecoration( //外观样式
+                          hintText: widget.hintText,
+                          contentPadding: const EdgeInsets.all(15.0),
+                          border: InputBorder.none, //去除自带的下划线
+                          hintStyle: TextStyle(
+                            color: Color(0xFFCBCDD5),
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Gaps.vGap15,
+                    Container(
+                      width: double.infinity,
+                      height: 45.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(20.0), bottomLeft: Radius.circular(20.0)),
+                      ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context, null);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: MyColors.loginDriverColor,
+                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0)),
+                                ),
+                                child: Text(
+                                  "取消",
+                                  style: TextStyle(
+                                    color: MyColors.text_normal_5,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context, _controller.text);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: MyColors.main_color,
+                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(20.0)),
+                                ),
+                                child: Text(
+                                  "确定",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+//中间提示弹窗
+class CenterHintDialog extends StatelessWidget {
+  final String text;
+
+  const CenterHintDialog({Key key, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.white,
+                ),
+                padding: EdgeInsets.only(top: 20.0),
+                margin: EdgeInsets.only(left: 25.0,right: 25.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 15.0),
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints(
+                        minHeight: 80.0
+                      ),
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: MyColors.title_color,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 45.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)),
+                      ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context, null);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: MyColors.loginDriverColor,
+                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15.0)),
+                                ),
+                                child: Text(
+                                  "取消",
+                                  style: TextStyle(
+                                    color: MyColors.text_normal_5,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context, 1);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: MyColors.main_color,
+                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.0)),
+                                ),
+                                child: Text(
+                                  "确定",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

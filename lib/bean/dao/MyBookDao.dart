@@ -2,6 +2,7 @@
 import 'package:flutter_base/bean/db/db_provider.dart';
 
 import '../my_book_bean_entity.dart';
+import 'MyTallyDao.dart';
 /*
  * 我的账本
  */
@@ -31,11 +32,22 @@ class MyBookDao extends BaseDBProvider{
   }
 
   //查询所有
-  Future<List<MyBookBeanEntity>> findAllData() async {
+  Future<List<MyBookBeanEntity>> findAllData(int userId, {Function callBack}) async {
     var db = await getDataBase();
     List<Map> result = await db.query(name);
     List<MyBookBeanEntity> data = [];
-    result.forEach((item) => data.add(MyBookBeanEntity.fromJson(item)));
+    if (result.length > 0) {
+      for(int i = 0; i < result.length; i++) {
+        MyBookBeanEntity myBookBeanEntity = MyBookBeanEntity.fromJson(result[i]);
+        myBookBeanEntity.pay = await MyTallyDao().findNumber(userId, bookId: myBookBeanEntity.id, type: "支出");
+        myBookBeanEntity.income = await MyTallyDao().findNumber(userId, bookId: myBookBeanEntity.id, type: "收入");
+        data.add(myBookBeanEntity);
+      }
+      print("数据大小：${data.length}");
+    }
+    if (callBack != null) {
+      callBack(data);
+    }
     return data;
   }
 
@@ -55,10 +67,14 @@ class MyBookDao extends BaseDBProvider{
 
   //保存账单
   Future saveData(MyBookBeanEntity data) async {
-    if (data.id == null || findById(data.id) == null) {
-      insertData(data);
+    if (data.id == null) {
+      return await insertData(data);
+    }
+    var myBookBeanEntity = await findById(data.id);
+    if (myBookBeanEntity == null) {
+      return await insertData(data);
     } else {
-      upBookInfoDate(data);
+      return await upBookInfoDate(data);
     }
   }
 
@@ -72,13 +88,14 @@ class MyBookDao extends BaseDBProvider{
   //更新数据
   Future upBookInfoDate(MyBookBeanEntity data) async {
     var db = await getDataBase();
-    return db.update(name, data.toJson(), where: "id = ?", whereArgs: [data.id]);
+    return await db.update(name, data.toJson(), where: "id = ?", whereArgs: [data.id]);
   }
 
   //根据id查询一条数据
   Future<MyBookBeanEntity> findById(int id) async {
     var db = await getDataBase();
     List<Map> result = await db.query(name, where: 'id = ?', whereArgs: [id]);
+    print("账本数据Id查询：$result");
     if (result.length > 0) {
       return MyBookBeanEntity.fromJson(result.first);
     }

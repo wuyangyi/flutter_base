@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
+import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 
@@ -57,9 +58,98 @@ class BookModel extends ChangeNotifier {
 
   void clearAll() {
     _books.clear();
+    notifyListeners();
   }
 
   void removeOne(int index) {
     _books.removeAt(index);
+    notifyListeners();
+  }
+
+  void update(MyBookBeanEntity data) {
+    for(int i = 0; i< _books.length; i++) {
+      if (_books[i].id == data.id) {
+        _books[i] = data;
+      }
+    }
+  }
+}
+
+//本月账单列表
+class TallyModel extends ChangeNotifier {
+  //用于保存本月账单列表
+  final List<MyTallyBeanEntity> _tally = [];
+
+  List<MyTallyBeanEntity> get tally => _tally;
+
+  void add(MyTallyBeanEntity myTallyBeanEntity) {
+    _tally.add(myTallyBeanEntity);
+    notifyListeners();
+  }
+
+  void addAll(List<MyTallyBeanEntity> myTallyBeanEntitys) {
+    _tally.addAll(myTallyBeanEntitys);
+    notifyListeners();
+  }
+
+  void clearAll() {
+    _tally.clear();
+    notifyListeners();
+  }
+
+  void removeOne(int id) {
+    for(int i = 0; i < _tally.length; i++) {
+      if (id == _tally[i].id) {
+        _tally.removeAt(i);
+        return;
+      }
+    }
+    notifyListeners();
+  }
+
+  void update(MyTallyBeanEntity data) {
+    for(int i = 0; i< _tally.length; i++) {
+      if (_tally[i].id == data.id) {
+        _tally[i] = data;
+      }
+    }
+    notifyListeners();
+  }
+
+  //获得某本账本本月的账单
+  List<MyTallyBeanEntity> getTallyByBookId(int bookId) {
+    List<MyTallyBeanEntity> data = [];
+    _tally.forEach((item){
+      if (item.bookId == bookId) {
+        data.add(item);
+      }
+    });
+    return data;
+  }
+
+  //本月支出
+  double getPay(int bookId) {
+    double pay = 0.00;
+    _tally.forEach((item){
+      if (item.type == "支出") {
+        if (item.bookId == bookId) {
+          pay += item.money;
+        }
+      }
+    });
+    return pay;
+  }
+
+  //本月收入
+  double getIncome(int bookId) {
+    double income = 0.00;
+    _tally.forEach((item){
+      if (item.type == "收入") {
+        if (item.bookId == bookId) {
+          income += item.money;
+        }
+      }
+    });
+    return income;
   }
 }

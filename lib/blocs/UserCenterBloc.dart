@@ -19,7 +19,7 @@ class UserCenterBloc<MyCoinDescInfoBeanDataData> extends BlocListBase {
   }
 
   @override
-  Future getData({int page, bool isLoadMore}) async {
+  Future getData({int userId, int page, bool isLoadMore}) async {
     return await NetClickUtil().getCoinList(page).then((data){
       subjectSink.add(data);
     }).catchError((_) {

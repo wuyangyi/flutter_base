@@ -10,8 +10,8 @@ class MyBookBloc<MyBookBeanEntity> extends BlocListBase {
   }
 
   @override
-  Future getData({int page, bool isLoadMore}) async {
-    return await MyBookDao().findAllData().then((data) {
+  Future getData({int userId, int page, bool isLoadMore}) async {
+    return await MyBookDao().findAllData(userId).then((data) {
       subjectSink.add(data);
     }).catchError((_){
     });

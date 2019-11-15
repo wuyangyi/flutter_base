@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_base/bean/book_type_bean.dart';
 import 'package:flutter_base/bean/userinfo_select.dart';
+import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/utils/toast_util.dart';
 
 class Util {
@@ -149,6 +151,69 @@ class Util {
       list[index].selected = index == selected;
     }
     return list;
+  }
+
+  //获得当前账单的图标和颜色
+  static BookItemBean getBookItemBean(String useType, String type, String bookType) {
+    BookItemBean bookItemBean;
+    DataConfig.bookTypes.forEach((item){
+      if (item.title == bookType) {
+        if (type == "支出") {
+          item.pay.forEach((data){
+            if (data.name == useType) {
+              bookItemBean = data;
+            }
+          });
+        } else {
+          item.income.forEach((data){
+            if (data.name == useType) {
+              bookItemBean = data;
+            }
+          });
+        }
+      }
+    });
+    return bookItemBean;
+  }
+
+  /*
+   * 根据年月，获取最大天数
+   */
+  static int getMaxDay(int year, int month) {
+    int maxDay = 30;
+    switch(month) {
+      case 1:
+      case 3:
+      case 5:
+      case 7:
+      case 8:
+      case 10:
+      case 12:
+        maxDay = 31;
+        break;
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+        maxDay = 30;
+        break;
+      case 2:
+        if (year % 100 == 0) { //整百年  能整除400为闰年
+          if (year % 400 == 0) {
+            maxDay = 29;
+          } else {
+            maxDay = 28;
+          }
+        } else { //非整百年，能整除4位闰年
+          if (year % 4 == 0) {
+            maxDay = 29;
+          } else {
+            maxDay = 28;
+          }
+        }
+        break;
+    }
+    return maxDay;
   }
 
 }

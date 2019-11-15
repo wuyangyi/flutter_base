@@ -4,11 +4,11 @@ import 'package:rxdart/rxdart.dart';
 
 abstract class BlocBase<D> {
 
-  Future getData({int page, bool isLoadMore});
+  Future getData({int userId, int page, bool isLoadMore});
 
-  Future onRefresh();
+  Future onRefresh({int userId,});
 
-  Future onLoadMore();
+  Future onLoadMore({int userId,});
 
   void dispose();
 }
@@ -24,20 +24,25 @@ abstract class BlocListBase<D extends BaseBean> extends BlocBase{
   Sink<List<D>> get subjectSink => _subject.sink;
   Stream<List<D>> get subjectStream => _subject.stream;
   int page = 0;
+  Map maps; //条件
 
   @override
-  Future onLoadMore() {
+  Future onLoadMore({int userId,}) {
     page++;
-    return getData(page: page, isLoadMore: true);
+    return getData(page: page, isLoadMore: true, userId: userId);
   }
 
   @override
-  Future onRefresh() {
+  Future onRefresh({int userId,}) {
     initPage();
-    return getData(page: page, isLoadMore: false);
+    return getData(page: page, isLoadMore: false, userId: userId);
   }
 
   void initPage();
+
+  void initCondition(Map map){
+    this.maps = map;
+  }
 
   @override
   void dispose() {

@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/blocs/MyBookBloc.dart';
+import 'package:flutter_base/blocs/MyTallyBloc.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/tally_book/tally_list_route.dart';
 import 'package:flutter_base/routes/tally_book/tally_route.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:provider/provider.dart';
 
 import 'add_tally_route.dart';
+import 'my_route.dart';
 
 class BookHomeRoute extends BaseRoute {
   @override
@@ -77,15 +80,11 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
 
     _bodys = [
       BlocProvider(child: TallyRoute(context), bloc: MyBookBloc(),),
-      Center(
-        child: Text(appBarTitles[1]),
-      ),
+      BlocProvider(child: TallyListRoute(context), bloc: MyTallyBloc(),),
       Center(
         child: Text(appBarTitles[2]),
       ),
-      Center(
-        child: Text(appBarTitles[3]),
-      ),
+      MyRoute(context),
     ];
   }
 

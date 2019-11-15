@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_base/base/web_scaffold.dart';
 import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/login_route.dart';
@@ -39,6 +40,16 @@ class NavigatorUtil {
         builder: (context){
           return route;
         }
+    ));
+  }
+
+  ///打开webview
+  static void pushWeb(BuildContext context,
+      {String title, String url}) {
+    if (context == null || url == null || url.isEmpty) return;
+    NavigatorUtil.pushPageByRoute(context, WebScaffold(
+      title: title,
+      url: url,
     ));
   }
 }

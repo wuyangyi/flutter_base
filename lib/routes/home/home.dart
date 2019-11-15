@@ -35,7 +35,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
   ];
   PageController _pageController = new PageController(
     /**视图比例**/
-    viewportFraction: 0.8,
+    viewportFraction: 0.82,
   );
 
   _HomeRouteState(){

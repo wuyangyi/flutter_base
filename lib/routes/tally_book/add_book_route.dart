@@ -33,6 +33,7 @@ class _AddBookRouteState extends BaseRouteState<AddBookRoute> {
   TextEditingController _controllerName = TextEditingController();
   int _colorIndex;
   UserBeanEntity user;
+  BookModel bookModel;
   MyBookBeanEntity bookBean;
 
   _AddBookRouteState(this.bookBean){
@@ -55,6 +56,7 @@ class _AddBookRouteState extends BaseRouteState<AddBookRoute> {
   void initState() {
     super.initState();
     user = Provider.of<UserModel>(context, listen: false).user;
+    bookModel = Provider.of<BookModel>(context, listen: false);
     //初始化数据，兼容修改账本信息的情况
     _controllerType.text = bookBean?.type ?? DataConfig.bookTypes[bookTypeSelectIndex].title; //默认为日常
     _controllerName.text = bookBean?.name ?? "";
@@ -174,13 +176,17 @@ class _AddBookRouteState extends BaseRouteState<AddBookRoute> {
                     income: 0.00,
                     userId: user.id,
                   );
+                  int id = await NetClickUtil().saveBook(bookBean);
+                  bookBean.id = id;
+                  bookModel.add(bookBean);
                 } else {
                   bookBean.type = _controllerType.text;
                   bookBean.name = _controllerName.text;
                   bookBean.color = _colorIndex;
+                  bookModel.update(bookBean);
+                  await NetClickUtil().saveBook(bookBean);
                 }
-                await NetClickUtil().saveBook(bookBean);
-                bus.emit(EventBusString.BOOK_LOADING, true);
+//                bus.emit(EventBusString.BOOK_LOADING, true);
                 hideWaitDialog();
                 showTopMessage();
                 Observable.just(1).delay(new Duration(seconds: 2)).listen((_){

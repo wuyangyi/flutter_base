@@ -51,6 +51,9 @@ class _InputTextFieldState extends State<InputTextField> {
       height: widget.height == null ? double.infinity : widget.height,
       alignment: Alignment.centerLeft,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
             alignment: Alignment.center,

@@ -18,7 +18,7 @@ class MyTallyBeanEntity extends BaseBean {
 	int month; //月
 	int day; //日
 
-	MyTallyBeanEntity({this.useType, this.address, this.money, this.userId, this.comment, this.bookId, this.time, this.type});
+	MyTallyBeanEntity({this.useType, this.address, this.money, this.userId, this.comment, this.bookId, this.time, this.type, this.year, this.month, this.day});
 
 	MyTallyBeanEntity.fromJson(Map<String, dynamic> json) {
 		useType = json['use_type'];
