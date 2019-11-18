@@ -8,8 +8,9 @@ import 'package:flutter_base/widgets/widgets.dart';
 class StatusView extends StatefulWidget {
   final int status;
   final GestureTapCallback onTap;
+  final bool enableEmptyClick;
 
-  const StatusView({Key key, this.status, this.onTap}) : super(key: key);
+  const StatusView({Key key, this.status, this.onTap, this.enableEmptyClick = false}) : super(key: key);
   @override
   _StatusViewState createState() => _StatusViewState(status);
 }
@@ -27,6 +28,9 @@ class _StatusViewState extends State<StatusView> {
             color: Colors.white,
             child: new InkWell(
               onTap: () {
+                if (!widget.enableEmptyClick) {
+                  return;
+                }
                 setState(() {
                   status = Status.loading;
                 });
@@ -62,6 +66,9 @@ class _StatusViewState extends State<StatusView> {
             color: Colors.white,
             child: new InkWell(
               onTap: () {
+                if (!widget.enableEmptyClick) {
+                  return;
+                }
                 setState(() {
                   status = Status.loading;
                 });

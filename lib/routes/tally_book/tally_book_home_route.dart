@@ -12,6 +12,7 @@ import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:provider/provider.dart';
 
 import 'add_tally_route.dart';
+import 'chart_route.dart';
 import 'my_route.dart';
 
 class BookHomeRoute extends BaseRoute {
@@ -81,9 +82,7 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
     _bodys = [
       BlocProvider(child: TallyRoute(context), bloc: MyBookBloc(),),
       BlocProvider(child: TallyListRoute(context), bloc: MyTallyBloc(),),
-      Center(
-        child: Text(appBarTitles[2]),
-      ),
+      ChartRoute(context),
       MyRoute(context),
     ];
   }

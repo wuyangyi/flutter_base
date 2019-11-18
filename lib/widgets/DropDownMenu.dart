@@ -88,7 +88,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
           child: ExpansionLayout(
             isExpanded: showMenu,
             children: <Widget>[
-              menuBean[selectIndex].dropListWidget ?? Container(height: 0, width: 0,),
+              menuBean.isEmpty ? Container() : menuBean[selectIndex]?.dropListWidget ?? Container(height: 0, width: 0,),
             ],
           ),
         ),

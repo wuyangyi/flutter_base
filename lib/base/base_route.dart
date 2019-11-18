@@ -155,10 +155,10 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
     if (showStartCenterLoading && loadStatus != Status.success) {
       return StatusView(
         status: loadStatus,
+        enableEmptyClick: enableEmptyClick,
         onTap: () {
           if (enableEmptyClick) {
             onRefresh();
-
           }
         },
       );

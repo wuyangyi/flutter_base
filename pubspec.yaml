@@ -40,6 +40,7 @@ dependencies:
   random_string: ^1.1.0
   image_picker: ^0.6.1+10 #图片选择或者视频选择
   intl: ^0.15.7 #国际化
+#  path_drawing: ^0.4.0 #绘制虚线
 
 dev_dependencies:
   flutter_test:

@@ -77,7 +77,6 @@ class _StartRouteState extends State<StartRoute> with SingleTickerProviderStateM
       }
 
     });
-
   }
 
   void _cancelTimer() {

@@ -158,8 +158,6 @@ class _AddTallyRouteState extends BaseRouteState<AddTallyRoute> {
       } else {
         books[selectBookIndex].income += resultData;
       }
-
-      bus.emit(EventBusString.TALLY_LOADING, true); //通知账单刷新
       int myId = -1;
       if (isUpdateTally) {
         myId = myTallyBean?.id;
@@ -192,6 +190,7 @@ class _AddTallyRouteState extends BaseRouteState<AddTallyRoute> {
           Navigator.pop(widget.oldContext);
         }
       }
+      bus.emit(EventBusString.TALLY_LOADING, true);
       hideWaitDialog();
       finish();
     } else if (data.isDelete()) {

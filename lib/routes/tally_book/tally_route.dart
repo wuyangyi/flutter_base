@@ -278,6 +278,7 @@ class _TallyRouteState extends BaseListRouteState<TallyRoute, MyBookBeanEntity, 
                                   showWaitDialog();
                                   await NetClickUtil().removeBook(user.id, mListData[index].id, (){
                                     mListData.removeAt(index);
+                                    tallyModel.clearAll();
                                     hideWaitDialog();
                                   });
                                 }

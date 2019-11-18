@@ -58,19 +58,19 @@ class _TallyMileageRouteState extends BaseRouteState<TallyMileageRoute> {
     monthTallyNumber = tallyModel.tally.length;
     allBookNumber = bookModel.books.length;
     tallyModel.tally.forEach((item){
-      monthMoney += item.month;
+      monthMoney += item.money;
       if (item.type == "支出") {
-        monthPay += item.month;
+        monthPay += item.money;
       } else {
-        monthIncome += item.month;
+        monthIncome += item.money;
       }
       if (item.time == "${nowTime.year}-${nowTime.month}-${nowTime.day}") {
         dayTallyNumber++;
-        dayMoney = dayMoney + item.month;
+        dayMoney = dayMoney + item.money;
         if (item.type == "支出") {
-          dayPay += item.month;
+          dayPay += item.money;
         } else {
-          dayPay += item.month;
+          dayPay += item.money;
         }
       }
     });

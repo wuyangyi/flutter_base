@@ -8,6 +8,7 @@ import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/dialog/dialog.dart';
 import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/utils/event_bus.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/line.dart';
@@ -72,6 +73,7 @@ class _TallyDetailsRouteState extends BaseRouteState<TallyDetailsRoute> {
         }
         bookModel.update(myBookBean);
       }
+      bus.emit(EventBusString.TALLY_LOADING, true); //通知更新
       showToast("删除成功");
       finish();
     }

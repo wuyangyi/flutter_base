@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_base/bean/book_type_bean.dart';
+import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/userinfo_select.dart';
 import 'package:flutter_base/config/data_config.dart';
+import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/toast_util.dart';
 
 class Util {
@@ -173,6 +177,7 @@ class Util {
         }
       }
     });
+    print("颜色：${bookItemBean.name}");
     return bookItemBean;
   }
 
@@ -215,5 +220,66 @@ class Util {
     }
     return maxDay;
   }
+
+  //获取当前账单的类别
+  static BookItemBean getTallyTypeByBookId(int bookId, List<MyBookBeanEntity> books, String useType, String type) {
+    BookItemBean bookItemBean;
+    books.forEach((item){
+      if (item.id == bookId) {
+        bookItemBean = getBookItemBean(useType, type, item.type);
+      }
+    });
+    if (bookItemBean == null) {
+      print("123456: $useType");
+      int i = Random().nextInt(DataConfig.bookTypes.length);
+      int j = Random().nextInt(type == "支出" ? DataConfig.bookTypes[i].pay.length : DataConfig.bookTypes[i].income.length);
+      bookItemBean = DataConfig.bookTypes[i].pay[j];
+    }
+    return bookItemBean;
+  }
+
+  //获得最大值
+  static double max(double a, double b) {
+    if (a > b) {
+      return a;
+    } else {
+      return b;
+    }
+  }
+
+  //获得一行文字的最大高度
+  static double getMaxHeight(String text, TextStyle textStyle) {
+    double maxHeight = 0;
+    text.runes.forEach((rune) {
+      String str = new String.fromCharCode(rune);
+      TextSpan span = new TextSpan(style: textStyle, text: str);
+      TextPainter tp = new TextPainter(
+          text: span,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr
+      );
+      tp.layout();
+      maxHeight = max(tp.height, maxHeight);
+    });
+    return maxHeight;
+  }
+
+  //获得文字的宽度和
+  static double findAllWidth(String text, TextStyle textStyle) {
+    double manWidth = 0;
+    text.runes.forEach((rune) {
+      String str = new String.fromCharCode(rune);
+      TextSpan span = new TextSpan(style: textStyle, text: str);
+      TextPainter tp = new TextPainter(
+          text: span,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr
+      );
+      tp.layout();
+      manWidth = manWidth + tp.width;
+    });
+    return manWidth;
+  }
+
 
 }

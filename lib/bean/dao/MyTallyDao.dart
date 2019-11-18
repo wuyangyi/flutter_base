@@ -135,7 +135,8 @@ class MyTallyDao extends BaseDBProvider{
 //      list.add(type);
 //    }
     var db = await getDataBase();
-    int offset = page * limit + 1;
+    int offset = page * limit;
+    print("分页offset: $offset");
     List<Map> result = await db.query(
       name,
       limit: limit,

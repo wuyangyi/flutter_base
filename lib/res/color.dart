@@ -11,6 +11,7 @@ class MyColors{
   static const Color loginDriverColor = Color(0xFFE7E7E7);
   static const Color selectColor = Color(0xFF3388FF);
   static const Color buttonNoSelectColor = Color(0xFF999999);
+  static const Color lineColor = Color(0xFFCCCCCC);
   static const Color home_bg = Color(0xFFF1F2F3);
   static const Color home_body_bg = Color(0xFFF0F0F0);
   static const Color finishDriverColor = Color(0xFFDEDEDE);

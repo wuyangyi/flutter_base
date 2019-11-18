@@ -5,6 +5,7 @@ import 'package:flutter_base/bean/dao/MyBookDao.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/blocs/MyTallyBloc.dart';
+import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/index.dart';
@@ -38,9 +39,10 @@ class _TallyListRouteState extends BaseListRouteState<TallyListRoute, MyTallyBea
 //    titleBarBg = Colors.white;
 //    titleColor = MyColors.title_color;
 //    statusTextDarkColor = false;
-    showStartCenterLoading = true;
+    showStartCenterLoading = false;
     resizeToAvoidBottomInset = false;
     leading = Container();
+    enableEmptyClick = false;
   }
 
   List<MenuBean> menuBeans = [];
@@ -52,6 +54,7 @@ class _TallyListRouteState extends BaseListRouteState<TallyListRoute, MyTallyBea
     super.initState();
     bookModel = Provider.of<BookModel>(context, listen: false);
     books = bookModel.books;
+    initMenu();
     MyBookDao().findAllData(user.id, callBack: (data) async {
       bookModel.clearAll();
       bookModel.addAll(data);
@@ -62,11 +65,16 @@ class _TallyListRouteState extends BaseListRouteState<TallyListRoute, MyTallyBea
       setState(() {
         loadStatus = Status.success;
       });
+    }).catchError((_){
+      setState(() {
+        bookModel.addAll([]);
+        initMenu();
+        loadStatus = Status.empty;
+      });
     });
     bus.on(EventBusString.TALLY_LOADING, (need){
-      if (need) {
-        onRefresh();
-      }
+      print("账单页面刷新  $loadStatus");
+      doRefresh();
     });
   }
 
@@ -132,7 +140,6 @@ class _TallyListRouteState extends BaseListRouteState<TallyListRoute, MyTallyBea
     return buildBody(context,
       body: Column(
         children: <Widget>[
-
           Expanded(
             flex: 1,
             child: DropDownMenu(
