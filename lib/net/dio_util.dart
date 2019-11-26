@@ -35,8 +35,10 @@ class HttpUtils {
 
   /// request method
   static Future<Map> request (
-      String url,
-      { data, method, Map<String, String> mapApi}) async {
+      String url, {
+        data, method,
+        Map<String, String> mapApi,
+      }) async {
 
     data = data ?? {};
     method = method ?? 'GET';

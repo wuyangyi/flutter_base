@@ -5,6 +5,10 @@ import 'package:flutter_base/bean/city_bean_entity.dart';
 import 'package:flutter_base/bean/dao/MyBookDao.dart';
 import 'package:flutter_base/bean/dao/MyTallyDao.dart';
 import 'package:flutter_base/bean/dao/UserDao.dart';
+import 'package:flutter_base/bean/music/music_all_bean_entity.dart';
+import 'package:flutter_base/bean/music/music_search_hot_key_entity.dart';
+import 'package:flutter_base/bean/music/music_singer_bean_entity.dart';
+import 'package:flutter_base/bean/music/recommend_bean_entity.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
@@ -17,6 +21,7 @@ import 'package:flutter_base/utils/utils.dart';
 import 'dart:convert';
 
 import 'dio_util.dart';
+import 'music_dio_util.dart';
 
 class NetClickUtil {
   static final String USER_LOGIN = "user/login"; //登录
@@ -144,6 +149,73 @@ class NetClickUtil {
     await MyTallyDao().removeDataByBookId(userId, bookId, callBack: () async { //删除关于此账本的账单
       await MyBookDao().removeDataById(bookId, callBack: onCallBack); //删除账本
     });
+  }
 
+
+
+  ///音乐播放器
+  //首页推荐
+  static final String MUSCI_HOME_RECOMMEND = "musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=jsonp&platform=h5&uin=0&needNewCode=1&jsonpCallback=jp0";
+  static final String MUSIC_SEARCH_HOTKEY = "splcloud/fcgi-bin/gethotkey.fcg?g_tk=531708863&uin=1297716249&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=h5&needNewCode=1&_=1545026658181";
+  static final String MUSIC_SINGER = "v8/fcg-bin/v8.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=jsonp&channel=singer&page=list&key=all_all_all&hostUin=0&needNewCode=0&platform=yqq&jsonpCallback=jp0";
+
+  //http://ustbhuangyi.com/music/api/getDiscList?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&platform=yqq&hostUin=0&sin=0&ein=29&sortId=5&needNewCode=0&categoryId=10000000&rnd=0.23358193201300614
+  //https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg?g_tk=531708863&uin=1297716249&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=h5&needNewCode=1&_=1545026658181
+  //https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=jsonp&uin=0&needNewCode=1&platform=h5&jsonpCallback=jp0
+  //https://c.y.qq.com/v8/fcg-bin/v8.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=jsonp&channel=singer&page=list&key=all_all_all&pagesize=100&pagenum=1&hostUin=0&needNewCode=0&platform=yqq&jsonpCallback=jp0
+
+  /*
+   * 首页推荐
+   */
+  Future<RecommendBeanData> getMusicRecommendData({Function callBack}) async {
+    var response = await MusicHttpUtils.request(MUSCI_HOME_RECOMMEND, method: MusicHttpUtils.GET);
+    if (response == null || response["data"] == null) {
+      return null;
+    }
+    RecommendBeanData data = RecommendBeanData.fromJson(response["data"]);
+    if (callBack != null) {
+      callBack(data);
+    }
+    print("数据L:${response.toString()}");
+    return data;
+  }
+
+
+  /*
+   * 搜索热词
+   */
+  Future<List<MusicSearchHotKeyHotkey>> getMusicSearchHotKey({Function callBack}) async {
+    var response = await MusicHttpUtils.request(MUSIC_SEARCH_HOTKEY, method: MusicHttpUtils.GET);
+    if (response == null || response["data"] == null) {
+      return null;
+    }
+    MusicSearchHotKeyEntity data = MusicSearchHotKeyEntity.fromJson(response["data"]);
+    if (callBack != null) {
+      callBack(data.hotkey);
+    }
+    print("数据L:${response.toString()}");
+    return data.hotkey;
+  }
+
+
+  //&pagesize=100&pagenum=2
+  /*
+   * 歌手
+   * pagesize 一个的个数
+   * pagenum 页面
+   */
+  Future<List<MusicSingerBeanList>> getMusicSinger(int page, int pageSize, {Function callBack}) async {
+    addMap("pagenum", page.toString());
+    addMap("pagesize", pageSize.toString());
+    var response = await MusicHttpUtils.request(MUSIC_SINGER, method: MusicHttpUtils.GET, mapApi: mapApi);
+    if (response == null || response["data"] == null) {
+      return null;
+    }
+    MusicSingerBeanEntity data = MusicSingerBeanEntity.fromJson(response["data"]);
+    if (callBack != null) {
+      callBack(data.xList);
+    }
+    print("数据L:${response.toString()}");
+    return data.xList;
   }
 }

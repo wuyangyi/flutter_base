@@ -72,8 +72,8 @@ class _ChartRouteState extends BaseRouteState<ChartRoute> {
     bus.off(EventBusString.TALLY_LOADING);
   }
 
-  void getData() {
-    MyBookDao().findAllData(user.id, callBack: (bookData) {
+  void getData() async {
+    await MyBookDao().findAllData(user.id, callBack: (bookData) {
       books = bookData;
       MyTallyDao().findData(user.id, onCallBack: (data){
         setState(() {

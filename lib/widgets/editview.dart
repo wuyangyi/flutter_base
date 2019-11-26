@@ -20,6 +20,8 @@ class InputTextField extends StatefulWidget {
   final OnTextChange onTextChange;
   final int maxLines;
   final TextAlign textAlign;
+  final bool autofocus;
+  final EdgeInsetsGeometry padding;
   InputTextField({
     this.height,
     this.leftIcon,
@@ -33,6 +35,8 @@ class InputTextField extends StatefulWidget {
     this.onTextChange,
     this.maxLines = 1,
     this.textAlign = TextAlign.left,
+    this.autofocus = false,
+    this.padding = const EdgeInsets.only(left: 15.0, right: 15.0),
   });
   @override
   State<StatefulWidget> createState() {
@@ -70,6 +74,7 @@ class _InputTextFieldState extends State<InputTextField> {
                 textAlign: widget.textAlign,
                 enabled: widget.enable,
                 maxLines: widget.maxLines,
+                autofocus: widget.autofocus,
                 inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
                 style: TextStyle(
                   color: Color(0xFF363951),
@@ -79,7 +84,7 @@ class _InputTextFieldState extends State<InputTextField> {
                 keyboardType: widget.inputType,
                 decoration: InputDecoration( //外观样式
                   hintText: widget.hintText,
-                  contentPadding: const EdgeInsets.all(15.0),
+                  contentPadding: widget.padding,
                   border: InputBorder.none, //去除自带的下划线
                   hintStyle: TextStyle(
                     color: Color(0xFFCBCDD5),

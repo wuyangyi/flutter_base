@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/config/application.dart';
+import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
@@ -42,7 +43,8 @@ class _StartRouteState extends State<StartRoute> with SingleTickerProviderStateM
     controller.forward();
   }
 
-  dispose() {
+  @override
+  void dispose() {
     controller.dispose();
     super.dispose();
   }
@@ -88,6 +90,7 @@ class _StartRouteState extends State<StartRoute> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    DataConfig.appSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: MyColors.startBg,
       body: Container(

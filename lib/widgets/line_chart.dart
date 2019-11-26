@@ -324,7 +324,7 @@ class LineChartPainter extends CustomPainter {
 
       //绘制上面的显示信息
       String showValueText = "金额：${getValueByTime(xStart + showDetailOffset)}";
-      String timeText = "${xStart + showDetailOffset}日";
+      String timeText = "${xStart + showDetailOffset}$xUnit";
       double reWidth = Util.findAllWidth(showValueText, topDetailTextStyle);
       double reHeight = Util.getMaxHeight(timeText, topDetailTextStyle) + Util.getMaxHeight(showValueText, topDetailTextStyle);
       RRect rRect = RRect.fromLTRBR(

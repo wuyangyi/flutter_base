@@ -55,10 +55,11 @@ class _TallyRouteState extends BaseListRouteState<TallyRoute, MyBookBeanEntity, 
     bookModel = Provider.of<BookModel>(context, listen: false);
     tallyModel = Provider.of<TallyModel>(context, listen: false);
     mListData = bookModel.books;
-//    bus.on(EventBusString.BOOK_LOADING, (isNeed){
-//      onRefresh();
-//    });
-    MyBookDao().findAllData(user.id, callBack: (data) async {
+    getData();
+  }
+
+  void getData() async {
+    await MyBookDao().findAllData(user.id, callBack: (data) async {
       bookModel.clearAll();
       bookModel.addAll(data);
       if (mListData != null) {

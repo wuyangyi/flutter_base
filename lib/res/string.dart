@@ -13,6 +13,12 @@ class EventBusString {
   static final String TALLY_LOADING = "tally_loading"; //账单页面需要刷新
   //关闭下拉菜单
   static final String CLOSE_MENU = "close_menu"; //关闭菜单栏
+
+  //音乐播放进度
+  static final String MUSIC_PROGRESS = "music_progress";
+
+  //音乐播放状态
+  static final String MUSIC_PLAY_STATE = "music_play_state";
 }
 
 class HeroString {

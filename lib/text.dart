@@ -1,4 +1,5 @@
 void main() {
-  int i = 8;
-  print(i ~/ 3);
+  String text = "js({dasdsads})";
+  print(text.indexOf("{"));
+  print(text.lastIndexOf("}"));
 }

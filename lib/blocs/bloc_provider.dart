@@ -17,6 +17,11 @@ abstract class BlocDataBase<D extends BaseBean> extends BlocBase {
   BehaviorSubject<D> _subject = BehaviorSubject<D>();
   Sink<D> get subjectSink => _subject.sink;
   Stream<D> get subjectStream => _subject.stream;
+
+  @override
+  void dispose() {
+//    _subject.close();
+  }
 }
 //列表加载的抽象类
 abstract class BlocListBase<D extends BaseBean> extends BlocBase{
@@ -66,23 +71,39 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   _BlocProviderState<T> createState() => _BlocProviderState<T>();
 
   static T of<T extends BlocBase>(BuildContext context) {
-    final type = _typeOf<BlocProvider<T>>();
-    BlocProvider<T> provider = context.ancestorWidgetOfExactType(type);
-    return provider.bloc;
+    final type = _typeOf<_BlocProviderInherited<T>>();
+    _BlocProviderInherited<T> provider = context.ancestorInheritedElementForWidgetOfExactType(type)?.widget;
+    return provider?.bloc;
   }
 
   static Type _typeOf<T>() => T;
 }
 
-class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
+class _BlocProviderState<T extends BlocBase> extends State<BlocProvider<BlocBase>> {
   @override
   void dispose() {
-    if (widget.userDispose) widget.bloc.dispose();
+    if (widget.userDispose) widget.bloc?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return new _BlocProviderInherited<T>(
+      child: widget.child,
+      bloc: widget.bloc,
+    );
   }
+}
+
+class _BlocProviderInherited<T> extends InheritedWidget {
+  _BlocProviderInherited({
+    Key key,
+    @required Widget child,
+    @required this.bloc,
+  }) : super(key: key, child: child);
+
+  final T bloc;
+
+  @override
+  bool updateShouldNotify(_BlocProviderInherited oldWidget) => false;
 }

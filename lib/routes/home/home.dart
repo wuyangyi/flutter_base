@@ -4,21 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/home_app_bean.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
+import 'package:flutter_base/blocs/MainBloc.dart';
+import 'package:flutter_base/blocs/MusicRecommendBloc.dart';
 import 'package:flutter_base/blocs/UserCenterBloc.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
+import 'package:flutter_base/dialog/dialog.dart';
+import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/net/network.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/music/music_home_route.dart';
 import 'package:flutter_base/routes/tally_book/tally_book_home_route.dart';
 import 'package:flutter_base/routes/user_center/user_center_route.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
+import 'package:flutter_base/utils/toast_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../about_us_route.dart';
 import '../login_route.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class HomeRoute extends BaseRoute {
   @override
@@ -29,7 +36,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
   UserBeanEntity user;
   List<HomeAppBean> homeAppBeans = [
     HomeAppBean("记账本", "\"小小记账本，一键记账，给你舒适的理财投资便捷享受！\"", "ic_book", route: BookHomeRoute()),
-    HomeAppBean("音乐播放器", "\"耳目一新的乐库，新歌速递、权威榜单、精选歌单，你要找的音乐，都在这里，开启欲罢不能的音乐之旅！\"", "ic_music"),
+    HomeAppBean("音乐播放器", "\"耳目一新的乐库，新歌速递、权威榜单、精选歌单，你要找的音乐，都在这里，开启欲罢不能的音乐之旅！\"", "ic_music", route: BlocProvider(child: MusicHomeRoute(), bloc: MusicRecommendBloc(),)),
     HomeAppBean("备忘录", "\"一款界面优美、操作便捷的备忘录应用，可以让你每时每刻记录下每一天的好心情，让昨天的回忆变成今天的记忆！\"", "ic_notepad"),
     HomeAppBean("更多功能", "\"不断完善是我的理念，让我们一起期待更多新的功能哟~\"", "ic_more_app"),
   ];
@@ -183,7 +190,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
 
   @override
   Widget getDrawer() {
-    return MyDrawer();
+    return MyDrawer(parentcontext: context,);
   }
 
 }
@@ -194,7 +201,10 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
 class MyDrawer extends StatelessWidget {
   const MyDrawer({
     Key key,
+    this.parentcontext
   }) : super(key: key);
+
+  final BuildContext parentcontext;
 
   @override
   Widget build(BuildContext context) {
@@ -325,11 +335,18 @@ class MyDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.crop_free),
+              title: Text("扫一扫"),
+              onTap: scan,
+            ),
+            ListTile(
               leading: const Icon(Icons.power_settings_new),
               title: Text("退出登录"),
-              onTap: () {
-                _outLogin(userModel);
-                NavigatorUtil.pushPageByRoute(context, LoginRoute(), isNeedCloseRoute: true);
+              onTap: () async {
+                int index = await showCenterDialog(context, CenterHintDialog(text: "您即将退出当前账号，退出后部分功能将无法使用，是否确定退出？",));
+                if (index != null && index == 1) {
+                  _outLogin(userModel, context);
+                }
               },
             ),
 
@@ -339,8 +356,17 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  _outLogin(UserModel userModel) {
+  _outLogin(UserModel userModel, BuildContext context) {
     userModel.outLogin();
+    NavigatorUtil.pushPageByRoute(context, LoginRoute(), isNeedCloseRoute: true);
+  }
+
+  Future scan() async {
+    String barcode = await scanner.scan();
+    print("扫描的信息:$barcode");
+    if (barcode.startsWith("http")) {
+      NavigatorUtil.pushWeb(parentcontext, url: barcode);
+    }
   }
 
 }

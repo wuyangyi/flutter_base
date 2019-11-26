@@ -55,7 +55,15 @@ class _TallyListRouteState extends BaseListRouteState<TallyListRoute, MyTallyBea
     bookModel = Provider.of<BookModel>(context, listen: false);
     books = bookModel.books;
     initMenu();
-    MyBookDao().findAllData(user.id, callBack: (data) async {
+    getData();
+    bus.on(EventBusString.TALLY_LOADING, (need){
+      print("账单页面刷新  $loadStatus");
+      doRefresh();
+    });
+  }
+
+  void getData() async {
+    await MyBookDao().findAllData(user.id, callBack: (data) async {
       bookModel.clearAll();
       bookModel.addAll(data);
       if (DataConfig.selectBookIndex > books.length) {
@@ -71,10 +79,6 @@ class _TallyListRouteState extends BaseListRouteState<TallyListRoute, MyTallyBea
         initMenu();
         loadStatus = Status.empty;
       });
-    });
-    bus.on(EventBusString.TALLY_LOADING, (need){
-      print("账单页面刷新  $loadStatus");
-      doRefresh();
     });
   }
 

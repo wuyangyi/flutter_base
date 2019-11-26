@@ -20,4 +20,7 @@ class MyColors{
   static const Color homeBottomColorNoSelect = Color(0xFF727880);
   static const Color text_normal_5 = Color(0xFF555555);
   static const Color text_normal_1 = Color(0xFF111111);
+  static const Color search_hint_color = Color(0xFFC9C9C9);
+  static const Color search_bg_color = Color(0xFFF0F0F0);
+  static const Color seekBar_color = Color(0xFFF2F1F3);
 }

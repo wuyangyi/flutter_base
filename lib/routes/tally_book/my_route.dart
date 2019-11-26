@@ -28,6 +28,7 @@ class _MyRouteState extends BaseRouteState<MyRoute> {
     leading = Container();
     appBarElevation = 0.0;
     bodyColor = MyColors.home_bg;
+    resizeToAvoidBottomInset = false;
   }
 
   TallyModel tallyModel;

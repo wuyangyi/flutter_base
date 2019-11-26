@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/book_type_bean.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/userinfo_select.dart';
@@ -279,6 +281,22 @@ class Util {
       manWidth = manWidth + tp.width;
     });
     return manWidth;
+  }
+
+  static String getSingerName(String name) {
+    String n = name;
+    if (name.contains("-")) {
+      n = name.substring(0, name.indexOf("-"));
+    }
+    return n;
+  }
+
+  static String getMusicName(String name) {
+    String n = name;
+    if (name.contains("-")) {
+      n = name.substring(name.indexOf("-") + 1);
+    }
+    return n;
   }
 
 

@@ -141,7 +141,11 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
         onRefresh: onRefresh,
         child: child ?? ListView.separated(
           controller: controller,
+          shrinkWrap: true,
           itemCount: enablePullUp ? mListData.length + getHeadCount() + getFloorCount() + 1 : mListData.length + getHeadCount() + getFloorCount(),
+          separatorBuilder: (context, index) {
+            return getListDriver(context, index);
+          },
           itemBuilder: (context, index) {
             return getItemView(context, index);
           },
@@ -213,6 +217,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
           loadMoreStatus = Status.success;
         }
         if (isRefresh) {
+          loadStatus = Status.success;
           loadStatus = Status.success;
         }
       }
@@ -337,6 +342,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
 
   @override
   void dispose() {
+    bloc?.dispose();
     super.dispose();
     controller.dispose();
   }

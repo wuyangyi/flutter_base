@@ -219,7 +219,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   void setRightButtonFromImage(String imageName) {
     btn_right = new IconButton(
       key: key_btn_right,
-      icon: Image.asset(Util.getImgPath(imageName), fit: BoxFit.fill,),
+      icon: Image.asset(Util.getImgPath(imageName), fit: BoxFit.fill, width: 20.0,),
       onPressed: (){
         onRightButtonClick();
       },
@@ -233,6 +233,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
     btn_right = new IconButton(
       key: key_btn_right,
       icon: Icon(iconData),
+      color: titleBarBg == Colors.white ? MyColors.title_color : Colors.white,
       onPressed: (){
         onRightButtonClick();
       },
@@ -321,6 +322,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
    * 左边按钮点击事件
    */
   void onLeftButtonClick() {
+    hideSoftInput();
     finish();
   }
 

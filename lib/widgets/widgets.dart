@@ -97,7 +97,6 @@ class MyEmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size(0, 0);
 
 }

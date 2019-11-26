@@ -1,4 +1,8 @@
 import 'package:flutter_base/bean/city_bean_entity.dart';
+import 'package:flutter_base/bean/music/music_all_bean_entity.dart';
+import 'package:flutter_base/bean/music/music_search_hot_key_entity.dart';
+import 'package:flutter_base/bean/music/music_singer_bean_entity.dart';
+import 'package:flutter_base/bean/music/recommend_bean_entity.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
@@ -13,6 +17,14 @@ class EntityFactory {
       return null;
     } else if (T.toString() == "CityBeanEntity") {
       return CityBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "MusicAllBeanEntity") {
+      return MusicAllBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "MusicSearchHotKeyEntity") {
+      return MusicSearchHotKeyEntity.fromJson(json) as T;
+    } else if (T.toString() == "MusicSingerBeanEntity") {
+      return MusicSingerBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "RecommendBeanData") {
+      return RecommendBeanData.fromJson(json) as T;
     } else if (T.toString() == "MyBookBeanEntity") {
       return MyBookBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "MyCoinDescInfoBeanEntity") {
