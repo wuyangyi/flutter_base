@@ -998,111 +998,127 @@ class _MusicListDialogState extends State<MusicListDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 20.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
       ),
       constraints: BoxConstraints(
-        maxHeight: DataConfig.appSize.height / 2
+          maxHeight: DataConfig.appSize.height / 3 * 2
       ),
-      alignment: Alignment.topCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
+        alignment: Alignment.topCenter,
         children: <Widget>[
           Container(
-            width: double.infinity,
-            height: 30.0,
-            margin: EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Stack(
-              alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Color(0xFFDEDEDE),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+            ),
+            child: Image.asset(Util.getImgPath("ico_top_bg"),),
+          ),
+          Container(
+            color: Colors.transparent,
+            padding: EdgeInsets.only(top: 20.0),
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text("音乐列表",
-                  style: TextStyle(
-                      color: MyColors.text_normal_1,
-                      fontSize: 16.0
+                Container(
+                  width: double.infinity,
+                  height: 30.0,
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Text("音乐列表",
+                        style: TextStyle(
+                            color: MyColors.text_normal_1,
+                            fontSize: 16.0
+                        ),
+                      ),
+                      Positioned(
+                        right: 0, top: 0,
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).pop(-1);
+                          },
+                          child: Container(
+                            alignment: Alignment.topRight,
+                            child: Image.asset(Util.getImgPath("ico_close"), fit: BoxFit.fill, width: 15.0, height: 15.0,),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Positioned(
-                  right: 0, top: 0,
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).pop(-1);
+                Gaps.vGap20,
+                Gaps.vGap10,
+                Expanded(
+                  flex: 1,
+                  child: ListView.separated(
+                    itemCount: widget.list.length,
+                    separatorBuilder: (context, index){
+                      return Container(
+                        width: double.infinity,
+                        height: 0.5,
+                        color: MyColors.loginDriverColor,
+                        margin: EdgeInsets.only(left: 10.0),
+                      );
                     },
-                    child: Container(
-                      alignment: Alignment.topRight,
-                      child: Image.asset(Util.getImgPath("ico_close"), fit: BoxFit.fill, width: 15.0, height: 15.0,),
-                    ),
+                    itemBuilder: (context, index){
+                      return Material(
+                        color: Colors.transparent,
+                        child: Ink(
+                          child: InkWell(
+                            onTap: (){
+                              setState(() {
+                                selectIndex = index;
+                              });
+                              //延迟100毫秒后关闭
+                              Observable.just(1).delay(new Duration(milliseconds: 100)).listen((_) {
+                                Navigator.of(context).pop(index);
+                              });
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.only(left: 10.0, top: 12.0, bottom: 12.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    width: 30.0,
+                                    height: 30.0,
+                                    alignment: Alignment.center,
+                                    child: widget.list[selectIndex].path == widget.list[index].path ?
+                                    Icon(Icons.volume_up, color: MyColors.main_color, size: 18.0,) :
+                                    Text("${index + 1}",
+                                      style: TextStyle(
+                                        color: MyColors.title_color,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Gaps.hGap5,
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      widget.list[index].fileName,
+                                      style: TextStyle(
+                                        color: widget.list[selectIndex].path == widget.list[index].path ? MyColors.main_color : MyColors.title_color,
+                                        fontSize: 15.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
-            ),
-          ),
-          Gaps.vGap20,
-          Expanded(
-            flex: 1,
-            child: ListView.separated(
-              itemCount: widget.list.length,
-              separatorBuilder: (context, index){
-                return Container(
-                  width: double.infinity,
-                  height: 0.5,
-                  color: MyColors.loginDriverColor,
-                  margin: EdgeInsets.only(left: 10.0),
-                );
-              },
-              itemBuilder: (context, index){
-                return Material(
-                  color: Colors.transparent,
-                  child: Ink(
-                    child: InkWell(
-                      onTap: (){
-                        setState(() {
-                          selectIndex = index;
-                        });
-                        //延迟100毫秒后关闭
-                        Observable.just(1).delay(new Duration(milliseconds: 100)).listen((_) {
-                          Navigator.of(context).pop(index);
-                        });
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.only(left: 10.0, top: 12.0, bottom: 12.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              width: 30.0,
-                              height: 30.0,
-                              alignment: Alignment.center,
-                              child: widget.list[selectIndex].path == widget.list[index].path ?
-                              Icon(Icons.volume_up, color: MyColors.main_color, size: 18.0,) :
-                              Text("${index + 1}",
-                                style: TextStyle(
-                                  color: MyColors.title_color,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                            Gaps.hGap5,
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                widget.list[index].fileName,
-                                style: TextStyle(
-                                  color: widget.list[selectIndex].path == widget.list[index].path ? MyColors.main_color : MyColors.title_color,
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
             ),
           ),
         ],
