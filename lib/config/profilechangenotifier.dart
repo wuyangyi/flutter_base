@@ -3,6 +3,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_base/bean/FlieInfoBean.dart';
+import 'package:flutter_base/bean/dao/music/MyLikeMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/PlayMusicInfoDao.dart';
 import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
@@ -180,6 +181,17 @@ class PlayMusicInfoModel extends ChangeNotifier{
     return _playList;
   }
 
+  //获得当前播放的位置
+  int getPlayIndex() {
+    int index = 0;
+    for (int i = 0; i < _playList.length; i++) {
+      if (_playList[i].path == _playMusicInfo.musicPath) {
+        index = i;
+      }
+    }
+    return index;
+  }
+
   //设置音乐
   void setMusicInfo(PlayMusicInfo musicInfo){
     if (_playMusicInfo?.playType != null) {
@@ -210,6 +222,12 @@ class PlayMusicInfoModel extends ChangeNotifier{
     } else {
       audioPlayer.pause();
     }
+    notifyListeners();
+  }
+
+  //更新收藏状态
+  void upCollect(bool collect) {
+    _playMusicInfo.collected = collect;
     notifyListeners();
   }
 
@@ -280,7 +298,7 @@ class PlayMusicInfoModel extends ChangeNotifier{
       PlayMusicInfoDao().insertData(_playMusicInfo);
     });
     audioPlayer.setUrl(_playMusicInfo.musicPath);
-    upPlayNowTime(_playMusicInfo.playTime);
+    upPlayNowTime(_playMusicInfo?.playTime ?? 0);
   }
 
   @override
@@ -318,5 +336,78 @@ class LocalMusicModel extends ChangeNotifier {
     notifyListeners();
 
     await MyLocalMusicDao().insertDatas(_fileInfoBean);
+  }
+
+  //更新收藏状态
+  void upCollect(bool collect, int index) async {
+    _fileInfoBean[index].collected = collect;
+    notifyListeners();
+    await MyLocalMusicDao().upUserInfoDate(_fileInfoBean[index]);
+  }
+
+  //更新选中状态
+  void upCheckState(bool check, int index) {
+    _fileInfoBean[index].check = check;
+    notifyListeners();
+  }
+
+  //删除选择的音乐
+  void removeCheckMusic() {
+    List<FileInfoBean> files = [];
+    _fileInfoBean.forEach((item){
+      if (item.check) {
+        files.add(item);
+      }
+    });
+    for (int i = 0; i < _fileInfoBean.length; i++) {
+      if (_fileInfoBean[i].check) {
+        files.add(_fileInfoBean[i]);
+        _fileInfoBean.removeAt(i);
+      }
+    }
+    MyLocalMusicDao().removeSome(files);
+    notifyListeners();
+  }
+}
+
+
+//我的喜欢歌单
+class MyLikeMusicModel extends ChangeNotifier {
+  List<FileInfoBean> _myLikeList = [];
+
+  List<FileInfoBean> get myLikeList => _myLikeList;
+
+  void addAll(List<FileInfoBean> data) {
+    _myLikeList.addAll(data);
+    notifyListeners();
+  }
+
+  void add(FileInfoBean data) async {
+    data.collected = true;
+    if(_myLikeList.isEmpty) {
+      _myLikeList.add(data);
+    } else {
+      bool needAdd = true;
+      _myLikeList.forEach((itemHave) {
+        if (data.fileName == itemHave.fileName) {
+          needAdd = false;
+        }
+      });
+      if (needAdd) {
+        _myLikeList.add(data);
+      }
+    }
+    notifyListeners();
+    await MyLikeMusicDao().insertData(data);
+  }
+
+  void remove(FileInfoBean data) async {
+    for (int i = 0; i < _myLikeList.length; i++) {
+      if (_myLikeList[i].path == data.path) {
+        _myLikeList.removeAt(i);
+      }
+    }
+    notifyListeners();
+    await MyLikeMusicDao().removeOne(data);
   }
 }

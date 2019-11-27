@@ -1,9 +1,15 @@
+import 'dart:math';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_list_route.dart';
+import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/base_bean.dart';
+import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/utils/event_bus.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -18,18 +24,140 @@ abstract class MusicBaseListRoute extends BaseListRoute {
 abstract class MusicBaseRouteState<T extends BaseListRoute, D extends BaseBean, B extends BlocListBase> extends BaseListRouteState<T, D, B> {
 
   PlayMusicInfoModel musicInfoModel;
+  List<FileInfoBean> musicList;
 
   @override
   void initState() {
     super.initState();
     musicInfoModel = Provider.of<PlayMusicInfoModel>(context, listen: false);
+    musicList = musicInfoModel.playList;
+    bus.on(EventBusString.MUSIC_PLAY_STATE, (state){
+      if(state == AudioPlayerState.COMPLETED) {
+        onStopPlay();
+        if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_RANDOM) {
+          randomMusic();
+        } else if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
+          nextMusic();
+        } else {
+          musicInfoModel.upPlayState(!musicInfoModel.playMusicInfo.isPlaying);
+        }
+      }
+      setState(() {
+
+      });
+    });
+  }
+
+  //停止播放
+  void onStopPlay() {
+
+  }
+
+  //随机播放
+  void randomMusic() {
+    if (musicList.isEmpty) {
+      showToast("暂无歌曲");
+      return;
+    }
+    int index = Random().nextInt(musicList.length-1);
+    //随机到当前歌曲就进行下一曲
+    if (musicList[index].path == musicInfoModel.playMusicInfo.musicPath) {
+      if (index < musicList.length - 1) {
+        index++;
+      } else {
+        index = 0;
+      }
+    }
+    musicInfoModel.setMusicInfo(new PlayMusicInfo(
+      musicPath: musicList[index].path,
+      uri: musicList[index].uri,
+      musicName: Util.getMusicName(musicList[index].fileName),
+      singer: Util.getSingerName(musicList[index].fileName),
+      fileName: musicList[index].fileName,
+      isPlaying: true,
+      isLocal: true,
+    ));
+    setState(() {
+
+    });
+  }
+
+  //下一首
+  void nextMusic(){
+    if (musicList.isEmpty) {
+      showToast("暂无歌曲");
+      return;
+    }
+    int index = 0;
+    for (int i = 0; i < musicInfoModel.playList.length; i++) {
+      if(musicInfoModel.playList[i].path == musicInfoModel.playMusicInfo.musicPath) {
+        if (i >= musicInfoModel.playList.length - 1) {
+          index = 0;
+        } else {
+          index = i+1;
+        }
+      }
+    }
+    musicInfoModel.setMusicInfo(new PlayMusicInfo(
+      musicPath: musicList[index].path,
+      uri: musicList[index].uri,
+      musicName: Util.getMusicName(musicList[index].fileName),
+      singer: Util.getSingerName(musicList[index].fileName),
+      fileName: musicList[index].fileName,
+      isPlaying: true,
+      isLocal: true,
+    ));
+    setState(() {
+
+    });
+  }
+
+  //上一首
+  void lastMusic(){
+    if (musicList.isEmpty) {
+      showToast("暂无歌曲");
+      return;
+    }
+    int index = 0;
+    for (int i = 0; i < musicInfoModel.playList.length; i++) {
+      if(musicInfoModel.playList[i].path == musicInfoModel.playMusicInfo.musicPath) {
+        if (i <= 0) {
+          index = musicInfoModel.playList.length - 1;
+        } else {
+          index = i-1;
+        }
+      }
+    }
+    musicInfoModel.setMusicInfo(new PlayMusicInfo(
+      musicPath: musicList[index].path,
+      uri: musicList[index].uri,
+      musicName: Util.getMusicName(musicList[index].fileName),
+      singer: Util.getSingerName(musicList[index].fileName),
+      fileName: musicList[index].fileName,
+      isPlaying: true,
+      isLocal: true,
+    ));
+    setState(() {
+
+    });
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bus.off(EventBusString.MUSIC_PLAY_STATE);
   }
 
   @override
   Widget getBottomNavigationBar() {
     return GestureDetector(
       onTap: (){
-        NavigatorUtil.pushPageByRoute(context, MusicPlayRoute());
+        if (musicInfoModel.playMusicInfo.musicPath == null) {
+          showToast("暂无歌曲");
+        } else {
+          NavigatorUtil.pushPageByRoute(context, MusicPlayRoute());
+        }
       },
       child: Container(
         width: double.infinity,
@@ -56,7 +184,7 @@ abstract class MusicBaseRouteState<T extends BaseListRoute, D extends BaseBean, 
             Expanded(
               flex: 1,
               child: Text(
-                musicInfoModel.playMusicInfo.musicName ?? "小小音乐",
+                musicInfoModel?.playMusicInfo?.fileName ?? "小小音乐",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -70,6 +198,10 @@ abstract class MusicBaseRouteState<T extends BaseListRoute, D extends BaseBean, 
 
             GestureDetector(
               onTap: (){
+                if (musicInfoModel.playMusicInfo.musicPath == null) {
+                  showToast("暂无歌曲");
+                  return;
+                }
                 setState(() {
                   musicInfoModel.upPlayState(!musicInfoModel.playMusicInfo.isPlaying);
                 });
@@ -92,7 +224,13 @@ abstract class MusicBaseRouteState<T extends BaseListRoute, D extends BaseBean, 
 
             GestureDetector(
               onTap: (){
-
+                if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_RANDOM) {
+                  randomMusic();
+                } else if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
+                  nextMusic();
+                } else {
+                  musicInfoModel.upPlayNowTime(0);
+                }
               },
               child: Container(
                 width: 25.0,

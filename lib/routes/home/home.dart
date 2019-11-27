@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/FlieInfoBean.dart';
+import 'package:flutter_base/bean/dao/music/MyLikeMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/PlayMusicInfoDao.dart';
 import 'package:flutter_base/bean/home_app_bean.dart';
@@ -51,6 +52,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
 
   LocalMusicModel localMusicModel;
   PlayMusicInfoModel playMusicInfoModel;
+  MyLikeMusicModel myLikeMusicModel;
 
   _HomeRouteState(){
     needAppBar = true;
@@ -68,6 +70,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     user = Provider.of<UserModel>(context, listen: false).user;
     localMusicModel = Provider.of<LocalMusicModel>(context, listen: false);
     playMusicInfoModel = Provider.of<PlayMusicInfoModel>(context, listen: false);
+    myLikeMusicModel = Provider.of<MyLikeMusicModel>(context, listen: false);
     NetClickUtil().login(user.phone, user.password, callBack: (){
       NetClickUtil().getIntegral(); //获得用户积分
     }); //更新下cookie，防止很久前登陆的，cookie过期
@@ -89,6 +92,11 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
       }
       playMusicInfoModel.setMusicInfo(data);
       playMusicInfoModel.initPlay(); //添加监听
+    });
+
+    //获取收藏的音乐
+    MyLikeMusicDao().findAllData(callBack: (data){
+      myLikeMusicModel.addAll(data);
     });
   }
 

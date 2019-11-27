@@ -3,10 +3,9 @@ import 'package:flutter_base/bean/db/db_provider.dart';
 
 import '../../FlieInfoBean.dart';
 
-class MyLocalMusicDao extends BaseDBProvider {
-
+class MyLikeMusicDao extends BaseDBProvider {
   //表名
-  final String name = "MyLocalMusicDao";
+  final String name = "MyLikeMusicDao";
 
   //表主键字段
   final String columnId = "_id";
@@ -33,25 +32,6 @@ class MyLocalMusicDao extends BaseDBProvider {
     return code;
   }
 
-  //批量插入歌曲信息
-  Future insertDatas(List<FileInfoBean> data) async {
-    await findAllData(callBack: (datas) async {
-      for (int i = 0; i < data.length; i++) {
-        bool needAdd = true;
-        for (int j = 0; j < datas.length; j ++) {
-          if (data[i].path == datas[j].path) {
-            needAdd = false;
-          }
-        }
-        if (needAdd) {
-          insertData(data[i]);
-        }
-      }
-    });
-
-  }
-
-
   //查询所有
   Future<List<FileInfoBean>> findAllData({Function callBack}) async {
     var db = await getDataBase();
@@ -70,25 +50,10 @@ class MyLocalMusicDao extends BaseDBProvider {
     return data;
   }
 
-  /*
-   * 批量删除记录
-   */
-  Future removeAll({Function callBack}) async {
-    var data = await findAllData();
-    var result;
-    var db = await getDataBase();
-    result = await db.delete(name);
-    if (callBack != null) {
-      callBack();
-    }
-    return result;
-  }
 
-  Future removeSome(List<FileInfoBean> files, {Function callBack}) async {
+  Future removeOne(FileInfoBean file, {Function callBack}) async {
     var db = await getDataBase();
-    files.forEach((item) async {
-      await db.delete(name, where: "path = ?", whereArgs: [item.path]);
-    });
+    await db.delete(name, where: "path = ?", whereArgs: [file.path]);
     if (callBack != null) {
       callBack();
     }

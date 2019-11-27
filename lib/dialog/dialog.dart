@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/userinfo_select.dart';
+import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/button.dart';
@@ -967,6 +969,143 @@ class CenterHintDialog extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+//音乐列表选择
+class MusicListDialog extends StatefulWidget {
+  final List<FileInfoBean> list;
+
+  final int selectIndex; //选择的位置
+
+  MusicListDialog({Key key,
+    this.list,
+    this.selectIndex = 0
+  }) : super(key: key);
+  @override
+  _MusicListDialogState createState() => _MusicListDialogState(selectIndex);
+}
+
+class _MusicListDialogState extends State<MusicListDialog> {
+
+  _MusicListDialogState(this.selectIndex);
+
+  int selectIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+      ),
+      constraints: BoxConstraints(
+        maxHeight: DataConfig.appSize.height / 2
+      ),
+      alignment: Alignment.topCenter,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            height: 30.0,
+            margin: EdgeInsets.only(left: 20.0, right: 20.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Text("音乐列表",
+                  style: TextStyle(
+                      color: MyColors.text_normal_1,
+                      fontSize: 16.0
+                  ),
+                ),
+                Positioned(
+                  right: 0, top: 0,
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop(-1);
+                    },
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      child: Image.asset(Util.getImgPath("ico_close"), fit: BoxFit.fill, width: 15.0, height: 15.0,),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Gaps.vGap20,
+          Expanded(
+            flex: 1,
+            child: ListView.separated(
+              itemCount: widget.list.length,
+              separatorBuilder: (context, index){
+                return Container(
+                  width: double.infinity,
+                  height: 0.5,
+                  color: MyColors.loginDriverColor,
+                  margin: EdgeInsets.only(left: 10.0),
+                );
+              },
+              itemBuilder: (context, index){
+                return Material(
+                  color: Colors.transparent,
+                  child: Ink(
+                    child: InkWell(
+                      onTap: (){
+                        setState(() {
+                          selectIndex = index;
+                        });
+                        //延迟100毫秒后关闭
+                        Observable.just(1).delay(new Duration(milliseconds: 100)).listen((_) {
+                          Navigator.of(context).pop(index);
+                        });
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.only(left: 10.0, top: 12.0, bottom: 12.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: 30.0,
+                              height: 30.0,
+                              alignment: Alignment.center,
+                              child: widget.list[selectIndex].path == widget.list[index].path ?
+                              Icon(Icons.volume_up, color: MyColors.main_color, size: 18.0,) :
+                              Text("${index + 1}",
+                                style: TextStyle(
+                                  color: MyColors.title_color,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                            Gaps.hGap5,
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                widget.list[index].fileName,
+                                style: TextStyle(
+                                  color: widget.list[selectIndex].path == widget.list[index].path ? MyColors.main_color : MyColors.title_color,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

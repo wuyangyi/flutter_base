@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: TallyModel()),
         ChangeNotifierProvider.value(value: PlayMusicInfoModel()),
         ChangeNotifierProvider.value(value: LocalMusicModel()),
+        ChangeNotifierProvider.value(value: MyLikeMusicModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: AppConfig.IS_DEBUG,

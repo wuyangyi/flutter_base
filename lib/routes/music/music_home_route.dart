@@ -18,6 +18,7 @@ import 'package:flutter_base/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'MyCollectRoute.dart';
 import 'music_base_route.dart';
 import 'music_singer_route.dart';
 import 'my_music_route.dart';
@@ -70,7 +71,7 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
         title: "收藏",
         icon: Icons.grade,
         color: Colors.redAccent,
-        route: null
+        route: MyCollectRoute()
     ),
   ];
 
@@ -244,6 +245,8 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
                                 onTap: (){
                                   if (item.route != null) {
                                     NavigatorUtil.pushPageByRoute(context, item.route);
+                                  } else {
+                                    showToast("正在建设中，先听听本地音乐吧~");
                                   }
                                 },
                                 child: Container(

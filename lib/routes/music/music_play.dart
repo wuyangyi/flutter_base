@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
+import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
+import 'package:flutter_base/config/profilechangenotifier.dart';
+import 'package:flutter_base/dialog/dialog.dart';
+import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/res/string.dart';
 import 'package:flutter_base/utils/event_bus.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/likebtn/like_button.dart';
 import 'package:flutter_base/widgets/seekbar.dart';
 import 'package:flutter_base/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 import 'music_base_route.dart';
 import 'dart:math' as math;
@@ -24,6 +29,8 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
     resizeToAvoidBottomInset = false;
     bodyColor = Colors.black;
   }
+  LocalMusicModel localMusicModel;
+  MyLikeMusicModel myLikeMusicModel;
 
   Animation<double> animation;
   AnimationController controller;
@@ -33,6 +40,8 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
   @override
   void initState(){
     super.initState();
+    localMusicModel = Provider.of<LocalMusicModel>(context, listen: false);
+    myLikeMusicModel = Provider.of<MyLikeMusicModel>(context, listen: false);
     controller = new AnimationController(
         duration: const Duration(seconds: 25), vsync: this);
     animation = new Tween(begin: 0.0, end: math.pi * 2).animate(controller)
@@ -133,8 +142,26 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                   LikeButton(
                     width: 55.0,
                     duration: Duration(milliseconds: 500),
+                    isLike: getLike(),
                     onIconClicked: (like) {
-
+                      musicInfoModel.upCollect(like);
+                      for (int i = 0; i < localMusicModel.fileInfoBean.length; i++) {
+                        if (localMusicModel.fileInfoBean[i].path == musicInfoModel.playMusicInfo.musicPath) {
+                          localMusicModel.upCollect(like , i);
+                        }
+                      }
+                      FileInfoBean file = new FileInfoBean(
+                          path: musicInfoModel.playMusicInfo.musicPath,
+                          fileName: musicInfoModel.playMusicInfo.fileName,
+                          uri: musicInfoModel.playMusicInfo.uri,
+                          check: false,
+                          collected: like
+                      );
+                      if (like) {
+                        myLikeMusicModel.add(file);
+                      } else {
+                        myLikeMusicModel.remove(file);
+                      }
                     },
                   )
                 ],
@@ -301,6 +328,8 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                             randomMusic();
                           } else if (musicInfoModel?.playMusicInfo?.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
                             lastMusic();
+                          } else {
+                            musicInfoModel.upPlayNowTime(0);
                           }
                         },
                       ),
@@ -347,6 +376,8 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                             randomMusic();
                           } else if (musicInfoModel?.playMusicInfo?.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
                             nextMusic();
+                          } else {
+                            musicInfoModel.upPlayNowTime(0);
                           }
                         },
                       ),
@@ -363,7 +394,20 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                           color: Colors.white,
                           size: 28.0,
                         ),
-                        onPressed: (){},
+                        onPressed: () async {
+                          int index = await showModalBottomSheetUtil(context,
+                            MusicListDialog(
+                              list: musicInfoModel?.playList ?? localMusicModel.fileInfoBean,
+                              selectIndex: musicInfoModel.getPlayIndex(),
+                            ),
+                            shapeBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          );
+                          if (index != null && index != -1) {
+                            playMusic(index);
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -393,5 +437,15 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
         break;
     }
     return Icons.repeat_one;
+  }
+
+  bool getLike() {
+    bool like = false;
+    myLikeMusicModel.myLikeList.forEach((item){
+      if (musicInfoModel.playMusicInfo.musicPath == item.path) {
+        like = true;
+      }
+    });
+    return like;
   }
 }

@@ -58,18 +58,15 @@ abstract class MusicBaseRouteState<T extends MusicBaseRoute> extends BaseRouteSt
       return;
     }
     int index = Random().nextInt(musicList.length-1);
-    musicInfoModel.setMusicInfo(new PlayMusicInfo(
-      musicPath: musicList[index].path,
-      uri: musicList[index].uri,
-      musicName: Util.getMusicName(musicList[index].fileName),
-      singer: Util.getSingerName(musicList[index].fileName),
-      fileName: musicList[index].fileName,
-      isPlaying: true,
-      isLocal: true,
-    ));
-    setState(() {
-
-    });
+    //随机到当前歌曲就进行下一曲
+    if (musicList[index].path == musicInfoModel.playMusicInfo.musicPath) {
+      if (index < musicList.length - 1) {
+        index++;
+      } else {
+        index = 0;
+      }
+    }
+    playMusic(index);
   }
 
   //下一首
@@ -88,18 +85,7 @@ abstract class MusicBaseRouteState<T extends MusicBaseRoute> extends BaseRouteSt
         }
       }
     }
-    musicInfoModel.setMusicInfo(new PlayMusicInfo(
-      musicPath: musicList[index].path,
-      uri: musicList[index].uri,
-      musicName: Util.getMusicName(musicList[index].fileName),
-      singer: Util.getSingerName(musicList[index].fileName),
-      fileName: musicList[index].fileName,
-      isPlaying: true,
-      isLocal: true,
-    ));
-    setState(() {
-
-    });
+    playMusic(index);
   }
 
   //上一首
@@ -118,6 +104,11 @@ abstract class MusicBaseRouteState<T extends MusicBaseRoute> extends BaseRouteSt
         }
       }
     }
+    playMusic(index);
+
+  }
+
+  void playMusic(int index) {
     musicInfoModel.setMusicInfo(new PlayMusicInfo(
       musicPath: musicList[index].path,
       uri: musicList[index].uri,
@@ -130,7 +121,6 @@ abstract class MusicBaseRouteState<T extends MusicBaseRoute> extends BaseRouteSt
     setState(() {
 
     });
-
   }
 
   @override
@@ -218,6 +208,8 @@ abstract class MusicBaseRouteState<T extends MusicBaseRoute> extends BaseRouteSt
                   randomMusic();
                 } else if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
                   nextMusic();
+                } else {
+                  musicInfoModel.upPlayNowTime(0);
                 }
               },
               child: Container(
