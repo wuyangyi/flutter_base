@@ -122,7 +122,7 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                     flex: 1,
                     child: Center(
                       child: Text(
-                        musicInfoModel.playMusicInfo.musicName ?? "",
+                        musicInfoModel?.playMusicInfo?.musicName ?? "",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,
@@ -156,7 +156,7 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                   ),
 
                   Text(
-                    musicInfoModel.playMusicInfo.singer ?? "",
+                    musicInfoModel?.playMusicInfo?.singer ?? "",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.0
@@ -212,7 +212,7 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    getTime(musicInfoModel.playMusicInfo.playTime),
+                    getTime(musicInfoModel?.playMusicInfo?.playTime ?? 0),
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 12.0,
@@ -224,10 +224,10 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                       margin: EdgeInsets.only(left: 10.0, right: 10.0),
                       alignment: Alignment.center,
                       child: MusicSeekBar(
-                        value: musicInfoModel.playMusicInfo.value,
+                        value: musicInfoModel?.playMusicInfo?.value ?? 0,
                         onValueChange: (value){
                           setState(() {
-                            musicInfoModel.upPlayNowTime((value * musicInfoModel.playMusicInfo.maxTime).toInt());
+                            musicInfoModel.upPlayNowTime((value * musicInfoModel?.playMusicInfo?.maxTime ?? 0).toInt());
                           });
                         },
                       ),
@@ -235,7 +235,7 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                     ),
                   ),
                   Text(
-                    getTime(musicInfoModel.playMusicInfo.maxTime),
+                    getTime(musicInfoModel?.playMusicInfo?.maxTime ?? 0),
                     style: TextStyle(
                       color: Colors.white54,
                       fontSize: 12.0,
@@ -260,12 +260,12 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                       alignment: Alignment.center,
                       child: IconButton(
                         icon: Icon(
-                          getPlayTypeIcon(musicInfoModel.playMusicInfo.playType),
+                          getPlayTypeIcon(musicInfoModel?.playMusicInfo?.playType ?? 0),
                           color: Colors.white,
                             size: 28.0,
                         ),
                         onPressed: (){
-                          int type = musicInfoModel.playMusicInfo.playType ?? PlayMusicInfo.PLAY_STATUE_ONE;
+                          int type = musicInfoModel?.playMusicInfo?.playType ?? PlayMusicInfo.PLAY_STATUE_ONE;
                           type++;
                           if (type > PlayMusicInfo.PLAY_STATUE_ONE) {
                             type = 0;
@@ -297,9 +297,9 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                           size: 30.0,
                         ),
                         onPressed: (){
-                          if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_RANDOM) {
+                          if (musicInfoModel?.playMusicInfo?.playType == PlayMusicInfo.PLAY_STATUE_RANDOM) {
                             randomMusic();
-                          } else if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
+                          } else if (musicInfoModel?.playMusicInfo?.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
                             lastMusic();
                           }
                         },
@@ -343,9 +343,9 @@ class _MusicPlayRouteState extends MusicBaseRouteState<MusicPlayRoute> with Sing
                           size: 30.0,
                         ),
                         onPressed: (){
-                          if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_RANDOM) {
+                          if (musicInfoModel?.playMusicInfo?.playType == PlayMusicInfo.PLAY_STATUE_RANDOM) {
                             randomMusic();
-                          } else if (musicInfoModel.playMusicInfo.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
+                          } else if (musicInfoModel?.playMusicInfo?.playType == PlayMusicInfo.PLAY_STATUE_LIST) {
                             nextMusic();
                           }
                         },
