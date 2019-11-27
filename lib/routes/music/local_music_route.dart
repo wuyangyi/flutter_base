@@ -5,6 +5,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/FlieInfoBean.dart';
+import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
 import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/dialog/wait_dialog.dart';
@@ -242,7 +243,8 @@ class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleT
                 radios: 5.0,
                 width: double.infinity,
                 height: 40.0,
-                onTop: () {
+                onTop: () async {
+                  showWaitDialog();
                   List<FileInfoBean> data = [];
                   files.forEach((item) {
                     if (item.check) {
@@ -250,6 +252,7 @@ class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleT
                     }
                   });
                   localMusicModel.addAll(data);
+                  hideWaitDialog();
                   showToast("成功添加$selectNumber首歌曲");
                   finish();
                 },

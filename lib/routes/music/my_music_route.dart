@@ -33,6 +33,8 @@ class _MyMusicRouteState extends MusicBaseRouteState<MyMusicRoute> {
 
   LocalMusicModel localMusicModel;
 
+  int index = 0;
+
 
   @override
   void onRightButtonClick() {
@@ -48,6 +50,7 @@ class _MyMusicRouteState extends MusicBaseRouteState<MyMusicRoute> {
 
   @override
   Widget build(BuildContext context) {
+    index = 0;
     return buildBody(
       context,
       body: ListView(
@@ -140,6 +143,7 @@ class _MyMusicRouteState extends MusicBaseRouteState<MyMusicRoute> {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: localMusicModel.fileInfoBean.map((item){
+              index++;
               return Ink(
                 child: InkWell(
                   onTap: (){
@@ -159,16 +163,32 @@ class _MyMusicRouteState extends MusicBaseRouteState<MyMusicRoute> {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(left: 20.0, top: 12.0, bottom: 12.0),
+                    padding: EdgeInsets.only(left: 10.0, top: 12.0, bottom: 12.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          item.fileName,
-                          style: TextStyle(
-                            color: MyColors.title_color,
-                            fontSize: 15.0,
+                        Container(
+                          width: 30.0,
+                          alignment: Alignment.center,
+                          child: musicInfoModel.playMusicInfo.musicPath == item.path ?
+                          Icon(Icons.volume_up, color: MyColors.main_color, size: 18.0,) :
+                          Text("$index",
+                            style: TextStyle(
+                              color: MyColors.title_color,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                        Gaps.hGap5,
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            item.fileName,
+                            style: TextStyle(
+                              color: MyColors.title_color,
+                              fontSize: 15.0,
+                            ),
                           ),
                         ),
                       ],

@@ -37,4 +37,40 @@ class PlayMusicInfo {
     this.fileName,
     this.value = 0,
   });
+
+  PlayMusicInfo.fromJson(Map<String, dynamic> json) {
+    musicId = json['music_id'] == null ? 0 : json['music_id'];
+    musicPath = json['music_path'];
+    uri = json['uri'] == null ? null : Uri.dataFromString(json['uri']);
+    musicName = json['music_name'];
+    fileName = json['file_name'];
+    singer = json['singer'];
+    playTime = json['play_time'] == null ? 0 : json['play_time'];
+    value = json['value'] == null ? 0.0 : double.parse(json['value']);
+    maxTime = json['max_time'] == null ? 0 : json['max_time'];
+    isLocal = json['is_local'] == null ? true : bool.fromEnvironment(json['is_local']);
+    imagePath = json['image_path'];
+    playType = json['play_type'] == null ? PLAY_STATUE_ONE : json['play_type'];
+    isPlaying = json['is_playing'] == null ? false : bool.fromEnvironment(json['is_playing']);
+    collected = json['collected'] == null ? false : bool.fromEnvironment(json['collected']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['music_id'] = this.musicId ?? 0;
+    data['music_path'] = this.musicPath;
+    data['uri'] = this.uri == null ? null : this.uri?.path;
+    data['music_name'] = this.musicName;
+    data['file_name'] = this.fileName;
+    data['singer'] = this.singer;
+    data['play_time'] = this.playTime ?? 0;
+    data['value'] = this.value.toString();
+    data['max_time'] = this.maxTime ?? 0;
+    data['is_local'] = this.isLocal.toString();
+    data['image_path'] = this.imagePath;
+    data['play_type'] = this.playType ?? 0;
+    data['is_playing'] = this.isPlaying.toString();
+    data['collected'] = this.collected.toString();
+    return data;
+  }
 }

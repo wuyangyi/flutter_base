@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
+import 'package:flutter_base/bean/FlieInfoBean.dart';
+import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
+import 'package:flutter_base/bean/dao/music/PlayMusicInfoDao.dart';
 import 'package:flutter_base/bean/home_app_bean.dart';
+import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/blocs/MainBloc.dart';
 import 'package:flutter_base/blocs/MusicRecommendBloc.dart';
@@ -45,6 +49,9 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     viewportFraction: 0.82,
   );
 
+  LocalMusicModel localMusicModel;
+  PlayMusicInfoModel playMusicInfoModel;
+
   _HomeRouteState(){
     needAppBar = true;
     title = AppConfig.APP_NAME;
@@ -59,10 +66,30 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     super.initState();
     Util.setTransAppBarDark(); //设置沉浸式状态栏 字体为黑色
     user = Provider.of<UserModel>(context, listen: false).user;
+    localMusicModel = Provider.of<LocalMusicModel>(context, listen: false);
+    playMusicInfoModel = Provider.of<PlayMusicInfoModel>(context, listen: false);
     NetClickUtil().login(user.phone, user.password, callBack: (){
       NetClickUtil().getIntegral(); //获得用户积分
     }); //更新下cookie，防止很久前登陆的，cookie过期
 
+    //获取本地歌曲
+    MyLocalMusicDao().findAllData(callBack: (data){
+      localMusicModel.addAll(data);
+      playMusicInfoModel.setMusicList(data);
+    });
+
+    //获取当前播放的音乐
+    PlayMusicInfoDao().findFirstData(callBack: (data){
+      if (data == null){
+        data = new PlayMusicInfo(
+          isPlaying: false,
+        );
+      } else {
+        data.isPlaying = false;
+      }
+      playMusicInfoModel.setMusicInfo(data);
+      playMusicInfoModel.initPlay(); //添加监听
+    });
   }
 
   @override

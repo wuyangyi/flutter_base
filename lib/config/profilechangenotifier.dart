@@ -3,6 +3,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_base/bean/FlieInfoBean.dart';
+import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
+import 'package:flutter_base/bean/dao/music/PlayMusicInfoDao.dart';
 import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
@@ -180,18 +182,19 @@ class PlayMusicInfoModel extends ChangeNotifier{
 
   //设置音乐
   void setMusicInfo(PlayMusicInfo musicInfo){
-    if (_playMusicInfo.playType != null) {
+    if (_playMusicInfo?.playType != null) {
       musicInfo.playType = _playMusicInfo.playType;
-    } else {
-      _playMusicInfo.playType = PlayMusicInfo.PLAY_STATUE_ONE;
     }
     this._playMusicInfo = musicInfo;
     audioPlayer.setVolume(0.5); //设置音量0-1
-    play();
+    if (_playMusicInfo.isPlaying) {
+      play();
+    }
     if (_playList.isEmpty) {
       _playList.add(FileInfoBean(path: musicInfo.musicPath, fileName: musicInfo.fileName, uri: musicInfo.uri, check: true));
     }
     notifyListeners();
+    PlayMusicInfoDao().insertData(_playMusicInfo);
   }
 
   void setMusicList(List<FileInfoBean> music) {
@@ -235,6 +238,7 @@ class PlayMusicInfoModel extends ChangeNotifier{
       } else {
         _playMusicInfo.isPlaying = false;
       }
+      PlayMusicInfoDao().insertData(_playMusicInfo);
     });
     int result = await audioPlayer.play(_playMusicInfo.isLocal ? _playMusicInfo.musicPath : _playMusicInfo.uri, isLocal: _playMusicInfo.isLocal,);
     if (result == 1) {
@@ -250,6 +254,35 @@ class PlayMusicInfoModel extends ChangeNotifier{
     notifyListeners();
   }
 
+  //用于启动初始化
+  void initPlay(){
+    if (_playMusicInfo == null) {
+      return;
+    }
+    audioPlayer.onDurationChanged.listen((Duration d){
+      _playMusicInfo.maxTime = d.inSeconds;
+      notifyListeners();
+    });
+    audioPlayer.onAudioPositionChanged.listen((Duration p){
+      _playMusicInfo.playTime = p.inSeconds;
+      _playMusicInfo.value = _playMusicInfo.playTime / _playMusicInfo.maxTime;
+      notifyListeners();
+      bus.emit(EventBusString.MUSIC_PROGRESS, _playMusicInfo.value);
+    });
+    audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s){
+      print("播放状态：${s.toString()}");
+      bus.emit(EventBusString.MUSIC_PLAY_STATE, s);
+      if (s == AudioPlayerState.PLAYING) {
+        _playMusicInfo.isPlaying = true;
+      } else {
+        _playMusicInfo.isPlaying = false;
+      }
+      PlayMusicInfoDao().insertData(_playMusicInfo);
+    });
+    audioPlayer.setUrl(_playMusicInfo.musicPath);
+    upPlayNowTime(_playMusicInfo.playTime);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -263,21 +296,27 @@ class LocalMusicModel extends ChangeNotifier {
 
   List<FileInfoBean> get fileInfoBean => _fileInfoBean;
 
-  void addAll(List<FileInfoBean> data) {
+  void addAll(List<FileInfoBean> data) async {
     //去重
     List<FileInfoBean> file = [];
     data.forEach((item){
       if(_fileInfoBean.isEmpty) {
         file.add(item);
       } else {
+        bool needAdd = true;
         _fileInfoBean.forEach((itemHave) {
-          if (item.fileName != itemHave.fileName) {
-            file.add(item);
+          if (item.fileName == itemHave.fileName) {
+            needAdd = false;
           }
         });
+        if (needAdd) {
+          file.add(item);
+        }
       }
     });
     _fileInfoBean.addAll(file);
     notifyListeners();
+
+    await MyLocalMusicDao().insertDatas(_fileInfoBean);
   }
 }

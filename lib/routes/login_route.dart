@@ -270,7 +270,6 @@ class _LoginRouteState extends BaseRouteState<LoginRoute> {
       showTopMessage(message: "验证码错误", status:  Status.fail);
       return;
     }
-//    showLoadingDialog(context);
     showWaitDialog();
     UserBeanEntity user;
     user = await NetClickUtil().login(username, password);
@@ -302,7 +301,6 @@ class _LoginRouteState extends BaseRouteState<LoginRoute> {
       Provider.of<UserModel>(context, listen: false).user = user;
       Application.profile.isLogin = true;
       Application.saveProfile(); //保存信息
-      Navigator.pop(context);
       showTopMessage(message: "注册成功");
       Observable.just(1).delay(new Duration(seconds: 2)).listen((_){ //等待1s后关闭
         NavigatorUtil.pushPageByRoute(bodyContext, user.isFinishInfo ? HomeRoute() : FinishInfoRoute(true), isNeedCloseRoute: true);
