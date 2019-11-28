@@ -10,6 +10,7 @@ import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/dialog/dialog.dart';
 import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/system/MyEditableText.dart';
 import 'package:flutter_base/system/MyTextFild.dart';
 import 'package:flutter_base/utils/event_bus.dart';
 import 'package:flutter_base/utils/utils.dart';
@@ -45,7 +46,7 @@ class _AddTallyRouteState extends BaseRouteState<AddTallyRoute> {
 
   bool showKeyBoard = true; //是否显示软键盘
   bool isCanInputOperator = false;
-  TextEditingController controller = new TextEditingController();
+  MyTextEditingController controller = new MyTextEditingController();
   String result = ""; //运算结果
   double resultData = 0.00;
   bool isInputOperator = false; //是否输入了运算符
@@ -300,6 +301,7 @@ class _AddTallyRouteState extends BaseRouteState<AddTallyRoute> {
                             controller: controller,
                             textAlign: TextAlign.right,
                             maxLines: 1,
+                            enableInteractiveSelection: false, //关闭复制粘贴功能
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: canSeeResult ? 12.0 : 20.0,

@@ -60,7 +60,7 @@ typedef InputCounterWidgetBuilder = Widget Function(
 /// To integrate the [MyTextField] into a [Form] with other [FormField] widgets,
 /// consider using [TextFormField].
 ///
-/// Remember to [dispose] of the TextEditingController when it is no longer needed.
+/// Remember to [dispose] of the MyTextEditingController when it is no longer needed.
 /// This will ensure we discard any resources used by the object.
 ///
 /// {@tool sample}
@@ -85,11 +85,11 @@ typedef InputCounterWidgetBuilder = Widget Function(
 ///  * [TextFormField], which integrates with the [Form] widget.
 ///  * [InputDecorator], which shows the labels and other visual elements that
 ///    surround the actual text editing widget.
-///  * [EditableText], which is the raw text editing control at the heart of a
-///    [TextField]. The [EditableText] widget is rarely used directly unless
+///  * [MyEditableText], which is the raw text editing control at the heart of a
+///    [TextField]. The [MyEditableText] widget is rarely used directly unless
 ///    you are implementing an entirely different design language, such as
 ///    Cupertino.
-///  * Learn how to use a TextEditingController in one of our [cookbook recipe]s.(https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller)
+///  * Learn how to use a MyTextEditingController in one of our [cookbook recipe]s.(https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller)
 class MyTextField extends StatefulWidget {
   /// Creates a Material Design text field.
   ///
@@ -167,7 +167,7 @@ class MyTextField extends StatefulWidget {
     this.keyboardAppearance,
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
-    this.enableInteractiveSelection,
+    this.enableInteractiveSelection = true,
     this.onTap,
     this.buildCounter,
     this.scrollController,
@@ -197,8 +197,8 @@ class MyTextField extends StatefulWidget {
 
   /// Controls the text being edited.
   ///
-  /// If null, this widget will create its own [TextEditingController].
-  final TextEditingController controller;
+  /// If null, this widget will create its own [MyTextEditingController].
+  final MyTextEditingController controller;
 
   /// Defines the keyboard focus for this widget.
   ///
@@ -236,8 +236,8 @@ class MyTextField extends StatefulWidget {
   /// obscuring. In this case requesting the focus again will not
   /// cause the focus to change, and will not make the keyboard visible.
   ///
-  /// This widget builds an [EditableText] and will ensure that the keyboard is
-  /// showing when it is tapped by calling [EditableTextState.requestKeyboard()].
+  /// This widget builds an [MyEditableText] and will ensure that the keyboard is
+  /// showing when it is tapped by calling [MyEditableTextState.requestKeyboard()].
   final FocusNode focusNode;
 
   /// The decoration to show around the text field.
@@ -488,7 +488,7 @@ class MyTextField extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<TextEditingController>('controller', controller, defaultValue: null));
+    properties.add(DiagnosticsProperty<MyTextEditingController>('controller', controller, defaultValue: null));
     properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
     properties.add(DiagnosticsProperty<bool>('enabled', enabled, defaultValue: null));
     properties.add(DiagnosticsProperty<InputDecoration>('decoration', decoration, defaultValue: const InputDecoration()));
@@ -524,8 +524,8 @@ class _MyTextFieldState extends State<MyTextField> with AutomaticKeepAliveClient
   Set<InteractiveInkFeature> _splashes;
   InteractiveInkFeature _currentSplash;
 
-  TextEditingController _controller;
-  TextEditingController get _effectiveController => widget.controller ?? _controller;
+  MyTextEditingController _controller;
+  MyTextEditingController get _effectiveController => widget.controller ?? _controller;
 
   FocusNode _focusNode;
   FocusNode get _effectiveFocusNode => widget.focusNode ?? (_focusNode ??= FocusNode());
@@ -609,14 +609,14 @@ class _MyTextFieldState extends State<MyTextField> with AutomaticKeepAliveClient
   void initState() {
     super.initState();
     if (widget.controller == null)
-      _controller = TextEditingController();
+      _controller = MyTextEditingController();
   }
 
   @override
   void didUpdateWidget(MyTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller == null && oldWidget.controller != null)
-      _controller = TextEditingController.fromValue(oldWidget.controller.value);
+      _controller = MyTextEditingController.fromValue(oldWidget.controller.value);
     else if (widget.controller != null && oldWidget.controller == null)
       _controller = null;
     final bool isEnabled = widget.enabled ?? widget.decoration?.enabled ?? true;
@@ -913,7 +913,7 @@ class _MyTextFieldState extends State<MyTextField> with AutomaticKeepAliveClient
     final ThemeData themeData = Theme.of(context);
     final TextStyle style = themeData.textTheme.subhead.merge(widget.style);
     final Brightness keyboardAppearance = widget.keyboardAppearance ?? themeData.primaryColorBrightness;
-    final TextEditingController controller = _effectiveController;
+    final MyTextEditingController controller = _effectiveController;
     final FocusNode focusNode = _effectiveFocusNode;
     final List<TextInputFormatter> formatters = widget.inputFormatters ?? <TextInputFormatter>[];
     if (widget.maxLength != null && widget.maxLengthEnforced)

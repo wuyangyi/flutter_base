@@ -27,7 +27,7 @@ dependencies:
   fluttertoast: ^3.0.3 #toast
   dio: ^2.1.13 #网络请求框架
   provider: ^3.0.0+1 #状态管理
-  webview_flutter: ^0.3.14+1 #安卓webview增加滚动监听
+  webview_flutter: ^0.3.16 #安卓webview增加滚动监听
 #  url_launcher: ^5.1.4 #用于在移动平台中启动URL。支持iOS和Android。
   rxdart: ^0.22.3 # https://github.com/ReactiveX/rxdart
   sqflite: ^1.1.3 #数据库 https://github.com/tekartik/sqflite
