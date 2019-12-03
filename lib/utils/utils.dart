@@ -313,5 +313,12 @@ class Util {
     return new DateTime(data.year, data.month, data.day);
   }
 
+  //获取随机颜色
+  static Color randomColor() {
+    int i = Random().nextInt(DataConfig.myBookColors.length);
+    int j = Random().nextInt(DataConfig.myBookColors[0].length);
+    return DataConfig.myBookColors[i][j];
+  }
+
 
 }

@@ -77,18 +77,24 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     playMusicInfoModel = Provider.of<PlayMusicInfoModel>(context, listen: false);
     myLikeMusicModel = Provider.of<MyLikeMusicModel>(context, listen: false);
     runWeekModel = Provider.of<RunWeekModel>(context, listen: false);
-    NetClickUtil().login(user.phone, user.password, callBack: (){
+
+    initData();
+  }
+
+  void initData() async {
+    showWaitDialog();
+    await NetClickUtil().login(user.phone, user.password, callBack: (){
       NetClickUtil().getIntegral(); //获得用户积分
     }); //更新下cookie，防止很久前登陆的，cookie过期
 
     //获取本地歌曲
-    MyLocalMusicDao().findAllData(callBack: (data){
+    await MyLocalMusicDao().findAllData(callBack: (data){
       localMusicModel.addAll(data);
       playMusicInfoModel.setMusicList(data);
     });
 
     //获取当前播放的音乐
-    PlayMusicInfoDao().findFirstData(callBack: (data){
+    await PlayMusicInfoDao().findFirstData(callBack: (data){
       if (data == null){
         data = new PlayMusicInfo(
           isPlaying: false,
@@ -101,14 +107,20 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     });
 
     //获取收藏的音乐
-    MyLikeMusicDao().findAllData(callBack: (data){
+    await MyLikeMusicDao().findAllData(callBack: (data){
       myLikeMusicModel.addAll(data);
     });
 
     //获取本周运动数据
-    RunInfoDao().findDataByWeek(user.id, onCallBack: (data){
+    await RunInfoDao().findDataByWeek(user.id, onCallBack: (data){
       runWeekModel.addAll(data);
     });
+
+    //获取用户全部运动数据
+    await RunInfoDao().findData(user.id, onCallBack: (data){
+      runWeekModel.addAllToAll(data);
+    });
+    hideWaitDialog();
   }
 
   @override

@@ -286,7 +286,7 @@ class PlayMusicInfoModel extends ChangeNotifier{
     });
     audioPlayer.onAudioPositionChanged.listen((Duration p){
       _playMusicInfo.playTime = p.inSeconds;
-      _playMusicInfo.value = _playMusicInfo.playTime / _playMusicInfo.maxTime;
+      _playMusicInfo.value = _playMusicInfo.playTime / _playMusicInfo?.maxTime ?? 0;
       notifyListeners();
       bus.emit(EventBusString.MUSIC_PROGRESS, _playMusicInfo.value);
     });
@@ -419,6 +419,8 @@ class MyLikeMusicModel extends ChangeNotifier {
 class RunWeekModel extends ChangeNotifier {
   List<RunInfoBeanEntity> _runInfoList = [];
 
+  List<RunInfoBeanEntity> _allRunInfoList = [];
+
 //  List<WeekRunBeanEntity> _weekList = [];
   void addAll(List<RunInfoBeanEntity> data) {
     _runInfoList.addAll(data);
@@ -427,8 +429,25 @@ class RunWeekModel extends ChangeNotifier {
 
   void add(RunInfoBeanEntity data) async {
     _runInfoList.add(data);
+    _allRunInfoList.add(data);
     notifyListeners();
   }
+
+  void addAllToAll(List<RunInfoBeanEntity> data) {
+    _allRunInfoList.addAll(data);
+    notifyListeners();
+  }
+
+  List<RunInfoBeanEntity> findAllByTime(int year, int month, int day) {
+    List<RunInfoBeanEntity> list = [];
+    _allRunInfoList.forEach((item){
+      if (item.year == year && item.month == month && item.day == day) {
+        list.add(item);
+      }
+    });
+    return list;
+  }
+
 
   //获取本周的运动里程
   double getAllWeekPath() {

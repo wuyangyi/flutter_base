@@ -13,6 +13,8 @@ import 'package:flutter_base/widgets/button.dart';
 import 'package:flutter_base/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
+import 'calendar_route.dart';
+
 class RunHomeRoute extends BaseRoute {
   @override
   _RunHomeRouteState createState() => _RunHomeRouteState();
@@ -98,7 +100,7 @@ class _RunHomeRouteState extends BaseRouteState<RunHomeRoute> {
                     color: MyColors.title_color,
                   ),
                   onTap: (){
-
+                    NavigatorUtil.pushPageByRoute(context, CalendarRoute());
                   },
                 ),
               ],
@@ -228,7 +230,7 @@ class _RunHomeRouteState extends BaseRouteState<RunHomeRoute> {
                         child: Text(
                           "${item.week}",
                           style: TextStyle(
-                            color: MyColors.lineColor,
+                            color: item.distance > 0 ? MyColors.main_color : MyColors.lineColor,
                             fontSize: 12.0,
                           ),
                         ),

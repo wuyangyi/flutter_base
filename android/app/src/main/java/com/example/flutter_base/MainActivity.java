@@ -444,7 +444,7 @@ public class MainActivity extends FlutterActivity implements MyFlutterPlugin.Sta
 
   //结束运动
   private void stop() {
-    addPosition(startLatLng, R.mipmap.icon_end); //添加终点
+    addPosition(endLatLng, R.mipmap.icon_end); //添加终点
     mTraceClient.stopGather(mOnTraceListener);
     //结束鹰眼轨迹
     mTraceClient.stopTrace(mTrace, mOnTraceListener); //结束服务
