@@ -1,6 +1,6 @@
 # flutter_base
 
-flutter基础封装，集成下拉刷新上拉加载，异步网络请求等
+flutter应用
 
 ## Getting Started
 
