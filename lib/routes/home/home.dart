@@ -6,6 +6,7 @@ import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/dao/music/MyLikeMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/PlayMusicInfoDao.dart';
+import 'package:flutter_base/bean/dao/run/RunInfoDao.dart';
 import 'package:flutter_base/bean/home_app_bean.dart';
 import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
@@ -21,11 +22,13 @@ import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/net/network.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/music/music_home_route.dart';
+import 'package:flutter_base/routes/run/RunHomeRoute.dart';
 import 'package:flutter_base/routes/tally_book/tally_book_home_route.dart';
 import 'package:flutter_base/routes/user_center/user_center_route.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/toast_util.dart';
 import 'package:flutter_base/utils/utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../about_us_route.dart';
@@ -42,6 +45,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
   List<HomeAppBean> homeAppBeans = [
     HomeAppBean("记账本", "\"小小记账本，一键记账，给你舒适的理财投资便捷享受！\"", "ic_book", route: BookHomeRoute()),
     HomeAppBean("音乐播放器", "\"耳目一新的乐库，新歌速递、权威榜单、精选歌单，你要找的音乐，都在这里，开启欲罢不能的音乐之旅！\"", "ic_music", route: BlocProvider(child: MusicHomeRoute(), bloc: MusicRecommendBloc(),)),
+    HomeAppBean("运动计步器", "\"运动轨迹计步工具，无论你是在进行健身散步还是仅仅在做日常运动，都可以用运动计步器来记录你的运动轨迹哦！\"", "ic_run", route: RunHomeRoute()),
     HomeAppBean("备忘录", "\"一款界面优美、操作便捷的备忘录应用，可以让你每时每刻记录下每一天的好心情，让昨天的回忆变成今天的记忆！\"", "ic_notepad"),
     HomeAppBean("更多功能", "\"不断完善是我的理念，让我们一起期待更多新的功能哟~\"", "ic_more_app"),
   ];
@@ -53,6 +57,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
   LocalMusicModel localMusicModel;
   PlayMusicInfoModel playMusicInfoModel;
   MyLikeMusicModel myLikeMusicModel;
+  RunWeekModel runWeekModel;
 
   _HomeRouteState(){
     needAppBar = true;
@@ -71,6 +76,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     localMusicModel = Provider.of<LocalMusicModel>(context, listen: false);
     playMusicInfoModel = Provider.of<PlayMusicInfoModel>(context, listen: false);
     myLikeMusicModel = Provider.of<MyLikeMusicModel>(context, listen: false);
+    runWeekModel = Provider.of<RunWeekModel>(context, listen: false);
     NetClickUtil().login(user.phone, user.password, callBack: (){
       NetClickUtil().getIntegral(); //获得用户积分
     }); //更新下cookie，防止很久前登陆的，cookie过期
@@ -98,6 +104,11 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     MyLikeMusicDao().findAllData(callBack: (data){
       myLikeMusicModel.addAll(data);
     });
+
+    //获取本周运动数据
+    RunInfoDao().findDataByWeek(user.id, onCallBack: (data){
+      runWeekModel.addAll(data);
+    });
   }
 
   @override
@@ -123,7 +134,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
   //首页pageview子页面
   Widget getPageView(HomeAppBean homeBean) {
     return GestureDetector(
-      onTap: (){
+      onTap: () async {
         if (homeBean.route == null) {
           showToast("敬请期待");
         } else {
@@ -188,6 +199,20 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
       ),
     );
   }
+
+//  //权限申请
+//  Future<bool> requestPermission() async {
+//    //请求权限
+//    Map<PermissionGroup, PermissionStatus> permissions =
+//    await PermissionHandler()
+//        .requestPermissions([PermissionGroup.location]);
+//    //校验权限
+//    if(permissions[PermissionGroup.location] != PermissionStatus.granted){
+//      return false;
+//    }
+//    return true;
+//
+//  }
 
 
   //appbar上左边头像

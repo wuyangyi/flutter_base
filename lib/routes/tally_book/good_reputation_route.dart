@@ -79,7 +79,7 @@ class _GoodReputationRouteState extends BaseRouteState<GoodReputationRoute> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20.0),
+            margin: EdgeInsets.only(top: 25.0),
             alignment: Alignment.center,
             child: Text(
               "您的好评就是我们的动力，请认真对待哦~",
@@ -90,7 +90,7 @@ class _GoodReputationRouteState extends BaseRouteState<GoodReputationRoute> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0),
+            margin: EdgeInsets.only(top: 25.0, left: 15.0, right: 15.0),
             child: GoodInput(
               leftText: "服务态度",
               onTap: (index){
@@ -103,7 +103,7 @@ class _GoodReputationRouteState extends BaseRouteState<GoodReputationRoute> {
           ),
 
           Container(
-            margin: EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+            margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
             child: GoodInput(
               leftText: "用户体验",
               onTap: (index){
@@ -115,7 +115,7 @@ class _GoodReputationRouteState extends BaseRouteState<GoodReputationRoute> {
           ),
 
           Container(
-            margin: EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+            margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
             child: GoodInput(
               leftText: "功能全面",
               onTap: (index){

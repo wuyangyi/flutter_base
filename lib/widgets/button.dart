@@ -268,10 +268,15 @@ class _GoodInputState extends State<GoodInput> {
         ),
         Container(
           width: 50.0,
+          height: 20.0,
           margin: EdgeInsets.only(left: 15.0),
           alignment: Alignment.center,
-          child: Text(
-            selectIndex > -1 ? "${selectIndex + 1}分" : "请打分",
+          child: selectIndex > -1 ? Icon(
+            getIcon(selectIndex+1),
+            color: MyColors.main_color,
+            size: 20.0,
+          ) : Text(
+            "请打分",
             style: TextStyle(
                 color: selectIndex > -1 ? MyColors.main_color : MyColors.text_normal,
                 fontSize: 14.0
@@ -280,5 +285,27 @@ class _GoodInputState extends State<GoodInput> {
         ),
       ],
     );
+  }
+
+  IconData getIcon(int index) {
+    IconData icon = Icons.sentiment_very_satisfied;
+    switch(index) {
+      case 1:
+        icon = Icons.sentiment_very_dissatisfied;
+        break;
+      case 2:
+        icon = Icons.sentiment_dissatisfied;
+        break;
+      case 3:
+        icon = Icons.sentiment_neutral;
+        break;
+      case 4:
+        icon = Icons.sentiment_satisfied;
+        break;
+      case 5:
+        icon = Icons.sentiment_very_satisfied;
+        break;
+    }
+    return icon;
   }
 }

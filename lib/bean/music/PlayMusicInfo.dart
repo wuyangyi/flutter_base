@@ -65,7 +65,7 @@ class PlayMusicInfo {
     data['singer'] = this.singer;
     data['play_time'] = this.playTime ?? 0;
     data['value'] = this.value.toString();
-    data['max_time'] = this.maxTime ?? 0;
+    data['max_time'] = this.maxTime ?? 1;
     data['is_local'] = this.isLocal.toString();
     data['image_path'] = this.imagePath;
     data['play_type'] = this.playType ?? 0;

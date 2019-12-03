@@ -35,7 +35,7 @@ dependencies:
   cached_network_image: ^1.1.3 #用于显示来自Internet的图像并将它们保存在缓存目录中。
   shared_preferences: ^0.5.3+4 #shared_preferences本地存储
   flustars: ^0.2.6+1 #该库包含SpUtil（单例"同步" SharedPreferences 工具类），ScreenUtil（屏幕适配），WidgetUtil（Widget渲染监听，获取Widget宽高，在屏幕上的坐标）。 https://github.com/Sky24n/flustars
-  common_utils: ^1.1.3  #该库包含TimerUtil（倒计时，定时任务），TimelineUtil（时间轴），DateUtil（日期格式化），RegexUtil（正则验证手机号，身份证，邮箱等等），RegexUtil（正则验证手机号，身份证，邮箱等等），NumUtil（保留x位小数, 精确加、减、乘、除, 防止精度丢失），MoneyUtil（元转分，分转元），ObjectUtil（判空），LogUtil（简单封装打印日志）。 https://github.com/Sky24n/common_utils
+#  common_utils: ^1.1.3  #该库包含TimerUtil（倒计时，定时任务），TimelineUtil（时间轴），DateUtil（日期格式化），RegexUtil（正则验证手机号，身份证，邮箱等等），RegexUtil（正则验证手机号，身份证，邮箱等等），NumUtil（保留x位小数, 精确加、减、乘、除, 防止精度丢失），MoneyUtil（元转分，分转元），ObjectUtil（判空），LogUtil（简单封装打印日志）。 https://github.com/Sky24n/common_utils
   azlistview: ^0.1.2 #AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
   random_string: ^1.1.0
   image_picker: ^0.6.1+10 #图片选择或者视频选择
@@ -44,6 +44,8 @@ dependencies:
   qrscan: ^0.2.10 #扫一扫
   audioplayers: ^0.13.3 #音乐播放
   path_provider: ^1.1.3
+  permission_handler: '^4.0.0'
+
 
 dev_dependencies:
   flutter_test:
@@ -196,6 +198,7 @@ flutter:
     - images/user_page_top_bg_03.png
     - images/ic_book.png
     - images/ic_music.png
+    - images/ic_run.png
     - images/ic_notepad.png
     - images/ic_more_app.png
     - images/ico_add_blue.png

@@ -8,6 +8,8 @@ import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
+import 'package:flutter_base/bean/run/run_info_bean_entity.dart';
+import 'package:flutter_base/bean/run/week_run_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/bean/user_coin_list_bean_entity.dart';
 
@@ -35,6 +37,10 @@ class EntityFactory {
       return OfficialAccountsBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "ProfileEntity") {
       return ProfileEntity.fromJson(json) as T;
+    } else if (T.toString() == "RunInfoBeanEntity") {
+      return RunInfoBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "WeekRunBeanEntity") {
+      return WeekRunBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "UserBeanEntity") {
       return UserBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "UserCoinListBeanEntity") {

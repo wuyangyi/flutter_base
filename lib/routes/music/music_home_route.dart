@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flukit/flukit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_list_route.dart';
 import 'package:flutter_base/base/base_route.dart';
@@ -216,14 +217,19 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
 
                               },
                               child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
                                 alignment: Alignment.center,
+                                margin: EdgeInsets.only(left: 10.0, right: 10.0),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.0)
                                 ),
                                 child: ClipRRect(
                                   child: new Image.network(
                                     model.picUrl,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
                                   ),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
@@ -315,6 +321,8 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
                                       child: Image.network(
                                         item.picUrl,
                                         width: 45.0,
+                                        height: 45.0,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                     Gaps.hGap5,

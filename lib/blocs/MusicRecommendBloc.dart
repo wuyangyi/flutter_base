@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 import 'bloc_provider.dart';
 
-class MusicRecommendBloc<MusicHomeBean> extends BlocDataBase {
+class MusicRecommendBloc<RecommendBeanData> extends BlocDataBase {
 
   @override
   Future getData({int userId, int page, bool isLoadMore}) async {

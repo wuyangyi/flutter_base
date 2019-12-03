@@ -299,5 +299,19 @@ class Util {
     return n;
   }
 
+  //获取本周周一的日期
+  static DateTime getStartWeekTime() {
+    DateTime nowData = DateTime.now();
+    DateTime data = nowData.add(new Duration(days: -(nowData.weekday - 1)));
+    return new DateTime(data.year, data.month, data.day);
+  }
+
+  //获取下周周一的日期
+  static DateTime getEndWeekTime() {
+    DateTime nowData = DateTime.now();
+    DateTime data = nowData.add(new Duration(days: 7 - nowData.weekday + 1));
+    return new DateTime(data.year, data.month, data.day);
+  }
+
 
 }

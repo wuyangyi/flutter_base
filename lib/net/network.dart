@@ -170,7 +170,109 @@ class NetClickUtil {
   Future<RecommendBeanData> getMusicRecommendData({Function callBack}) async {
     var response = await MusicHttpUtils.request(MUSCI_HOME_RECOMMEND, method: MusicHttpUtils.GET);
     if (response == null || response["data"] == null) {
-      return null;
+      RecommendBeanData data = RecommendBeanData(
+        slider: [
+          RecommandBeanDataSlider(
+            picUrl: "http://hbimg.b0.upaiyun.com/f890b857cbe851d5ccd63418d2662797a1a70b9576216-OctfNE_fw658",
+            id: 0,
+            linkUrl: "http://hbimg.b0.upaiyun.com/f890b857cbe851d5ccd63418d2662797a1a70b9576216-OctfNE_fw658",
+          ),
+          RecommandBeanDataSlider(
+            picUrl: "http://img.zcool.cn/community/018b8a5adea216a80120927b1e20ec.jpg@1280w_1l_2o_100sh.jpg",
+            id: 0,
+            linkUrl: "http://img.zcool.cn/community/018b8a5adea216a80120927b1e20ec.jpg@1280w_1l_2o_100sh.jpg",
+          ),
+          RecommandBeanDataSlider(
+            picUrl: "http://img.zcool.cn/community/01626259f67c4fa801202b0cab54b5.jpg@1280w_1l_2o_100sh.jpg",
+            id: 0,
+            linkUrl: "http://img.zcool.cn/community/01626259f67c4fa801202b0cab54b5.jpg@1280w_1l_2o_100sh.jpg",
+          ),
+          RecommandBeanDataSlider(
+            picUrl: "http://img.zcool.cn/community/01988459ecae0ba801216a4b9322ab.jpg@1280w_1l_2o_100sh.jpg",
+            id: 0,
+            linkUrl: "http://img.zcool.cn/community/01988459ecae0ba801216a4b9322ab.jpg@1280w_1l_2o_100sh.jpg",
+          ),
+          RecommandBeanDataSlider(
+            picUrl: "http://img.zcool.cn/community/01950e58acf2baa801219c775ad064.jpg",
+            id: 0,
+            linkUrl: "http://img.zcool.cn/community/01950e58acf2baa801219c775ad064.jpg",
+          ),
+          RecommandBeanDataSlider(
+            picUrl: "http://img.zcool.cn/community/0142eb59758719a8012193a38ff3d5.jpg@1280w_1l_2o_100sh.png",
+            id: 0,
+            linkUrl: "http://img.zcool.cn/community/0142eb59758719a8012193a38ff3d5.jpg@1280w_1l_2o_100sh.png",
+          ),
+        ],
+        radioList: [
+          RecommandBeanDataRadiolist(
+            picUrl: "http://wx4.sinaimg.cn/orj360/776990e0ly1g1yjcsn35wj20v90r0ae9.jpg",
+            ftitle: "热歌",
+            radioid: 0,
+          ),
+          RecommandBeanDataRadiolist(
+            picUrl: "http://p2.music.126.net/TFF5xp3Iltc_m4RACMBY-A==/5514050813393442.jpg",
+            ftitle: "一人一首出名歌",
+            radioid: 0,
+          ),
+        ],
+        songList: [
+          RecommandBeanDataSonglist(
+            picUrl: "http://p1.music.126.net/UwAkAD_0ZDrkLEVC3lrrJw==/3416182628949245.jpg",
+            songListDesc: "[VIP专享]一周新歌推荐",
+            id: "0",
+            albumPicMid: "0",
+            picMid: "0",
+            accessnum: 12554500,
+            songListAuthor: ""
+          ),
+          RecommandBeanDataSonglist(
+              picUrl: "http://p1.music.126.net/8PkYZGk0AbThTciV_EjbiQ==/18015498021373133.jpg",
+              songListDesc: "失恋歌单，只有歌曲才能安慰自己！",
+              id: "0",
+              albumPicMid: "0",
+              picMid: "0",
+              accessnum: 22834800,
+              songListAuthor: ""
+          ),
+          RecommandBeanDataSonglist(
+              picUrl: "http://p1.music.126.net/jr5gmterKUdu1A7Cv6pqcA==/6668538023356477.jpg",
+              songListDesc: "在这些孤单角色里，你是否能找到自己？",
+              id: "0",
+              albumPicMid: "0",
+              picMid: "0",
+              accessnum: 46489600,
+              songListAuthor: ""
+          ),
+          RecommandBeanDataSonglist(
+              picUrl: "http://hbimg.huabanimg.com/96394ce383f3e03eb1d5873b0cf2e7ac1053d705ca961-3ON38T_fw236",
+              songListDesc: "夜里做了美丽的噩梦",
+              id: "0",
+              albumPicMid: "0",
+              picMid: "0",
+              accessnum: 54655200,
+              songListAuthor: ""
+          ),
+          RecommandBeanDataSonglist(
+              picUrl: "http://pic76.nipic.com/file/20150825/9431976_161223102862_2.jpg",
+              songListDesc: "原有星光的夜晚，总有浪漫的期许",
+              id: "0",
+              albumPicMid: "0",
+              picMid: "0",
+              accessnum: 25658600,
+              songListAuthor: ""
+          ),
+          RecommandBeanDataSonglist(
+              picUrl: "http://hbimg.b0.upaiyun.com/fe63f355ccdb6ae3f7d7c279b4dc39e614af99ef34ad7-GJ6hqp_fw658",
+              songListDesc: "薛之谦 陈奕迅 李荣浩 林宥嘉 凌俊杰 郭顶",
+              id: "0",
+              albumPicMid: "0",
+              picMid: "0",
+              accessnum: 12315500,
+              songListAuthor: ""
+          ),
+        ],
+      );
+      return data;
     }
     RecommendBeanData data = RecommendBeanData.fromJson(response["data"]);
     if (callBack != null) {

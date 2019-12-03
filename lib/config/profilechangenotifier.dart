@@ -10,10 +10,13 @@ import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
+import 'package:flutter_base/bean/run/run_info_bean_entity.dart';
+import 'package:flutter_base/bean/run/week_run_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/res/string.dart';
 import 'package:flutter_base/utils/event_bus.dart';
 import 'package:flutter_base/utils/utils.dart';
+import 'dart:math' as math;
 
 import 'application.dart';
 
@@ -409,5 +412,46 @@ class MyLikeMusicModel extends ChangeNotifier {
     }
     notifyListeners();
     await MyLikeMusicDao().removeOne(data);
+  }
+}
+
+//本周运动数据
+class RunWeekModel extends ChangeNotifier {
+  List<RunInfoBeanEntity> _runInfoList = [];
+
+//  List<WeekRunBeanEntity> _weekList = [];
+  void addAll(List<RunInfoBeanEntity> data) {
+    _runInfoList.addAll(data);
+    notifyListeners();
+  }
+
+  void add(RunInfoBeanEntity data) async {
+    _runInfoList.add(data);
+    notifyListeners();
+  }
+
+  //获取本周的运动里程
+  double getAllWeekPath() {
+    double allPath = 0;
+    _runInfoList.forEach((item){
+      allPath += item.path;
+    });
+    return double.parse(allPath.toStringAsFixed(2));
+  }
+
+  //获取本周的运动次数
+  int getAllRunNumber() {
+    return _runInfoList.length;
+  }
+
+  //获取某一天的总里程
+  double getOneDayAllPath(String week) {
+    double path = 0;
+    _runInfoList.forEach((item){
+      if (week == item.week) {
+        path += item.path;
+      }
+    });
+    return double.parse(path.toStringAsFixed(2));
   }
 }

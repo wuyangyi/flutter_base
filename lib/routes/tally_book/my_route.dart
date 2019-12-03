@@ -100,27 +100,27 @@ class _MyRouteState extends BaseRouteState<MyRoute> {
                     ],
                   ),
                 ),
-                Gaps.hGap5,
-                GestureDetector(
-                  onTap: (){
-                    showToast("签到暂未开通~");
-                  },
-                  child: Container(
-                    height: 25.0,
-                    width: 60.0,
-                    decoration: BoxDecoration(
-                      color: MyColors.main_color,
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text("签到",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
+//                Gaps.hGap5,
+//                GestureDetector(
+//                  onTap: (){
+//                    showToast("签到暂未开通~");
+//                  },
+//                  child: Container(
+//                    height: 25.0,
+//                    width: 60.0,
+//                    decoration: BoxDecoration(
+//                      color: MyColors.main_color,
+//                      borderRadius: BorderRadius.circular(22.0),
+//                    ),
+//                    alignment: Alignment.center,
+//                    child: Text("签到",
+//                      style: TextStyle(
+//                        color: Colors.white,
+//                        fontSize: 12.0,
+//                      ),
+//                    ),
+//                  ),
+//                ),
               ],
             ),
           ),
