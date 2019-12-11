@@ -1,10 +1,13 @@
 
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_base/bean/chat/chat_message_info_bean_entity.dart';
+import 'package:flutter_base/bean/chat/chat_send_bean_entity.dart';
 import 'package:flutter_base/bean/city_bean_entity.dart';
 import 'package:flutter_base/bean/dao/MyBookDao.dart';
 import 'package:flutter_base/bean/dao/MyTallyDao.dart';
 import 'package:flutter_base/bean/dao/UserDao.dart';
+import 'package:flutter_base/bean/dao/chat/ChatInfoDao.dart';
 import 'package:flutter_base/bean/music/music_all_bean_entity.dart';
 import 'package:flutter_base/bean/music/music_search_hot_key_entity.dart';
 import 'package:flutter_base/bean/music/music_singer_bean_entity.dart';
@@ -20,6 +23,7 @@ import 'package:flutter_base/res/string.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'dart:convert';
 
+import 'chat_dio_util.dart';
 import 'dio_util.dart';
 import 'music_dio_util.dart';
 
@@ -319,5 +323,36 @@ class NetClickUtil {
     }
     print("数据L:${response.toString()}");
     return data.xList;
+  }
+
+
+  static final String TL_CHAT = "openapi/api/v2";
+
+  //聊天
+  Future<ChatMessageInfoBeanEntity> sendMessage(String text, ChatSendBeanPerceptionSelfinfoLocation location, {Function callBack}) async {
+    ChatSendBeanEntity chatSendBeanEntity = new ChatSendBeanEntity(
+      userInfo: ChatSendBeanUserinfo(
+        apiKey: "73808218b0544165a57901cb4c4cf5f7",
+        userId: "484225",
+      ),
+      reqType: 0,
+      perception: ChatSendBeanPerception(
+        inputText: ChatSendBeanPerceptionInputtext(
+          text: text,
+        ),
+        selfInfo: ChatSendBeanPerceptionSelfinfo(
+          location: location,
+        ),
+      ),
+    );
+    var response = await ChatHttpUtils.request(TL_CHAT, method: ChatHttpUtils.POST, data: chatSendBeanEntity.toJson());
+    if (response == null) {
+      return null;
+    }
+    ChatMessageInfoBeanEntity chatMessageBeanEntity = ChatMessageInfoBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(chatMessageBeanEntity);
+    }
+    return chatMessageBeanEntity;
   }
 }

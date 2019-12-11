@@ -29,7 +29,7 @@ class MyLocalMusicDao extends BaseDBProvider {
   //插入歌曲信息
   Future<int> insertData(FileInfoBean data) async {
     var db = await getDataBase();
-    var code = db.insert(name, data.toJson());
+    var code = await db.insert(name, data.toJson());
     return code;
   }
 

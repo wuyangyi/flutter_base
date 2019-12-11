@@ -49,6 +49,16 @@ class UserModel extends ProfileChangeNotifier {
     _profile.user = null;
     notifyListeners();
   }
+
+  void setMyChatBg(int index) {
+    user.chatColor = index;
+    notifyListeners();
+  }
+
+  void setRoBotChatBg(int index) {
+    user.robotColor = index;
+    notifyListeners();
+  }
 }
 
 //账本状态

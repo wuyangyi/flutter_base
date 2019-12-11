@@ -27,6 +27,9 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 28
 
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -39,6 +42,11 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+//        manifestPlaceholders = [
+//                AMAP_KEY : "170d3d0bdc78a8ac28a91a7657407126", /// 高德地图key
+//        ]
     }
 
     signingConfigs {
@@ -75,6 +83,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation files('libs/BaiduLBS_Android.jar')
     implementation files('libs/BaiduTraceSDK_v3_1_4.jar')
     implementation files('libs/bos-android-sdk-1.0.3.jar')

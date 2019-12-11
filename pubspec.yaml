@@ -45,6 +45,7 @@ dependencies:
   audioplayers: ^0.13.3 #音乐播放
   path_provider: ^1.1.3
   permission_handler: '^4.0.0'
+#  amap_location: #高德地图
 
 
 dev_dependencies:
@@ -224,3 +225,51 @@ flutter:
     - images/ico_music_play_bg.png
     - images/ico_music_logo.png
     - images/ico_top_bg.png
+    - images/ico_chat_robot.png
+    - images/ic_chat_robot.png
+    - images/ico_chat_voice.png
+    - images/ico_chat_keyboard.png
+    - images/ico_chat_no_emil.png
+    - images/ico_chat_yes_emil.png
+    - images/ico_chat_more.png
+    - images/ico_chat_more_yes.png
+    - images/ease_chatto_bg_normal.9.png
+    - images/ease_chatfrom_bg_normal.9.png
+    - images/emil/ee_1.png
+    - images/emil/ee_2.png
+    - images/emil/ee_3.png
+    - images/emil/ee_4.png
+    - images/emil/ee_5.png
+    - images/emil/ee_6.png
+    - images/emil/ee_7.png
+    - images/emil/ee_8.png
+    - images/emil/ee_9.png
+    - images/emil/ee_10.png
+    - images/emil/ee_11.png
+    - images/emil/ee_12.png
+    - images/emil/ee_13.png
+    - images/emil/ee_14.png
+    - images/emil/ee_15.png
+    - images/emil/ee_16.png
+    - images/emil/ee_17.png
+    - images/emil/ee_18.png
+    - images/emil/ee_19.png
+    - images/emil/ee_20.png
+    - images/emil/ee_21.png
+    - images/emil/ee_22.png
+    - images/emil/ee_23.png
+    - images/emil/ee_24.png
+    - images/emil/ee_25.png
+    - images/emil/ee_26.png
+    - images/emil/ee_27.png
+    - images/emil/ee_28.png
+    - images/emil/ee_29.png
+    - images/emil/ee_30.png
+    - images/emil/ee_31.png
+    - images/emil/ee_32.png
+    - images/emil/ee_33.png
+    - images/emil/ee_34.png
+    - images/emil/ee_35.png
+    - images/ico_card_bg.png
+    - images/ico_woman_white.png
+    - images/ico_man_white.png

@@ -39,7 +39,7 @@ class PlayMusicInfoDao extends BaseDBProvider {
   Future<int> insertData(PlayMusicInfo data) async {
     await removeAll();
     var db = await getDataBase();
-    var code = db.insert(name, data.toJson());
+    var code = await db.insert(name, data.toJson());
     return code;
   }
 

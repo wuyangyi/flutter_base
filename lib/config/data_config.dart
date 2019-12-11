@@ -172,4 +172,19 @@ class DataConfig {
   static String selectMonth = "不限"; //选择的月
   static String selectDay = "不限"; //选择的天
   static String selectType = "不限"; //类别选择
+
+
+  static var myChatColors = [
+    [Colors.white, Color(0xFFCCCCCC)],
+    [Colors.deepPurpleAccent[100], Colors.deepPurpleAccent[200]],
+    [Color(0xFF4BE3D5), Color(0xFF4BD5D5)],
+    [Color(0x99FF8C00), Color(0xFFFF8C00)],
+    [Color(0xFFB5BCF3), Color(0xFFB5ADF3)],
+    [Color(0x997F80CA), Color(0xFF7F80CA)],
+    [Color(0x99BEF0FF), Color(0xFFBEF0FF)],
+    [Color(0x997CAAFF), Color(0xFF7CAAFF)],
+    [Color(0x99CF73FF), Color(0xFFCF73FF)],
+    [Color(0x99E5778B), Color(0xFFE5778B)],
+    [Color(0x990495FB), Color(0xFF0495FB)],
+  ];
 }

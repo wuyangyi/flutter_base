@@ -59,9 +59,12 @@ class _InputTextFieldState extends State<InputTextField> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            child: widget.leftIcon,
+          Offstage(
+            offstage: widget.leftIcon != null,
+            child: Container(
+              alignment: Alignment.center,
+              child: widget.leftIcon,
+            ),
           ),
           Expanded(
             flex: 1,

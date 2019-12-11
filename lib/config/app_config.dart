@@ -2,6 +2,7 @@
 class AppConfig {
   static final String BASE_URL = "https://www.wanandroid.com/"; //请求地址
   static final String QQ_MUSIC_BASE_URL = "http://c.y.qq.com/"; //请求地址
+  static final String TL_CHAT_BASE_URL = "http://openapi.tuling123.com/"; //请求地址
 
   static final bool IS_DEBUG = false; //是否是debug模式
 

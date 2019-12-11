@@ -6,12 +6,14 @@ import 'package:flutter_base/bean/profile_entity.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:provider/provider.dart';
+//import 'package:amap_location/amap_location.dart';
 
 class Application {
   static ProfileEntity profile = ProfileEntity();
 
   ///初始化全局配置
   static Future init() async {
+//    AMapLocationClient.setApiKey("170d3d0bdc78a8ac28a91a7657407126");
     await SpUtil.getInstance();
     var _profile = SpUtil.getString(Ids.appProfile);
     if (_profile != null) {

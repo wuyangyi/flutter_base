@@ -81,7 +81,7 @@ class MyBookDao extends BaseDBProvider{
   //插入账单信息
   Future<int> insertData(MyBookBeanEntity data) async {
     var db = await getDataBase();
-    var code = db.insert(name, data.toJson());
+    var code = await db.insert(name, data.toJson());
     return code;
   }
 

@@ -10,6 +10,7 @@ import 'package:flutter_base/bean/userinfo_select.dart';
 import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/toast_util.dart';
+import 'package:intl/intl.dart';
 
 class Util {
   static String getImgPath(String name, {String format: 'png'}) {
@@ -258,7 +259,6 @@ class Util {
       TextPainter tp = new TextPainter(
           text: span,
           textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr
       );
       tp.layout();
       maxHeight = max(tp.height, maxHeight);
@@ -275,7 +275,6 @@ class Util {
       TextPainter tp = new TextPainter(
           text: span,
           textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr
       );
       tp.layout();
       manWidth = manWidth + tp.width;
@@ -318,6 +317,12 @@ class Util {
     int i = Random().nextInt(DataConfig.myBookColors.length);
     int j = Random().nextInt(DataConfig.myBookColors[0].length);
     return DataConfig.myBookColors[i][j];
+  }
+
+  static String getNowTime() {
+    var formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');
+    DateTime dateTime = DateTime.now();
+    return formatter.format(dateTime);
   }
 
 

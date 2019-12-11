@@ -325,6 +325,9 @@ class _FinishInfoRouteState extends BaseRouteState<FinishInfoRoute> {
   /*拍照*/
   _takePhoto() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (image == null || image?.path == null) {
+      return;
+    }
     setState(() {
       imageFile = image;
       headImage = image.path;
@@ -334,6 +337,9 @@ class _FinishInfoRouteState extends BaseRouteState<FinishInfoRoute> {
   /*相册*/
   _openGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image == null || image?.path == null) {
+      return;
+    }
     setState(() {
       imageFile = image;
       headImage = image.path;

@@ -17,6 +17,8 @@ class UserBeanEntity {
 	int age;
 	bool isFinishInfo;
 	String infoBg;
+	int chatColor; //聊天的气泡颜色
+	int robotColor; //机器人气泡的颜色
 
 	setBirthDate(String time) {
 		this.birthDate = time;
@@ -49,6 +51,8 @@ class UserBeanEntity {
 		synopsis = jsons['synopsis'];
 		age = jsons['age'] ?? 0;
 		infoBg = jsons['info_bg'];
+		chatColor = jsons['chatColor'] ?? 1;
+		robotColor = jsons['robotColor'] ?? 0;
 	}
 
 	Map<String, dynamic> toJson() {
@@ -67,6 +71,8 @@ class UserBeanEntity {
 		data['synopsis'] = this.synopsis;
 		data['age'] = this.age;
 		data['info_bg'] = this.infoBg;
+		data['chatColor'] = this.chatColor ?? 1;
+		data['robotColor'] = this.robotColor ?? 0;
 		return data;
 	}
 }
