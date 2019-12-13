@@ -21,6 +21,7 @@ import 'package:flutter_base/dialog/dialog.dart';
 import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/net/network.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/book_read/BookReadHomeRoute.dart';
 import 'package:flutter_base/routes/chat/ChatWithRobotRoute.dart';
 import 'package:flutter_base/routes/music/music_home_route.dart';
 import 'package:flutter_base/routes/run/RunHomeRoute.dart';
@@ -48,6 +49,7 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     HomeAppBean("音乐播放器", "\"耳目一新的乐库，新歌速递、权威榜单、精选歌单，你要找的音乐，都在这里，开启欲罢不能的音乐之旅！\"", "ic_music", route: BlocProvider(child: MusicHomeRoute(), bloc: MusicRecommendBloc(),)),
     HomeAppBean("运动计步器", "\"运动轨迹计步工具，无论你是在进行健身散步还是仅仅在做日常运动，都可以用运动计步器来记录你的运动轨迹哦！\"", "ic_run", route: RunHomeRoute()),
     HomeAppBean("机器人助手", "\"这是一款智能机器人助手，逗你笑、逗你玩、查资料等等，快来跟你的专属机器人度过琐碎无聊的时间吧~\"", "ic_chat_robot", route: ChatWithRobotRoute()),
+    HomeAppBean("精品阅读", "\"热门小说电子书阅读神器，热门小说尽在其中，全部畅看，种类广泛，畅销好书，应有尽有，快来和我一起尽情阅读吧~\"", "ic_reed_book", route: BookReadHomeRoute()),
 //    HomeAppBean("备忘录", "\"一款界面优美、操作便捷的备忘录应用，可以让你每时每刻记录下每一天的好心情，让昨天的回忆变成今天的记忆！\"", "ic_notepad"),
     HomeAppBean("更多功能", "\"不断完善是我的理念，让我们一起期待更多新的功能哟~\"", "ic_more_app"),
   ];

@@ -23,4 +23,6 @@ class EventBusString {
 
 class HeroString {
   static final String BOOK_MINE_USER_HEAD = "book_mine_user_head"; //记账本我的页面头像
+
+  static final String IMAGE_DETIL_HEAD = "image_detil_head"; //图片详情
 }

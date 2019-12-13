@@ -252,7 +252,7 @@ class LineChartPainter extends CustomPainter {
     //max文字
     TextPainter(
       text: TextSpan(
-        text: "${yMax.toStringAsFixed(0)}$yUnit",
+        text: "${yMax?.toStringAsFixed(0)}$yUnit",
         style: yTextStyle,
       ),
       textDirection: TextDirection.ltr,
@@ -263,7 +263,7 @@ class LineChartPainter extends CustomPainter {
     //center文字
     TextPainter(
       text: TextSpan(
-        text: "${(yMax / 2).toStringAsFixed(0)}$yUnit",
+        text: "${(yMax / 2)?.toStringAsFixed(0)}$yUnit",
         style: yTextStyle,
       ),
       textDirection: TextDirection.ltr,

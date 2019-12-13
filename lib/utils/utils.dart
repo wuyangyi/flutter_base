@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/services.dart';
 import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/book_type_bean.dart';
@@ -259,6 +260,7 @@ class Util {
       TextPainter tp = new TextPainter(
           text: span,
           textAlign: TextAlign.center,
+        textDirection: prefix0.TextDirection.ltr
       );
       tp.layout();
       maxHeight = max(tp.height, maxHeight);
@@ -275,6 +277,7 @@ class Util {
       TextPainter tp = new TextPainter(
           text: span,
           textAlign: TextAlign.center,
+          textDirection: prefix0.TextDirection.ltr
       );
       tp.layout();
       manWidth = manWidth + tp.width;

@@ -12,6 +12,7 @@ import 'package:flutter_base/bean/dao/chat/ChatInfoDao.dart';
 import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/dialog/dialog.dart';
 import 'package:flutter_base/dialog/show_dialog_util.dart';
+import 'package:flutter_base/image/image_look_route.dart';
 import 'package:flutter_base/net/network.dart';
 import 'package:flutter_base/res/color.dart';
 import 'package:flutter_base/res/index.dart';
@@ -24,6 +25,7 @@ import 'package:flutter_base/widgets/status_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'ChatCollectRoute.dart';
 import 'SelectChatBgColorRoute.dart';
 
 //机器人助手
@@ -309,7 +311,6 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
             children: <Widget>[
 
               ClipOval(
-                // 如果已登录，则显示用户头像；若未登录，则显示默认头像
                 child: Image.asset(Util.getImgPath("ico_chat_robot"),
                   width: 45.0,
                   height: 45.0,
@@ -431,14 +432,17 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
         item = Image.asset(Util.getImgPath(data.value));
         break;
       case ChatInfoBeanEntity.IMAGE:
-        item = Container(
-          constraints: BoxConstraints(
-            maxWidth: DataConfig.appSize.width / 2,
-          ),
-          alignment: isMe ? Alignment.topRight : Alignment.topLeft,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(5.0),
-            child: Image.file(File(data.value),),
+        item = Hero(
+          tag: "${HeroString.IMAGE_DETIL_HEAD}$index", //唯一标记
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: DataConfig.appSize.width / 2,
+            ),
+            alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5.0),
+              child: Image.file(File(data.value),),
+            ),
           ),
         );
         break;
@@ -557,6 +561,18 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
             Clipboard.setData(ClipboardData(text: mData[index].value));
             showToast("复制成功");
           }
+        }
+      },
+      onTap: (){
+        if (type == ChatInfoBeanEntity.IMAGE) {
+          Navigator.push(context, PageRouteBuilder(
+            pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
+              return new FadeTransition(
+                opacity: animation,
+                child: ImageLookRoute(mData[index].value, index),
+              );
+            },
+          ),);
         }
       },
       child: item,
@@ -927,19 +943,33 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
         }
       ),
       MenuItemBean(
-        iconData: Icons.location_on,
-        text: "位置(待)",
-        onTap: (){
-          showToast("正在建设中~");
-        }
-      ),
-      MenuItemBean(
           iconData: Icons.person,
           text: "发送名片",
           onTap: (){
             sendMessage(CardText, ChatInfoBeanEntity.CARD);
           }
       ),
+      MenuItemBean(
+          iconData: Icons.bookmark,
+          text: "我的收藏",
+          onTap: (){
+            List<ChatInfoBeanEntity> d = [];
+            mData.forEach((items){
+              if (items.isCollect) {
+                d.add(items);
+              }
+            });
+            NavigatorUtil.pushPageByRoute(context, ChatCollectRoute(d));
+          }
+      ),
+      MenuItemBean(
+          iconData: Icons.question_answer,
+          text: "气泡",
+          onTap: (){
+            NavigatorUtil.pushPageByRoute(context, SelectChatBgColorRoute());
+          }
+      ),
+
       MenuItemBean(
           iconData: Icons.folder,
           text: "文件(待)",
@@ -948,8 +978,8 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
           }
       ),
       MenuItemBean(
-          iconData: Icons.bookmark,
-          text: "我的收藏(待)",
+          iconData: Icons.location_on,
+          text: "位置(待)",
           onTap: (){
             showToast("正在建设中~");
           }
@@ -959,13 +989,6 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
           text: "语音(待)",
           onTap: (){
             showToast("正在建设中~");
-          }
-      ),
-      MenuItemBean(
-          iconData: Icons.question_answer,
-          text: "气泡",
-          onTap: (){
-            NavigatorUtil.pushPageByRoute(context, SelectChatBgColorRoute());
           }
       ),
     ];
@@ -989,8 +1012,6 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
     }
   }
 }
-
-
 
 class MenuItemBean {
   IconData iconData;
