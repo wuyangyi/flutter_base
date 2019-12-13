@@ -1,5 +1,8 @@
 void main() {
   String text = "js({dasdsads})";
-  print(text.indexOf("{"));
-  print(text.lastIndexOf("}"));
+  int index = 0;
+  while(index != text.length) {
+    index++;
+    print("index:$index");
+  }
 }
