@@ -172,7 +172,7 @@ class NetClickUtil {
    * 首页推荐
    */
   Future<RecommendBeanData> getMusicRecommendData({Function callBack}) async {
-    var response = await MusicHttpUtils.request(MUSCI_HOME_RECOMMEND, method: MusicHttpUtils.GET);
+    var response;// = await MusicHttpUtils.request(MUSCI_HOME_RECOMMEND, method: MusicHttpUtils.GET);
     if (response == null || response["data"] == null) {
       RecommendBeanData data = RecommendBeanData(
         slider: [
