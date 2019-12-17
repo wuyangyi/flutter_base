@@ -132,7 +132,7 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () async {
-                    dateTime = await showDatePicker(
+                    var date = await showDatePicker(
                       context: context,
                       //定义控件打开时默认选择日期
                       initialDate: dateTime,
@@ -140,8 +140,9 @@ class _CustomKeyboardState extends State<CustomKeyboard> {
                       firstDate: DateTime(1900, 1),
                       //定义控件最晚可以选择的日期
                       lastDate: DateTime.now(),);
-                    if (dateTime != null) {
+                    if (date != null) {
                       setState(() {
+                        dateTime = date;
                         time = time ="${dateTime.month}.${dateTime.day}";
                       });
                     }
