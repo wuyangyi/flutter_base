@@ -21,6 +21,8 @@ class Gaps {
   static Widget vGap10 = new SizedBox(height: 10.0);
   static Widget vGap15 = new SizedBox(height: 15.0);
   static Widget vGap20 = new SizedBox(height: 20.0);
+  static Widget vGap30 = new SizedBox(height: 30.0);
+  static Widget vGap50 = new SizedBox(height: 50.0);
 }
 
 

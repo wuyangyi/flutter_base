@@ -97,6 +97,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - jsons/city.json
+    - jsons/citys.json
     - images/ico_network_error.png
     - images/ico_data_empty.png
     - images/icon_back_white.png
@@ -275,3 +276,19 @@ flutter:
     - images/ico_man_white.png
     - images/ic_reed_book.png
     - images/ico_book_bg.png
+    - images/ic_weather.png
+    - images/weather/0.png
+    - images/weather/1.png
+    - images/weather/2.png
+    - images/weather/3.png
+    - images/weather/31.png
+    - images/weather/32.png
+    - images/weather/4.png
+    - images/weather/41.png
+    - images/weather/42.png
+    - images/ico_windmill.png
+    - images/ico_windmill_blade.png
+    - images/ico_weather_sun.png
+    - images/ico_weather_sun_night.png
+    - images/ico_weather_sun_dusk.png
+    - images/ico_seather_cloudy.png

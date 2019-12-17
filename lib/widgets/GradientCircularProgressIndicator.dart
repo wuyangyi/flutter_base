@@ -10,7 +10,8 @@ class GradientCircularProgressIndicator extends StatelessWidget {
     this.strokeCapRound = false,
     this.backgroundColor = const Color(0xFFEEEEEE),
     this.totalAngle = 2*pi,
-    this.value
+    this.value,
+    this.angle
   });
 
   ///粗细
@@ -37,6 +38,9 @@ class GradientCircularProgressIndicator extends StatelessWidget {
   /// 渐变色的终止点，对应colors属性
   final List<double> stops;
 
+  ///旋转角度
+  final double angle;
+
   @override
   Widget build(BuildContext context) {
     double _offset = .0;
@@ -53,7 +57,7 @@ class GradientCircularProgressIndicator extends StatelessWidget {
       _colors = [color, color];
     }
     return Transform.rotate(
-      angle: -pi / 2.0 - _offset,
+      angle: angle ?? -pi / 2.0 - _offset,
       child: CustomPaint(
           size: Size.fromRadius(radius),
           painter: _GradientCircularProgressPainter(

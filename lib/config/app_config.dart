@@ -1,8 +1,9 @@
 ///全局配置
 class AppConfig {
-  static final String BASE_URL = "https://www.wanandroid.com/"; //请求地址
-  static final String QQ_MUSIC_BASE_URL = "http://c.y.qq.com/"; //请求地址
-  static final String TL_CHAT_BASE_URL = "http://openapi.tuling123.com/"; //请求地址
+  static final String BASE_URL = "https://www.wanandroid.com/"; //玩android请求地址
+  static final String QQ_MUSIC_BASE_URL = "http://c.y.qq.com/"; //音乐请求地址
+  static final String TL_CHAT_BASE_URL = "http://openapi.tuling123.com/"; //图灵机器人请求地址
+  static final String WEATHER_BASE_URL = "http://t.weather.sojson.com/api/weather/city/"; //天气请求地址
 
   static final bool IS_DEBUG = false; //是否是debug模式
 

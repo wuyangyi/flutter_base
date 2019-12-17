@@ -380,6 +380,12 @@ class _FinishInfoRouteState extends BaseRouteState<FinishInfoRoute> {
     user.address = _addressController.text;
     user.isFinishInfo = true;
     user.setLogo(headImage);
+    if (user?.robotColor == null) {
+      user.robotColor = 0;
+    }
+    if (user.chatColor == null) {
+      user.chatColor = 1;
+    }
     UserDao().saveData(user);
     Provider.of<UserModel>(context, listen: false).user = user;
     Application.saveProfile(); //保存信息

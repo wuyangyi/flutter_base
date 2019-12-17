@@ -16,6 +16,8 @@ import 'package:flutter_base/bean/run/run_info_bean_entity.dart';
 import 'package:flutter_base/bean/run/week_run_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/bean/user_coin_list_bean_entity.dart';
+import 'package:flutter_base/bean/weather/weather_bean_entity.dart';
+import 'package:flutter_base/bean/weather/weather_city_list_bean_entity.dart';
 
 class EntityFactory {
   static T generateOBJ<T>(json) {
@@ -57,6 +59,10 @@ class EntityFactory {
       return UserBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "UserCoinListBeanEntity") {
       return UserCoinListBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "WeatherBeanEntity") {
+      return WeatherBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "WeatherCityListBeanEntity") {
+      return WeatherCityListBeanEntity.fromJson(json) as T;
     } else {
       return null;
     }

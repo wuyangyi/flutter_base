@@ -17,8 +17,11 @@ import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/bean/user_coin_list_bean_entity.dart';
+import 'package:flutter_base/bean/weather/weather_bean_entity.dart';
+import 'package:flutter_base/bean/weather/weather_city_list_bean_entity.dart';
 import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/config/data_config.dart';
+import 'package:flutter_base/net/weather_dio_util.dart';
 import 'package:flutter_base/res/string.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'dart:convert';
@@ -354,5 +357,32 @@ class NetClickUtil {
       callBack(chatMessageBeanEntity);
     }
     return chatMessageBeanEntity;
+  }
+
+  //获得天气
+  Future<WeatherBeanEntity> getWeather(String city, {Function callBack}) async {
+    var response = await WeatherHttpUtils.request(city, method: WeatherHttpUtils.GET);
+    if (response == null) {
+      return getWeather(city);
+    }
+    WeatherBeanEntity data = WeatherBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  ///获取全国城市代码信息
+  Future<WeatherCityListBeanEntity> getCityListData({Function callBack}) async {
+    var response = await DefaultAssetBundle.of(context).loadString("jsons/citys.json");
+    if (response == null) {
+      return getCityListData();
+    }
+    print("接口数据: $response");
+    WeatherCityListBeanEntity data = WeatherCityListBeanEntity.fromJson(json.decode(response));
+    if (callBack != null){
+      callBack(data);
+    }
+    return data;
   }
 }

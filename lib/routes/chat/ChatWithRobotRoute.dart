@@ -151,7 +151,12 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
     );
     await ChatInfoDao().insertData(chatInfoBeanEntity, onCallBack: (id){
       chatInfoBeanEntity.id = id;
-      mData.insert(0, chatInfoBeanEntity);
+      if (mData == null || mData.isEmpty) {
+        mData = [];
+        mData.add(chatInfoBeanEntity);
+      } else {
+        mData.insert(0, chatInfoBeanEntity);
+      }
       doSetState();
     });
 
@@ -582,9 +587,9 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
   //获得当前气泡的背景色
   Color getSendBgColor(bool isMe, int index) {
     if(isMe) {
-      return index == _downIndex ? DataConfig.myChatColors[user.chatColor][1] : DataConfig.myChatColors[user.chatColor][0];
+      return index == _downIndex ? DataConfig.myChatColors[user?.chatColor ?? 1][1] : DataConfig.myChatColors[user?.chatColor ?? 1][0];
     } else {
-      return _downIndex == index ? DataConfig.myChatColors[user.robotColor][1] : DataConfig.myChatColors[user.robotColor][0];
+      return _downIndex == index ? DataConfig.myChatColors[user?.robotColor ?? 0][1] : DataConfig.myChatColors[user?.robotColor ?? 0][0];
     }
   }
 
