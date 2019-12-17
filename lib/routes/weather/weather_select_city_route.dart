@@ -24,9 +24,9 @@ class _WeatherSelectCityRouteState extends BaseRouteState<WeatherSelectCityRoute
     return buildBody(context,
       body: Scrollbar(
         child: ListView.separated(
-          itemCount: widget.cityList.citys.length,
+          itemCount: widget.cityList.citys.length + 1,
           separatorBuilder: (context, index){
-            return widget.cityList.citys[index].cityCode == null || widget.cityList.citys[index].cityCode.isEmpty ?
+            return index == 0 || widget.cityList.citys[index - 1].cityCode == null || widget.cityList.citys[index - 1].cityCode.isEmpty ?
             Container() :
             Container(
               width: double.infinity,
@@ -36,8 +36,69 @@ class _WeatherSelectCityRouteState extends BaseRouteState<WeatherSelectCityRoute
             );
           },
           itemBuilder: (context, index) {
-            return widget.cityList.citys[index].cityCode == null || widget.cityList.citys[index].cityCode.isEmpty ?
+            return index != 0 && (widget.cityList.citys[index - 1].cityCode == null || widget.cityList.citys[index - 1].cityCode.isEmpty) ?
             Container() :
+            index == 0 ? Column(
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  height: 35.0,
+                  color: MyColors.home_bg,
+                  padding: EdgeInsets.only(left: 10.0),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "当前城市",
+                    style: TextStyle(
+                      color: MyColors.text_normal,
+                      fontSize: 13.0
+                    ),
+                  ),
+                ),
+                Ink(
+                  color: Colors.white,
+                  child: InkWell(
+                    onTap: (){
+                      finish(data: widget.index);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 50.0,
+                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              widget.cityList.citys[widget.index].cityName,
+                              style: TextStyle(
+                                color: MyColors.main_color,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.done, color: MyColors.main_color,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 35.0,
+                  color: MyColors.home_bg,
+                  padding: EdgeInsets.only(left: 10.0),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "更多城市",
+                    style: TextStyle(
+                        color: MyColors.text_normal,
+                        fontSize: 13.0
+                    ),
+                  ),
+                ),
+              ],
+            ) :
             Ink(
               color: Colors.white,
               child: InkWell(
