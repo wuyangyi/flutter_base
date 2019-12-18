@@ -162,7 +162,7 @@ class _WeatherHomeRouteState extends BaseRouteState<WeatherHomeRoute> {
           width: double.infinity,
           height: double.infinity,
           child: Image.asset(
-            Util.getImgPath(DateTime.now().hour >= getSunDownTime() + 1 ? "ico_weather_sun_night" : DateTime.now().hour >= getSunDownTime() - 1 ? "ico_weather_sun_dusk" : "ico_weather_sun"),
+            Util.getImgPath(DateTime.now().hour >= getSunDownTime() + 1 ? "ico_weather_sun_night" : DateTime.now().hour >= getSunDownTime() - 1 ? "ico_weather_sun_dusk" : "ico_weather_sun"),//ico_weather_sun_two
             fit: BoxFit.cover,
           ),
         );

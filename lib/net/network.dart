@@ -363,7 +363,7 @@ class NetClickUtil {
   Future<WeatherBeanEntity> getWeather(String city, {Function callBack}) async {
     var response = await WeatherHttpUtils.request(city, method: WeatherHttpUtils.GET);
     if (response == null) {
-      return getWeather(city);
+      return null;
     }
     WeatherBeanEntity data = WeatherBeanEntity.fromJson(response);
     if (callBack != null) {

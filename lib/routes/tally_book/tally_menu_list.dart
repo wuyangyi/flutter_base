@@ -280,7 +280,8 @@ class _TallyMenuTimeState extends State<TallyMenuTime> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 10.0, bottom: 15.0),
+//            margin: EdgeInsets.only(top: 10.0, bottom: 15.0),
+            height: 40.0,
             alignment: Alignment.center,
             child: Text(
               selectTime,
@@ -367,10 +368,18 @@ class _TallyMenuTimeState extends State<TallyMenuTime> {
                                 initMonthList();
                                 if (selectMonthIndex >= listMonths.length) {
                                   selectMonthIndex = listMonths.length - 1;
+                                  _scrollMonthController.jumpTo(itemHeight * selectMonthIndex);
+                                } else if (selectMonthIndex != listMonths.length - 1) {
+                                  _scrollMonthController.jumpTo(itemHeight * (selectMonthIndex + 1));
+                                  _scrollMonthController.jumpTo(itemHeight * selectMonthIndex);
                                 }
                                 initDayList();
                                 if (selectDayIndex >= listDays.length) {
                                   selectDayIndex = listDays.length - 1;
+                                  _scrollDayController.jumpTo(itemHeight * selectDayIndex);
+                                } else if (selectDayIndex != listDays.length - 1) {
+                                  _scrollDayController.jumpTo(itemHeight * (selectDayIndex + 1));
+                                  _scrollDayController.jumpTo(itemHeight * selectDayIndex);
                                 }
                                 initShowTime();
                               });
@@ -459,6 +468,10 @@ class _TallyMenuTimeState extends State<TallyMenuTime> {
                                 initDayList();
                                 if (selectDayIndex >= listDays.length) {
                                   selectDayIndex = listDays.length - 1;
+                                  _scrollDayController.jumpTo(itemHeight * selectDayIndex);
+                                } else if (selectDayIndex != listDays.length - 1) {
+                                  _scrollDayController.jumpTo(itemHeight * (selectDayIndex + 1));
+                                  _scrollDayController.jumpTo(itemHeight * selectDayIndex);
                                 }
                                 initShowTime();
                               });
@@ -477,6 +490,7 @@ class _TallyMenuTimeState extends State<TallyMenuTime> {
                                   physics: BouncingScrollPhysics(),
                                   controller: _scrollMonthController,
                                   itemExtent: itemHeight,
+                                  clipToSize: true,
                                   children: listMonths.map((item){
                                     return Container(
                                       height: itemHeight,
