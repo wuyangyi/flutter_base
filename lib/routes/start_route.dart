@@ -6,7 +6,9 @@ import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/config/data_config.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
+import 'package:flutter_base/utils/toast_util.dart';
 import 'package:flutter_base/utils/utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'finish_user_info/finish_info_route.dart';
@@ -31,6 +33,7 @@ class _StartRouteState extends State<StartRoute> with SingleTickerProviderStateM
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     super.initState();
+    requestPermission();
     _startTimer();
     controller = new AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
@@ -42,6 +45,23 @@ class _StartRouteState extends State<StartRoute> with SingleTickerProviderStateM
       });
     controller.forward();
   }
+
+  Future requestPermission() async {
+    PermissionStatus permissionStatus = await  PermissionHandler().checkPermissionStatus(PermissionGroup.location);
+    if (permissionStatus == PermissionStatus.granted) {
+      return;
+    }
+    // 申请权限
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.location]);
+
+    // 申请结果
+    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.location);
+    if (permission == PermissionStatus.granted) {
+    } else {
+      ToastUtil.showToast("权限申请被拒绝");
+    }
+  }
+
 
   @override
   void dispose() {

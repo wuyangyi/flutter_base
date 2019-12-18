@@ -47,6 +47,7 @@ import java.util.List;
 
 import io.flutter.Log;
 import io.flutter.app.FlutterActivity;
+import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity implements MyFlutterPlugin.StartLocationClick {
 
@@ -248,7 +249,7 @@ public class MainActivity extends FlutterActivity implements MyFlutterPlugin.Sta
     initView();
     initMap();
     ViewRegistrant.registerWith(this, view);
-//    GeneratedPluginRegistrant.registerWith(this);
+    GeneratedPluginRegistrant.registerWith(this);
     myFlutterPlugin = new MyFlutterPlugin(this);
     myFlutterPlugin.setStartLocationClick(this);
     MyFlutterPlugin.registerWith(this, myFlutterPlugin); //自定义插件注册

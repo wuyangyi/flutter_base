@@ -10,6 +10,7 @@ import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
 import 'package:flutter_base/widgets/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 ///
@@ -437,5 +438,29 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   //自定义标题控件
   Widget getTitleWidget() {
     return null;
+  }
+
+  //申请权限
+  Future requestPermission(PermissionGroup group, {Function onFailed, Function onSuccess}) async {
+    PermissionStatus permissionStatus = await  PermissionHandler().checkPermissionStatus(PermissionGroup.location);
+    if (permissionStatus == PermissionStatus.granted) {
+      return;
+    }
+    // 申请权限
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([group]);
+
+    // 申请结果
+    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(group);
+    if (permission == PermissionStatus.granted) {
+      if (onSuccess != null) {
+        onSuccess();
+      }
+    } else {
+      if (onFailed != null) {
+        onFailed();
+      } else {
+        ToastUtil.showToast("权限申请被拒绝");
+      }
+    }
   }
 }
