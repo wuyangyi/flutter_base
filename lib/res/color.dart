@@ -25,4 +25,5 @@ class MyColors{
   static const Color seekBar_color = Color(0xFFF2F1F3);
   static const Color top_bg = Color(0xFFF2F2F2);
   static const Color chat_bg = Color(0xFFF2F4F5);
+  static const Color chess_text_color =Color(0xFFFF0400);
 }

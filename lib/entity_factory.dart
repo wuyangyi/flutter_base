@@ -2,6 +2,7 @@ import 'package:flutter_base/bean/chat/chat_info_bean_entity.dart';
 import 'package:flutter_base/bean/chat/chat_message_bean_entity.dart';
 import 'package:flutter_base/bean/chat/chat_message_info_bean_entity.dart';
 import 'package:flutter_base/bean/chat/chat_send_bean_entity.dart';
+import 'package:flutter_base/bean/chess/chess_game_info_bean_entity.dart';
 import 'package:flutter_base/bean/city_bean_entity.dart';
 import 'package:flutter_base/bean/music/music_all_bean_entity.dart';
 import 'package:flutter_base/bean/music/music_search_hot_key_entity.dart';
@@ -31,6 +32,8 @@ class EntityFactory {
       return ChatMessageInfoBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "ChatSendBeanEntity") {
       return ChatSendBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "ChessGameInfoBeanEntity") {
+      return ChessGameInfoBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "CityBeanEntity") {
       return CityBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "MusicAllBeanEntity") {

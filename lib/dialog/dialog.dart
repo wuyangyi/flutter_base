@@ -1126,3 +1126,38 @@ class _MusicListDialogState extends State<MusicListDialog> {
     );
   }
 }
+
+//象棋胜利弹窗
+class ChessWinDialog extends StatelessWidget {
+  final String winner;
+
+  const ChessWinDialog({Key key, this.winner}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.pop(context);
+      },
+      child: Center(
+        child: Image.asset(
+          Util.getImgPath(getWinImage()),
+          width: MediaQuery.of(context).size.width / 3,
+        ),
+      ),
+    );
+  }
+
+  String getWinImage() {
+    String image;
+    if (winner == "红棋") {
+      image = "chess/ico_win_hong";
+    } else if(winner == "黑棋") {
+      image = "chess/ico_win_hei";
+    } else {
+      image = "chess/ico_win";
+    }
+    return image;
+  }
+}
+

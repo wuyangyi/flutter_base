@@ -293,3 +293,30 @@ flutter:
     - images/ico_weather_sun_dusk.png
     - images/ico_seather_cloudy.png
     - images/ico_weather_sun_two.png
+    - images/ico_checkerboard_bg.png
+    - images/ico_chess_start.png
+    - images/ico_chess_home_bg.png
+    - images/ic_chinese_chess.png
+    - images/ico_chess_background.png
+    - images/ico_chess_bt_bg.png
+    - images/ico_chess_red_head.png
+    - images/ico_chess_black_head.png
+    - images/ico_chess_vs.png
+    - images/chess/ico_qizi.png
+    - images/chess/ico_hongzu.png
+    - images/chess/ico_hongpao.png
+    - images/chess/ico_hongju.png
+    - images/chess/ico_hongma.png
+    - images/chess/ico_hongxiang.png
+    - images/chess/ico_hongshi.png
+    - images/chess/ico_hongjiang.png
+    - images/chess/ico_heibing.png
+    - images/chess/ico_heipao.png
+    - images/chess/ico_heiju.png
+    - images/chess/ico_heima.png
+    - images/chess/ico_heixiang.png
+    - images/chess/ico_heishi.png
+    - images/chess/ico_heishuai.png
+    - images/chess/ico_win.png
+    - images/chess/ico_win_hong.png
+    - images/chess/ico_win_hei.png
