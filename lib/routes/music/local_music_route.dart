@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
@@ -28,6 +30,7 @@ class LocalMusicRoute extends BaseRoute {
 }
 
 class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleTickerProviderStateMixin {
+  static const myPlugin = const MethodChannel('com.example.flutter_base/plugin');
 
   _LocalMusicRouteState(){
     title = "扫描歌曲";
@@ -57,7 +60,7 @@ class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleT
   void initState() {
     super.initState();
     localMusicModel = Provider.of<LocalMusicModel>(context, listen: false);
-    initData();
+//    initData();
     controller = new AnimationController(
         duration: const Duration(seconds: 2), vsync: this);
     animation = new Tween(begin: 0.0, end: math.pi * 2).animate(controller)
@@ -75,30 +78,30 @@ class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleT
 //    search(sdCardDir);
   }
 
-  Future search(FileSystemEntity file) async {
-    if (file != null) {
-      if (FileSystemEntity.isFileSync(file.path)) { //文件
-        String fileName = file.path;
-        if (fileName.endsWith(".mp3")) {
-          FileInfoBean fileInfoBean = new FileInfoBean(
-            fileName: fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf(".mp3")),
-            path: fileName,
-            uri: file.uri,
-            check: true
-          );
-          files.add(fileInfoBean);
-          selectNumber++;
-        }
-        print("文件名：$fileName");
-      } else { //文件夹
-        List<FileSystemEntity> fs = Directory(file.path).listSync();
-        print("文件夹名：${file.path}");
-        for (int i = 0; i < fs.length; i++) {
-          await search(fs[i]);
-        }
-      }
-    }
-  }
+//  Future search(FileSystemEntity file) async {
+//    if (file != null) {
+//      if (FileSystemEntity.isFileSync(file.path)) { //文件
+//        String fileName = file.path;
+//        if (fileName.endsWith(".mp3")) {
+//          FileInfoBean fileInfoBean = new FileInfoBean(
+//            fileName: fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf(".mp3")),
+//            path: fileName,
+//            uri: file.uri,
+//            check: true
+//          );
+//          files.add(fileInfoBean);
+//          selectNumber++;
+//        }
+//        print("文件名：$fileName");
+//      } else { //文件夹
+//        List<FileSystemEntity> fs = Directory(file.path).listSync();
+//        print("文件夹名：${file.path}");
+//        for (int i = 0; i < fs.length; i++) {
+//          await search(fs[i]);
+//        }
+//      }
+//    }
+//  }
 
   @override
   void dispose() {
@@ -381,7 +384,7 @@ class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleT
   }
 
   Future loadData() async {
-    await search(sdCardDir);
+    await loadMusicFile();
     if (isStartSearch) {
       setState(() {
         isStartSearch = false;
@@ -389,5 +392,27 @@ class _LocalMusicRouteState extends BaseRouteState<LocalMusicRoute> with SingleT
         controller.stop();
       });
     }
+  }
+
+  //根据文件后缀获取文件
+  Future loadMusicFile() async {
+    Map<String, Object> map = {"suffix": ".mp3"};
+    List result = await myPlugin.invokeMethod("getFileBySuffix", map);
+    print("文件：${result.toString()}");
+    result.forEach((filePath){
+      String file = filePath.toString();
+      if (file.endsWith(".mp3")) {
+        print("文件：$file");
+        FileInfoBean fileInfoBean = new FileInfoBean(
+            fileName: file.substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf(".mp3")),
+            path: file,
+            uri: Uri.parse(file),
+            check: true
+        );
+        files.add(fileInfoBean);
+        selectNumber++;
+      }
+
+    });
   }
 }

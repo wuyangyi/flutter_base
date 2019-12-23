@@ -3,6 +3,12 @@ package com.example.flutter_base;
 import android.app.Activity;
 import android.util.Log;
 
+import com.example.flutter_base.bean.Song;
+import com.example.flutter_base.util.MusicUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
@@ -31,6 +37,16 @@ public class MyFlutterPlugin implements MethodChannel.MethodCallHandler {
             if(startLocationClick != null) {
                 startLocationClick.startLocation(userId == null ? 0 : userId);
             }
+        } else  if(methodCall.method.equals("getFileBySuffix")) {
+            List<String> results = new ArrayList<>();
+            String suffix = methodCall.argument("suffix");
+            if (suffix.equals(".mp3")) {
+                List<Song> songs = MusicUtil.getMusic(activity);
+                for (Song s : songs) {
+                    results.add(s.path);
+                }
+            }
+            result.success(results);
         }
     }
 
