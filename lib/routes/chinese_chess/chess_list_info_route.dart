@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/chess/chess_game_info_bean_entity.dart';
 import 'package:flutter_base/bean/dao/chess/ChessGameInfoDao.dart';
+import 'package:flutter_base/dialog/dialog.dart';
+import 'package:flutter_base/dialog/show_dialog_util.dart';
 import 'package:flutter_base/res/color.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
@@ -58,77 +60,120 @@ class _ChessListInfoRouteState extends BaseRouteState<ChessListInfoRoute> {
           );
         },
         itemBuilder: (context, index) {
-          return Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(15.0),
-            color: MyColors.home_bg,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      mListData[index].gameType,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Gaps.hGap10,
-                    Image.asset(
-                      Util.getImgPath(getImageName(mListData[index].winner)),
-                      width: 25.0,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        getWinner(mListData[index].winner, mListData[index].bottomIsRed),
-                        textAlign: TextAlign.right,
+          return Dismissible(
+            key: Key("key_${mListData[index].id}"),
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 15.0),
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+            secondaryBackground: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 15.0),
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+            confirmDismiss: (direction) async {
+              String centerHint = "是否删除该记录？";
+              bool isDismiss = false;
+              int i = await showCenterDialog(context, CenterHintDialog(text: centerHint,));
+              if (i == 1) {
+                isDismiss = true;
+              }
+              return isDismiss;
+            },
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(15.0),
+              color: MyColors.home_bg,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        mListData[index].gameType,
                         style: TextStyle(
-                          color: getWinnerColor(mListData[index].winner, mListData[index].bottomIsRed),
-                          fontSize: 13.0,
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Gaps.vGap5,
-                Text(
-                  "结束原因：${mListData[index].reason}",
-                  style: TextStyle(
-                    color: MyColors.text_normal,
-                    fontSize: 11.0,
-                  ),
-                ),
-                Gaps.vGap5,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "总时长：${mListData[index].allGameTime ~/ 60 > 0 ? '${mListData[index].allGameTime ~/ 60}分' : ''}${mListData[index].allGameTime % 60}秒",
-                      style: TextStyle(
-                        color: MyColors.title_color,
-                        fontSize: 14.0,
+                      Gaps.hGap10,
+                      Image.asset(
+                        Util.getImgPath(getImageName(mListData[index].winner)),
+                        width: 25.0,
                       ),
+                      Gaps.hGap10,
+                      mListData[index].collect ? Icon(Icons.grade, color: Colors.green,size: 20.0,) : Container(),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          getWinner(mListData[index].winner, mListData[index].bottomIsRed),
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: getWinnerColor(mListData[index].winner, mListData[index].bottomIsRed),
+                            fontSize: 13.0,
+                          ),
+                        )
+                      ),
+
+                    ],
+                  ),
+                  Gaps.vGap5,
+                  Text(
+                    "结束原因：${mListData[index].reason}",
+                    style: TextStyle(
+                      color: MyColors.text_normal,
+                      fontSize: 11.0,
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "开始时间：${getTime(mListData[index].startTime)}",
-                        textAlign: TextAlign.right,
+                  ),
+                  Gaps.vGap5,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "总时长：${mListData[index].allGameTime ~/ 60 > 0 ? '${mListData[index].allGameTime ~/ 60}分' : ''}${mListData[index].allGameTime % 60}秒",
                         style: TextStyle(
                           color: MyColors.title_color,
                           fontSize: 14.0,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "开始时间：${getTime(mListData[index].startTime)}",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: MyColors.title_color,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
+            onDismissed: (direction){
+              if (direction == DismissDirection.endToStart) { //删除
+                ChessGameInfoDao().deleteById(mListData[index].id);
+                if (mListData.contains(mListData[index])) {
+                  setState(() {
+                    mListData.remove(mListData[index]);
+                  });
+                }
+              }
+            },
           );
         },
       ),

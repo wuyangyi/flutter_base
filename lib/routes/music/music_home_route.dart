@@ -241,12 +241,14 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
 
                       //歌手 排行 歌单
                       Container(
+                        height: 70.0,
                         margin: EdgeInsets.all(15.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                        child: ReorderableListView(
+                          scrollDirection: Axis.horizontal,
                           children: homeMenuItems.map((item){
-                            return Expanded(
-                              flex: 1,
+                            return Container(
+                              key: Key("key_${item.title}"),
+                              width: (MediaQuery.of(context).size.width - 30.0) / homeMenuItems.length,
                               child: GestureDetector(
                                 onTap: (){
                                   if (item.route != null) {
@@ -291,6 +293,17 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
                               ),
                             );
                           }).toList(),
+                          onReorder: (int oldIndex, int newIndex) {
+                            setState(() {
+                              if(oldIndex < newIndex) {
+                                newIndex -= 1;
+                              }
+
+                              var temp = homeMenuItems.removeAt(oldIndex);
+                              homeMenuItems.insert(newIndex, temp);
+                              print("长度：${homeMenuItems.length}  oldIndex:$oldIndex    newIndex:$newIndex");
+                            });
+                          },
                         ),
                       ),
 
@@ -445,7 +458,6 @@ class _MusicHomeRouteState extends MusicBaseRouteState<MusicHomeRoute> {
                           );
                         },
                       ),
-
                     ],
                   ),
                 ),

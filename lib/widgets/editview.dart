@@ -60,7 +60,7 @@ class _InputTextFieldState extends State<InputTextField> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Offstage(
-            offstage: widget.leftIcon != null,
+            offstage: widget.leftIcon == null,
             child: Container(
               alignment: Alignment.center,
               child: widget.leftIcon,

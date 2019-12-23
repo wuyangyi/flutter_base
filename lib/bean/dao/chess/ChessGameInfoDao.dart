@@ -26,7 +26,8 @@ class ChessGameInfoDao extends BaseDBProvider{
       winner TEXT,
       allGameTime INTEGER,
       startTime TEXT,
-      endTime TEXT)
+      endTime TEXT,
+      collect TEXT)
     ''';
   }
 
@@ -53,6 +54,18 @@ class ChessGameInfoDao extends BaseDBProvider{
     print("插入的信息：${data.toJson()}");
     var code = await db.insert(name, data.toJson());
     print("插入：$code");
+    return code;
+  }
+
+  Future<int> deleteById(int id) async {
+    var db = await getDataBase();
+    var code = await db.delete(name, where: '$columnId = ?', whereArgs: [id]);
+    return code;
+  }
+
+  Future<int> upData(ChessGameInfoBeanEntity data) async {
+    var db = await getDataBase();
+    var code = await db.update(name, data.toJson(), where: "$columnId = ?", whereArgs: [data.id]);
     return code;
   }
 
