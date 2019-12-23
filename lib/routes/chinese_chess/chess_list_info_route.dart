@@ -31,12 +31,14 @@ class _ChessListInfoRouteState extends BaseRouteState<ChessListInfoRoute> {
     await ChessGameInfoDao().findData(onCallBack: (data){
       mListData = data;
       setState(() {
+
         if (mListData.isEmpty) {
           loadStatus = Status.empty;
-        } else {
+        } else{
           loadStatus = Status.success;
         }
       });
+      print("loadStatus:$loadStatus");
     });
   }
 

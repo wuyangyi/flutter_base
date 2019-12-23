@@ -34,7 +34,7 @@ class ChessGameInfoDao extends BaseDBProvider{
    * 查询对局信息
    * desc 倒序
    */
-  Future<List<ChessGameInfoBeanEntity>> findData({Function onCallBack, bool desc = true}) async {
+  Future<List<ChessGameInfoBeanEntity>> findData({bool desc = true, Function onCallBack,}) async {
     var db = await getDataBase();
 //    List<Map> result = await db.query(name);
     List<Map> result = await db.rawQuery("select * from $name order by $columnId ${desc ? 'desc' : 'asc'}");

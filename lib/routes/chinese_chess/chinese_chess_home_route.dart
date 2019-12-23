@@ -70,8 +70,8 @@ class _ChineseChessHomeRouteState extends BaseRouteState<ChineseChessHomeRoute> 
             ),
             GestureDetector(
               onTap: (){
-//                NavigatorUtil.pushPageByRoute(context, ChessPlayDoubleRoute(true));
-                showToast("正在建设中");
+                NavigatorUtil.pushPageByRoute(context, ChessPlayDoubleRoute(true));
+//                showToast("正在建设中");
               },
               child: Container(
                 width: double.infinity,

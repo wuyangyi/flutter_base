@@ -1135,27 +1135,123 @@ class ChessWinDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.pop(context);
-      },
-      child: Center(
-        child: Image.asset(
-          Util.getImgPath(getWinImage()),
-          width: MediaQuery.of(context).size.width / 3,
+    return Material(
+        type: MaterialType.transparency,
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width / 3 * 2,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width / 3 * 2,
+                  height: 120.0,
+                  margin: EdgeInsets.only(top: 18.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFBDB39B),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Gaps.vGap15,
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            winner,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 40.0,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.pop(context, 0);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white12,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(5.0),
+                                      )
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "退出",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.pop(context, 1);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Color(0x1F7C4DFF),
+                                      borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(5.0),
+                                      )
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "继续",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFBDB39B),
+                    borderRadius: BorderRadius.circular(360.0),
+                  ),
+                  child: Image.asset(Util.getImgPath(getWinImage()), width: 25.0, height: 25.0,),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
     );
   }
 
   String getWinImage() {
     String image;
     if (winner == "红棋") {
-      image = "chess/ico_win_hong";
+      image = "ico_chess_red_head";
     } else if(winner == "黑棋") {
-      image = "chess/ico_win_hei";
+      image = "ico_chess_black_head";
     } else {
-      image = "chess/ico_win";
+      image = "chess/ico_qizi";
     }
     return image;
   }

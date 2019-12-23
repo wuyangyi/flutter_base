@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_base/bean/chess/RoubotChessBean.dart';
 import 'package:flutter_base/bean/chess/chess_rule.dart';
 import 'package:flutter_base/res/color.dart';
 
@@ -83,7 +84,9 @@ class _ChineseChessPiecesState extends State<ChineseChessPieces> {
     if (isFinish) {
       return;
     }
-
+    if (isRobot && !ChessStartIndex.redChangeRobot) {
+      return;
+    }
     if (isSelectMyChess(jIndex, iIndex)) {
       isMove = false;
       isSelect = true;
@@ -115,6 +118,13 @@ class _ChineseChessPiecesState extends State<ChineseChessPieces> {
       if (widget?.onChange != null) {
         widget.onChange();
       }
+      if(!ChessStartIndex.isFinishRobot && !ChessStartIndex.redChangeRobot){
+        //机器人走棋
+        moveByRobot();
+        if (widget?.onChange != null) {
+          widget.onChange();
+        }
+      }
     }
 
     if (isSelect) {
@@ -126,10 +136,47 @@ class _ChineseChessPiecesState extends State<ChineseChessPieces> {
   }
 
 
+  //机器人走棋
+  void moveByRobot(){
+    List<RobotChessInfo> robotAllChess = [];
+    for (int i = 0; i < ChessStartIndex.chessIndexRobot.length; i++) {
+      for (int j = 0; j < ChessStartIndex.chessIndexRobot[i].length; j++) {
+        if (ChineseChessRule.checkIsMe(ChessStartIndex.chessIndexRobot[i][j], false)) { //是机器人的棋子
+          List<Point<int>> canMove = ChineseChessRule.getAllCanMovePosition(i, j, isRobot);
+          canMove.forEach((item){
+            robotAllChess.add(RobotChessInfo(iStart: i, jStart: j, iEnd: item.x, jEnd: item.y));
+          });
+        }
+      }
+    }
+    double maxGrade = 0;
+    robotAllChess.forEach((item){
+      if (item.grade > maxGrade) {
+        maxGrade = item.grade;
+      }
+    });
+    List<RobotChessInfo> maxAllChess = [];
+    robotAllChess.forEach((item){
+      if (item.grade == maxGrade) {
+        maxAllChess.add(item);
+      }
+    });
+    RobotChessInfo index;
+    if (maxAllChess.length > 0) {
+      int i = Random().nextInt(maxAllChess.length);
+      index = maxAllChess[i];
+    }  else {
+      int i = Random().nextInt(robotAllChess.length);
+      index = robotAllChess[i];
+    }
+    ChineseChessRule.move(index.iStart, index.jStart, index.iEnd, index.jEnd, isRobot);
+  }
+
+
   //是否点击到下棋方棋子
   bool isSelectMyChess(int i, int j) {
       bool select = false;
-      ChineseChess type = ChessStartIndex.chessIndex[i][j];
+      ChineseChess type = isRobot ? ChessStartIndex.chessIndexRobot[i][j] : ChessStartIndex.chessIndex[i][j];
       if (isRobot) {
         select = ChineseChessRule.checkIsMe(type, true);
       } else {

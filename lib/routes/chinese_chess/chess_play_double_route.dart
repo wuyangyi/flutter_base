@@ -79,12 +79,12 @@ class _ChessPlayDoubleRouteState extends BaseRouteState<ChessPlayDoubleRoute> {
           gameAllTime++;
           if (redMaxTime == 0) {
             ChessStartIndex.finish(isRobot, "黑棋");
-            showToast("黑棋胜利");
+            doGameOver(true, "时间到了");
             _cancelTimer();
           }
           if (blackMaxTime == 0) {
             ChessStartIndex.finish(isRobot, "红棋");
-            showToast("红棋胜利");
+            doGameOver(true, "时间到了");
             _cancelTimer();
           }
         });
@@ -114,7 +114,10 @@ class _ChessPlayDoubleRouteState extends BaseRouteState<ChessPlayDoubleRoute> {
     ChessGameInfoDao().insertData(chessInfo);
     _cancelTimer();
     if (showHint) {
-      await showCenterDialog(context, ChessWinDialog(winner: ChessStartIndex.winner,));
+      int index = await showCenterDialog(context, ChessWinDialog(winner: ChessStartIndex.winner,));
+      if (index == 0) {
+        finish();
+      }
     }
     ChessStartIndex.init(isRobot, reStart: true);
     initTime();
