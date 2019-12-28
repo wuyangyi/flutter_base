@@ -52,6 +52,9 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   //标题文字颜色
   Color titleColor = Colors.white;
 
+  //标题文字大小
+  double titleSize = 16.0;
+
   //是否中部标题栏 默认为true
   bool centerTitle = true;
 
@@ -113,7 +116,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
                   },
                 ),
             title: getTitleWidget() ?? new Text(title ?? "", style: TextStyle(
-              fontSize: 16.0,
+              fontSize: titleSize,
               color: titleColor,
             ),),
             centerTitle: centerTitle,
@@ -123,6 +126,7 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
             ],
             backgroundColor: titleBarBg,
             elevation: appBarElevation,
+            bottom: getAppBarBottom(),
           ) : null,
           body: new Builder(builder: (BuildContext context) {
             this.bodyContext = context;
@@ -148,6 +152,10 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   }
 
   Widget buildFloatingActionButton() {
+    return null;
+  }
+
+  Widget getAppBarBottom() {
     return null;
   }
 

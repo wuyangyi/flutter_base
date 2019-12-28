@@ -13,6 +13,14 @@ import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
+import 'package:flutter_base/bean/read_book/classify_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/classify_bean_two_entity.dart';
+import 'package:flutter_base/bean/read_book/hot_search_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/rank_type_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/read_book_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/search_all_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/search_book_bean_entity.dart';
 import 'package:flutter_base/bean/run/run_info_bean_entity.dart';
 import 'package:flutter_base/bean/run/week_run_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
@@ -54,6 +62,22 @@ class EntityFactory {
       return OfficialAccountsBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "ProfileEntity") {
       return ProfileEntity.fromJson(json) as T;
+    } else if (T.toString() == "ClassifyBeanEntity") {
+      return ClassifyBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "ClassifyBeanTwoEntity") {
+      return ClassifyBeanTwoEntity.fromJson(json) as T;
+    } else if (T.toString() == "HotSearchBeanEntity") {
+      return HotSearchBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "RankBeanEntity") {
+      return RankBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "RankTypeBeanEntity") {
+      return RankTypeBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "ReadBookBeanEntity") {
+      return ReadBookBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "SearchAllBeanEntity") {
+      return SearchAllBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "SearchBookBeanEntity") {
+      return SearchBookBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "RunInfoBeanEntity") {
       return RunInfoBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "WeekRunBeanEntity") {

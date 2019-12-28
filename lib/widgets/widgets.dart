@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base/res/color.dart';
+import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
 
 
@@ -114,4 +116,67 @@ class AppStatusBar extends StatelessWidget {
       color: color,
     );
   }
+}
+
+//列表到底的显示
+class ListBottomLine extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(15.0),
+      alignment: Alignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+              width: double.infinity,
+              height: 0.8,
+              color: MyColors.lineColor,
+              margin: EdgeInsets.only(right: 5.0),
+            ),
+          ),
+
+          Icon(
+            Icons.grade,
+            color: MyColors.lineColor,
+            size: 7.0,
+          ),
+
+          Gaps.hGap10,
+
+          Text(
+            "我也是有底线的",
+            style: TextStyle(
+              color: MyColors.lineColor,
+              fontSize: 13.0,
+            ),
+          ),
+
+          Gaps.hGap10,
+
+          Icon(
+            Icons.grade,
+            color: MyColors.lineColor,
+            size: 7.0,
+          ),
+
+          Expanded(
+            flex: 1,
+            child: Container(
+              width: double.infinity,
+              height: 01.0,
+              color: MyColors.lineColor,
+              margin: EdgeInsets.only(left: 3.0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

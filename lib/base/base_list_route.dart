@@ -129,6 +129,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    * 自己写child没有上拉加载功能，需要自己实现
    */
   Widget buildListBody(BuildContext context, {Widget child,}) {
+    initHeadOrFloorView();
     return buildBody(context,
       body: SmartRefresher(
         enablePullUp: false,
@@ -306,14 +307,18 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
     );
   }
 
-  //获得头布局或者尾布局控件
-  List<Widget> getHeadOrFloorView(bool isHead) {
+  //初始化头布局和为布局
+  void initHeadOrFloorView(){
     if (_headView.isEmpty) {
       _headView.addAll(initHeadView());
     }
     if (_floorView.isEmpty) {
       _floorView.addAll(initFloorView());
     }
+  }
+
+  //获得头布局或者尾布局控件
+  List<Widget> getHeadOrFloorView(bool isHead) {
     if (isHead) {
       return _headView;
     }

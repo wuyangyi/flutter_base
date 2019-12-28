@@ -19,6 +19,8 @@ class EventBusString {
 
   //音乐播放状态
   static final String MUSIC_PLAY_STATE = "music_play_state";
+
+  static final String READ_BOOK_HOME_PAGE_CHANGE = "read_book_home_page_change"; //精品阅读首页tab切换
 }
 
 class HeroString {

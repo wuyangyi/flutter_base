@@ -15,12 +15,22 @@ import 'package:flutter_base/bean/music/recommend_bean_entity.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/HomeBookMallBean.dart';
+import 'package:flutter_base/bean/read_book/classify_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/classify_bean_two_entity.dart';
+import 'package:flutter_base/bean/read_book/hot_search_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/rank_type_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/read_book_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/search_all_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/search_book_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
 import 'package:flutter_base/bean/user_coin_list_bean_entity.dart';
 import 'package:flutter_base/bean/weather/weather_bean_entity.dart';
 import 'package:flutter_base/bean/weather/weather_city_list_bean_entity.dart';
 import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/config/data_config.dart';
+import 'package:flutter_base/net/read_book_dio.dart';
 import 'package:flutter_base/net/weather_dio_util.dart';
 import 'package:flutter_base/res/string.dart';
 import 'package:flutter_base/utils/utils.dart';
@@ -385,4 +395,188 @@ class NetClickUtil {
     }
     return data;
   }
+
+  ///精品阅读
+  static const String ALL_TYPE = "cats/lv2/statistics"; //获取所有分类
+  static const String RANKING_LIST_TYPE = "ranking/gender"; //获取排行榜类型
+  static const String RANKING_LIST = "ranking/"; //获取排行榜小说
+  static const String SMALL_TYPE = "cats/lv2"; //获取分类下小类别
+  static const String ALL_BOOK_BY_TYPE = "book/by-categories"; //根据分类获取小说列表
+  static const String BOOK_SEARCH_HOT_KEY = "book/search-hotwords"; //获取热搜词
+  static const String BOOK_SEARCH_TO_ALL = "book/auto-complete"; //获取搜索自动补充
+  static const String SEARCH_BOOK = "book/fuzzy-search"; //模糊搜索
+
+  //获得排行榜类型
+  Future<RankTypeBeanEntity> getRankType({Function callBack}) async {
+    var response = await ReadBookHttpUtils.request(RANKING_LIST_TYPE, method: ReadBookHttpUtils.GET);
+    if (response == null) {
+      return getRankType(callBack: callBack);
+    }
+    RankTypeBeanEntity data = RankTypeBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获得排行榜类型小说
+  Future<RankBeanEntity> getRankBookList(String id, {Function callBack}) async {
+    var response = await ReadBookHttpUtils.request(RANKING_LIST + id, method: ReadBookHttpUtils.GET);
+    if (response == null) {
+      return getRankBookList(id, callBack: callBack);
+    }
+    RankBeanEntity data = RankBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获取首页数据
+  Future<HomeBookMallBean> getReadBookHomeAllData() async {
+    List<RankBeanEntity> datas = [];
+    RankTypeBeanEntity data = await NetClickUtil().getRankType();
+
+    String manId = data?.male[0]?.sId ?? "5a6844f8fc84c2b8efaa8bc5";
+    if (data.male != null) {
+      data.male.forEach((RankTypeBeanFemale rankData){
+        if (rankData.shortTitle == "热搜榜") {
+          manId = rankData.sId;
+        }
+      });
+    }
+    RankBeanEntity manData = await getRankBookList(manId);
+    datas.add(manData);
+
+    String womanId = "5a684515fc84c2b8efaa9875";
+    if (data.female!= null) {
+      data.female.forEach((RankTypeBeanFemale rankData){
+        if (rankData.shortTitle == "热搜榜") {
+          womanId = rankData.sId;
+        }
+      });
+    }
+    RankBeanEntity womanData = await getRankBookList(womanId);
+    datas.add(womanData);
+
+    if (data.picture != null) {
+      for (int i = 0; i < data.picture.length; i++) {
+        RankTypeBeanFemale rankData = data.picture[i];
+        RankBeanEntity d = await getRankBookList(rankData.sId);
+        datas.add(d);
+      }
+    }
+    return new HomeBookMallBean(datas, data);
+
+  }
+
+  //获得一级分类
+  Future<ClassifyBeanEntity> getClassify({Function callBack}) async {
+    var response = await ReadBookHttpUtils.request(ALL_TYPE, method: ReadBookHttpUtils.GET);
+    if (response == null) {
+      return getClassify(callBack: callBack);
+    }
+    ClassifyBeanEntity data = ClassifyBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获得二级分类
+  Future<ClassifyBeanTwoEntity> getClassifyTwo({Function callBack}) async {
+    var response = await ReadBookHttpUtils.request(SMALL_TYPE, method: ReadBookHttpUtils.GET);
+    if (response == null) {
+      return getClassifyTwo(callBack: callBack);
+    }
+    ClassifyBeanTwoEntity data = ClassifyBeanTwoEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  /*
+   * 获得分类下的小说
+   *
+   * gender: 男生:mael 女生:female 出版:press
+   * type: 热门:hot 新书:new 好评:repulation 完结: over 包月: month
+   * major: 大类别 从接口1获取
+   * minor: 小类别 从接口4获取 (非必填)
+   * start: 分页开始页
+   * limit: 分页条数
+   * callBack: 回调
+   */
+  Future<ReadBookBeanEntity> getReadBookByType({Map<String, String> map, Function callBack}) async { //String gender, String type, String major, String minor, int start, int limit
+//    if (gender != null) {
+//      addMap("gender", gender);
+//    }
+//    if (type != null) {
+//      addMap("type", type);
+//    }
+//    if (major != null) {
+//      addMap("major", major);
+//    }
+//    if (minor != null) {
+//      addMap("minor", minor);
+//    }
+//    if (start != null) {
+//      addMap("start", start.toString());
+//    }
+//    if (limit != null) {
+//      addMap("limit", limit.toString());
+//    }
+    var response = await ReadBookHttpUtils.request(ALL_BOOK_BY_TYPE, method: ReadBookHttpUtils.GET, mapApi: map);
+    if (response == null) {
+      return getReadBookByType(map: map, callBack: callBack);
+    }
+    ReadBookBeanEntity data = ReadBookBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获得热搜词
+  Future<List<HotSearchBeanSearchhotword>> getHotSearch({Function callBack}) async {
+    var response = await ReadBookHttpUtils.request(BOOK_SEARCH_HOT_KEY, method: ReadBookHttpUtils.GET);
+    if (response == null) {
+      return getHotSearch(callBack: callBack);
+    }
+    HotSearchBeanEntity data = HotSearchBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data?.searchHotWords ?? []);
+    }
+    return data?.searchHotWords ?? [];
+  }
+
+  //获得搜索自动补充
+  Future<List<String>> getSearchAutoComplete(String query, {Function callBack}) async {
+    addMap("query", query);
+    var response = await ReadBookHttpUtils.request(BOOK_SEARCH_TO_ALL, method: ReadBookHttpUtils.GET, mapApi: mapApi);
+    if (response == null) {
+      return getSearchAutoComplete(query, callBack: callBack);
+    }
+    SearchAllBeanEntity data = SearchAllBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data?.keywords ?? []);
+    }
+    return data?.keywords ?? [];
+  }
+
+
+  //模糊搜索
+  Future<SearchBookBeanEntity> getSearchBook(String query, {Function callBack}) async {
+    addMap("query", query);
+    var response = await ReadBookHttpUtils.request(SEARCH_BOOK, method: ReadBookHttpUtils.GET, mapApi: mapApi);
+    if (response == null) {
+      return getSearchBook(query, callBack: callBack);
+    }
+    SearchBookBeanEntity data = SearchBookBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
 }

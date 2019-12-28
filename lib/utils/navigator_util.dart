@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/web_scaffold.dart';
+import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/config/application.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/login_route.dart';

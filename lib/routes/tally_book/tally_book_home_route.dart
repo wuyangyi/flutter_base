@@ -31,7 +31,7 @@ class _BookHomeRouteState extends BaseRouteState<BookHomeRoute> {
   var tabImages;
   var appBarTitles = ['账本','账单', '图表', '我的'];
   /*
-   * 存储的五个页面
+   * 存储的四个页面
    */
   var _bodys;
   /*
