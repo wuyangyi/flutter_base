@@ -46,6 +46,7 @@ dependencies:
   path_provider: ^1.1.3
   permission_handler: ^4.0.0
 #  amap_location: #高德地图
+  quantize_dart: ^1.0.2
 
 
 dev_dependencies:
@@ -98,6 +99,7 @@ flutter:
   assets:
     - jsons/city.json
     - jsons/citys.json
+    - jsons/read_book.json
     - images/ico_network_error.png
     - images/ico_data_empty.png
     - images/icon_back_white.png

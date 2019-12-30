@@ -238,11 +238,11 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   /*
    * 设置右边按钮图片
    */
-  void setRightButtonFromIcon(IconData iconData) {
+  void setRightButtonFromIcon(IconData iconData, {Color iconColor}) {
     btn_right = new IconButton(
       key: key_btn_right,
       icon: Icon(iconData),
-      color: titleBarBg == Colors.white ? MyColors.title_color : Colors.white,
+      color: iconColor != null ? iconColor : titleBarBg == Colors.white ? MyColors.title_color : Colors.white,
       onPressed: (){
         onRightButtonClick();
       },
@@ -291,10 +291,11 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
   /*
    * 设置侧边按钮图片
    */
-  void setBorderButtonFromIcon(IconData iconData) {
+  void setBorderButtonFromIcon(IconData iconData, {Color iconColor}) {
     btn_border = new IconButton(
       key: key_btn_border,
       icon: Icon(iconData),
+      color: iconColor != null ? iconColor : Colors.white,
       onPressed: (){
         onBorderButtonClick();
       },

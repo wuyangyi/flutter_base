@@ -16,12 +16,16 @@ import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_coin_desc_info_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/HomeBookMallBean.dart';
+import 'package:flutter_base/bean/read_book/book_detail_info_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/book_real_info_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/classify_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/classify_bean_two_entity.dart';
 import 'package:flutter_base/bean/read_book/hot_search_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/rank_type_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/read_book_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/read_book_catalogue_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/read_book_content_info_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/search_all_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/search_book_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
@@ -405,6 +409,9 @@ class NetClickUtil {
   static const String BOOK_SEARCH_HOT_KEY = "book/search-hotwords"; //获取热搜词
   static const String BOOK_SEARCH_TO_ALL = "book/auto-complete"; //获取搜索自动补充
   static const String SEARCH_BOOK = "book/fuzzy-search"; //模糊搜索
+  static const String BOOK_DETAIL_INFO = "book/"; //获取小说信息
+  static const String BOOK_CATALOGUE_INFO = "atoc/"; //获取小说目录信息
+  static const String BOOK_REAL_DETAIL_INFO = "btoc/"; //获取小说源信息
 
   //获得排行榜类型
   Future<RankTypeBeanEntity> getRankType({Function callBack}) async {
@@ -573,6 +580,67 @@ class NetClickUtil {
       return getSearchBook(query, callBack: callBack);
     }
     SearchBookBeanEntity data = SearchBookBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获取小说信息
+  Future<BookDetailInfoBeanEntity> getBookDetailInfo(String bookId, {Function callBack}) async {
+    var response = await ReadBookHttpUtils.request(BOOK_DETAIL_INFO + bookId, method: ReadBookHttpUtils.GET);
+    if (response == null) {
+      return getBookDetailInfo(bookId, callBack: callBack);
+    }
+    BookDetailInfoBeanEntity data = BookDetailInfoBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获取源小说信息
+  Future<BookRealInfoBeanEntity> getRealBookDetailInfo(String bookId, {Function callBack}) async {
+    addMap("view", "summary");
+    addMap("book", bookId);
+    var response = await ReadBookHttpUtils.request(BOOK_REAL_DETAIL_INFO, method: ReadBookHttpUtils.GET, mapApi: mapApi);
+    if (response == null) {
+      return getRealBookDetailInfo(bookId, callBack: callBack);
+    }
+    BookRealInfoBeanEntity data = BookRealInfoBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //获取小说目录信息
+  Future<ReadBookCatalogueBeanEntity> getBookCatalogueInfo(String bookId, {Function callBack}) async {
+    addMap("view", "chapters");
+    var response = await ReadBookHttpUtils.request(BOOK_CATALOGUE_INFO + bookId, method: ReadBookHttpUtils.GET, mapApi: mapApi);
+    if (response == null) {
+      return getBookCatalogueInfo(bookId, callBack: callBack);
+    }
+    ReadBookCatalogueBeanEntity data = ReadBookCatalogueBeanEntity.fromJson(response);
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+
+  //获取章节内容
+  Future<ReadBookContentInfoBeanEntity> getBookContentInfo(String link, {Function callBack}) async {
+//    var response = await ReadBookHttpUtils.request("/$link", method: ReadBookHttpUtils.GET, read: true);
+//    if (response == null) {
+//      return null;
+//    }
+    var response = await DefaultAssetBundle.of(context).loadString("jsons/read_book.json");
+    if (response == null) {
+      return getBookContentInfo(link, callBack: callBack);
+    }
+    print("接口数据: $response");
+    ReadBookContentInfoBeanEntity data = ReadBookContentInfoBeanEntity.fromJson(json.decode(response));
     if (callBack != null) {
       callBack(data);
     }

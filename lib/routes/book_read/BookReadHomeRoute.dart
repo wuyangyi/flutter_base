@@ -21,9 +21,9 @@ class _BookReadHomeRouteState extends BaseRouteState<BookReadHomeRoute> {
 //    bodyColor = Colors.transparent;
   }
 
-  int _tabIndex = 0;
+  int _tabIndex = 1;
   var tabImages;
-  var appBarTitles = ['书架','书城', '分类', '我的'];
+  var appBarTitles = ['书架','书城', '分类']; //, '我的'
   var _bodys;
 
   /*
@@ -65,17 +65,17 @@ class _BookReadHomeRouteState extends BaseRouteState<BookReadHomeRoute> {
         Icon(Icons.widgets, color: Colors.black45,),
         Icon(Icons.widgets, color: MyColors.main_color,),
       ],
-      [
-        Icon(Icons.account_box, color: Colors.black45,),
-        Icon(Icons.account_box, color: MyColors.main_color,),
-      ],
+//      [
+//        Icon(Icons.account_box, color: Colors.black45,),
+//        Icon(Icons.account_box, color: MyColors.main_color,),
+//      ],
     ];
 
     _bodys = [
       BookRackRoute(context),
       BlocProvider(child: BookMallRoute(context), bloc: ReadBookMallBloc(),),
       HomeClassifyRoute(context),
-      Container(),
+//      Container(),
     ];
   }
 
@@ -116,8 +116,8 @@ class _BookReadHomeRouteState extends BaseRouteState<BookReadHomeRoute> {
           icon: getTabIcon(1),title: getTabTitle(1),),
         new BottomNavigationBarItem(
           icon: getTabIcon(2),title: getTabTitle(2),),
-        new BottomNavigationBarItem(
-          icon: getTabIcon(3),title: getTabTitle(3),),
+//        new BottomNavigationBarItem(
+//          icon: getTabIcon(3),title: getTabTitle(3),),
       ],
       type: BottomNavigationBarType.fixed,
       currentIndex: _tabIndex,

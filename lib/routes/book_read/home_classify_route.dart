@@ -199,10 +199,7 @@ class _HomeClassifyRouteState extends BaseRouteState<HomeClassifyRoute> {
                               mainAxisSpacing: 15.0,
                               childAspectRatio: 2 / 1,
                             ),
-                            padding: EdgeInsets.only(bottom: 10.0, top: 10.0
-
-
-                            ),
+                            padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
                             itemCount: getNowData().length,
                             physics: BouncingScrollPhysics(),
                             itemBuilder: (context, index) {

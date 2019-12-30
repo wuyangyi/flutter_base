@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
 import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/book_read/book_info_route.dart';
+import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/widgets/widgets.dart';
 
 class BookItem extends StatelessWidget {
@@ -22,7 +24,7 @@ class BookItem extends StatelessWidget {
             if (onTap != null) {
               onTap();
             } else {
-
+              NavigatorUtil.pushPageByRoute(context, BookInfoRoute(data.sId));
             }
           },
           child: Container(

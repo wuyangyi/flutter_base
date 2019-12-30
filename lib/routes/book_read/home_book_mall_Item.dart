@@ -3,13 +3,17 @@ import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
 import 'package:flutter_base/res/color.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/book_read/book_item.dart';
+import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
+
+import 'book_info_route.dart';
 
 class HomeBookMallItem extends StatelessWidget {
   final RankBeanRanking data;
   final Function onMoreClick;
+  final BuildContext parentContext;
 
-  const HomeBookMallItem(this.data, {Key key, this.onMoreClick,}) : super(key: key);
+  const HomeBookMallItem(this.data, {Key key, this.onMoreClick, this.parentContext,}) : super(key: key);
 
 
   @override
@@ -82,6 +86,9 @@ class HomeBookMallItem extends StatelessWidget {
     for (int i = 0; i < 3 && i < data.books.length; i++) {
       list.add(BookItem(
         data.books[i],
+        onTap: () {
+          NavigatorUtil.pushPageByRoute(parentContext, BookInfoRoute(data.books[i].sId));
+        },
       ));
     }
     return list;

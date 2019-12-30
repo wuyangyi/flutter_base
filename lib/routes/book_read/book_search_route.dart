@@ -88,6 +88,7 @@ class _BookSearchRouteState extends BaseRouteState<BookSearchRoute> {
 
   //搜索书
   void doSearchBook(String value) async {
+    hideSoftInput();
     setState(() {
       status = Status.loading;
     });

@@ -16,6 +16,7 @@ class ReadBookHttpUtils {
 
   /// global dio object
   static Dio readBookDio;
+  static Dio readDio;
 
   /// default options
   static const int CONNECT_TIMEOUT = 20000;
@@ -33,6 +34,7 @@ class ReadBookHttpUtils {
       String url, {
         Map<String, dynamic> data, method,
         Map<String, String> mapApi,
+        bool read = false,
       }) async {
 
     data = data ?? {};
@@ -51,7 +53,7 @@ class ReadBookHttpUtils {
 
 
     /// 打印请求相关信息：请求地址、请求方式、请求参数
-    print('请求地址：【' + method + '  ' + AppConfig.READ_BOOK_BASE_URL + url + '】');
+    print('请求地址：【' + method + '  ' + (read ? AppConfig.READ_BOOK_BASE_URL_READ : AppConfig.READ_BOOK_BASE_URL) + url + '】');
     print('请求参数：' + data.toString());
 
     Dio dio = createInstance();
@@ -59,13 +61,20 @@ class ReadBookHttpUtils {
 
     try {
       var response = await dio.request(url, options: new Options(method: method));
-
-      result = response.data;
+      if (response.toString().startsWith("[") && response.toString().endsWith("]")) {
+        List list = response.data as List;
+        if(list != null && list.length > 0) {
+          result = list[0];
+        }
+      } else {
+        result = response.data;
+      }
       /// 打印响应相关信息
       print('响应数据：' + response.toString());
     } on DioError catch (e) {
       /// 打印请求失败相关信息
       print('请求出错：' + e.toString());
+      return null;
     }
     if (result == null) {
       return null;
@@ -87,6 +96,22 @@ class ReadBookHttpUtils {
     }
 
     return readBookDio;
+  }
+
+  //
+  static Dio createReadInstance () {
+    if (readDio == null) {
+      /// 全局属性：请求前缀、连接超时时间、响应超时时间
+      BaseOptions options = new BaseOptions(
+        baseUrl: AppConfig.READ_BOOK_BASE_URL_READ,
+        connectTimeout: CONNECT_TIMEOUT,
+        receiveTimeout: RECEIVE_TIMEOUT,
+      );
+
+      readDio = new Dio(options);
+    }
+
+    return readDio;
   }
 
   /// 清空 dio 对象

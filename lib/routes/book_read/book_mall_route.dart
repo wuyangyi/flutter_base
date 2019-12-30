@@ -7,6 +7,7 @@ import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
 import 'package:flutter_base/blocs/ReadBookMallBloc.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/res/index.dart';
+import 'package:flutter_base/routes/book_read/book_info_route.dart';
 import 'package:flutter_base/routes/book_read/book_more_route.dart';
 import 'package:flutter_base/routes/book_read/book_rank_route.dart';
 import 'package:flutter_base/routes/book_read/book_search_route.dart';
@@ -448,6 +449,7 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
           onMoreClick: (){
             NavigatorUtil.pushPageByRoute(widget.parentContext, BookMoreRoute(mData[i].ranking));
           },
+          parentContext: widget.parentContext,
         ));
       }
     }
@@ -484,7 +486,7 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
       flex: 1,
       child: GestureDetector(
         onTap: () {
-          showToast("正在建设中");
+          NavigatorUtil.pushPageByRoute(widget.parentContext, BookInfoRoute(rankData.sId));
         },
         child: Container(
           width: double.infinity,

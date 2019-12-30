@@ -107,7 +107,7 @@ class MyEmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
 class AppStatusBar extends StatelessWidget {
   final Color color;
   final BuildContext buildContext;
-  const AppStatusBar({Key key, this.color, this.buildContext}) : super(key: key);
+  const AppStatusBar({Key key, this.color = Colors.white, this.buildContext}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
