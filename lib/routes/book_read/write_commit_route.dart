@@ -61,6 +61,7 @@ class _WriteCommitRouteState extends BaseRouteState<WriteCommitRoute> {
       likeNumber: 0,
       likeUserId: [],
       parentId: -1,
+      parentContent: "",
       bookId: widget.mBookInfo.sId,
       bookCover: widget.mBookInfo.cover,
       bookAuthor: widget.mBookInfo.author,

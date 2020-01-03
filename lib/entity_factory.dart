@@ -70,7 +70,7 @@ class EntityFactory {
       return ProfileEntity.fromJson(json) as T;
     } else if (T.toString() == "BookDetailInfoBeanEntity") {
       return BookDetailInfoBeanEntity.fromJson(json) as T;
-    } else if (T.toString() == "BookRackBeanEntity") {
+    }  else if (T.toString() == "BookRackBeanEntity") {
       return BookRackBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "BookRealInfoBeanEntity") {
       return BookRealInfoBeanEntity.fromJson(json) as T;

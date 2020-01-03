@@ -1,13 +1,17 @@
 import 'package:flukit/flukit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
+import 'package:flutter_base/bean/dao/read_book/BookCommentDao.dart';
 import 'package:flutter_base/bean/music/home_menu_item_bean.dart';
 import 'package:flutter_base/bean/read_book/HomeBookMallBean.dart';
+import 'package:flutter_base/bean/read_book/book_send_comment_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
 import 'package:flutter_base/blocs/ReadBookMallBloc.dart';
 import 'package:flutter_base/blocs/bloc_provider.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/book_read/book_info_route.dart';
+import 'package:flutter_base/routes/book_read/book_look_history_route.dart';
+import 'package:flutter_base/routes/book_read/book_message_route.dart';
 import 'package:flutter_base/routes/book_read/book_more_route.dart';
 import 'package:flutter_base/routes/book_read/book_rank_route.dart';
 import 'package:flutter_base/routes/book_read/book_search_route.dart';
@@ -47,6 +51,7 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
   List<RankBeanRankingBook> manBooks = [];
   int womanRankIndex = -1; //女频畅销索引
   List<RankBeanRankingBook> womanBooks = [];
+  bool showHaveMessage = false; // 是否有消息
 
   List<String> banner = [
     "ico_read_book_banner2",
@@ -76,15 +81,30 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
         title: "历史",
         icon: Icons.access_time,
         color: Colors.blueGrey,
-        route: null
+        route: BookLookHistoryRoute()
     ),
     HomeMenuItemBean(
         title: "消息",
         icon: Icons.message,
         color: Colors.purple,
-        route: null
+        route: BookMessageRoute()
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    initMessage();
+  }
+
+  void initMessage() {
+    BookCommentDao().findMyAllMessageNoRead(user.id, callBack: (List<BookSendCommentBeanEntity> data){
+      setState(() {
+        showHaveMessage = data.isNotEmpty;
+      });
+    });
+  }
+
 
   @override
   void dispose() {
@@ -281,6 +301,11 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
                     return;
                   }
                   if (item.route != null) {
+                    if(item.title == "消息") {
+                      setState(() {
+                        showHaveMessage = false;
+                      });
+                    }
                     NavigatorUtil.pushPageByRoute(widget.parentContext, item.route);
                   } else {
                     showToast("正在建设中~");
@@ -302,10 +327,32 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 1.0, color: item.route == null ? MyColors.lineColor : item.color),
                         ),
-                        child: Icon(
-                          item.icon,
-                          color: item.route == null ? MyColors.lineColor : item.color,
-                          size: 22,
+                        child: Stack(
+                          alignment: Alignment.center,
+
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.center,
+                              child: Icon(
+                                item.icon,
+                                color: item.route == null ? MyColors.lineColor : item.color,
+                                size: 22,
+                              ),
+                            ),
+
+                            Positioned(
+                              right: 4.0,
+                              top: 4.0,
+                              child: Container(
+                                width: 5.0,
+                                height: 5.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(360),
+                                  color: item.title == "消息" && showHaveMessage ? Colors.redAccent : Colors.transparent,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(height: 8.0),

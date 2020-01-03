@@ -12,6 +12,7 @@ class BookSendCommentBeanEntity extends BaseBean {
 	List<int> likeUserId; //点赞的用户id
 	String content; //评论的内容
 	int parentId; //父评论id（若为一级评论，则parentId为-1）
+	String parentContent; //父评论内容（若为一级评论，则parentContent为''）
 	int likeNumber; //点赞的人数
 	String bookId; //书id
 	String bookCover; //书的封面
@@ -21,7 +22,7 @@ class BookSendCommentBeanEntity extends BaseBean {
 	CommitUserInfo sendUser; //评论的用户
 	CommitUserInfo receiverUser; //被评论的用户（若为一级评论，则无此项）
 
-	BookSendCommentBeanEntity({this.commitNumber, this.level, this.grade = -1, this.isRead, this.id, this.likeUserId, this.content, this.parentId = -1, this.likeNumber, this.bookId, this.bookName, this.bookCover, this.bookAuthor, this.sendTime, this.sendUser, this.receiverUser});
+	BookSendCommentBeanEntity({this.commitNumber, this.level, this.grade = -1, this.isRead, this.id, this.likeUserId, this.content, this.parentId = -1, this.likeNumber, this.bookId, this.bookName, this.bookCover, this.bookAuthor, this.sendTime, this.sendUser, this.receiverUser, this.parentContent});
 
 	BookSendCommentBeanEntity.fromJson(Map<String, dynamic> json) {
 		commitNumber = json['commitNumber'];
@@ -50,6 +51,7 @@ class BookSendCommentBeanEntity extends BaseBean {
 		bookCover = json['bookCover'];
 		bookName = json['bookName'];
 		bookAuthor = json['bookAuthor'];
+		parentContent = json['parentContent'] ?? '';
 	}
 
 	Map<String, dynamic> toJson() {
@@ -70,6 +72,7 @@ class BookSendCommentBeanEntity extends BaseBean {
 		data['bookCover'] = this.bookCover;
 		data['bookName'] = this.bookName;
 		data['bookAuthor'] = this.bookAuthor;
+		data['parentContent'] = this.parentContent ?? "";
 		return data;
 	}
 }

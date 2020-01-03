@@ -34,7 +34,8 @@ class BookCommentDao extends BaseDBProvider{
       receiverUser TEXT,
       bookCover TEXT,
       bookName TEXT,
-      bookAuthor TEXT)
+      bookAuthor TEXT,
+      parentContent TEXT)
     ''';
   }
 
@@ -88,6 +89,7 @@ class BookCommentDao extends BaseDBProvider{
     if (data.length > 0) {
       beanEntity = data.first;
     }
+//    print("id查询：${beanEntity.toJson()}");
     if (callBack != null) {
       callBack(beanEntity);
     }
@@ -110,6 +112,45 @@ class BookCommentDao extends BaseDBProvider{
       callBack(code);
     }
     return code;
+  }
+
+
+  //查询我的所有未读消息
+  Future<List<BookSendCommentBeanEntity>> findMyAllMessageNoRead(int userId, {Function callBack}) async {
+    var db = await getDataBase();
+    List<Map> result = await db.query(name, where: "isRead = ? and level = ?", whereArgs: ["false", 2]);
+    List<BookSendCommentBeanEntity> data = [];
+    if (result.length > 0) {
+      for(int i = 0; i < result.length; i++) {
+        BookSendCommentBeanEntity beanEntity = BookSendCommentBeanEntity.fromJson(result[i]);
+        if (beanEntity.receiverUser.userId == userId){
+          data.add(beanEntity);
+        }
+      }
+    }
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
+  }
+
+  //查询我的所有消息
+  Future<List<BookSendCommentBeanEntity>> findMyAllMessage(int userId, {Function callBack}) async {
+    var db = await getDataBase();
+    List<Map> result = await db.query(name, where: "level = ?", whereArgs: [2]);
+    List<BookSendCommentBeanEntity> data = [];
+    if (result.length > 0) {
+      for(int i = 0; i < result.length; i++) {
+        BookSendCommentBeanEntity beanEntity = BookSendCommentBeanEntity.fromJson(result[i]);
+        if (beanEntity.receiverUser.userId == userId){
+          data.add(beanEntity);
+        }
+      }
+    }
+    if (callBack != null) {
+      callBack(data);
+    }
+    return data;
   }
 
 }

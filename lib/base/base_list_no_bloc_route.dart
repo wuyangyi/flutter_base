@@ -77,6 +77,7 @@ abstract class BaseListNoBlocRouteState<T extends BaseListNoBlocRoute, D extends
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_){
       controller.addListener((){
+        addListener();
         var position = controller.position;
         int offset = position.pixels.toInt();
         //小于10px时触发上拉加载
@@ -94,6 +95,9 @@ abstract class BaseListNoBlocRouteState<T extends BaseListNoBlocRoute, D extends
     });
 
   }
+
+  //列表滑动的回调
+  void addListener(){}
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +183,7 @@ abstract class BaseListNoBlocRouteState<T extends BaseListNoBlocRoute, D extends
     super.onRefresh();
     initPage();
     _initData();
+    initHeadOrFloorView();
   }
 
   //请求数据处理

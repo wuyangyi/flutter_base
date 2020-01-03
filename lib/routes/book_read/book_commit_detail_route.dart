@@ -22,8 +22,9 @@ import 'package:provider/provider.dart';
 class BookCommitDetailRoute extends BaseListNoBlocRoute {
   final int selectIndex;
   BookSendCommentBeanEntity commentBeanEntity;
+  final bool otherComeIn;
 
-  BookCommitDetailRoute({this.selectIndex = -1, this.commentBeanEntity});
+  BookCommitDetailRoute({this.selectIndex = -1, this.commentBeanEntity, this.otherComeIn = false});
   
   @override
   _BookCommitDetailRouteState createState() => _BookCommitDetailRouteState(selectIndex);
@@ -34,7 +35,7 @@ class _BookCommitDetailRouteState extends BaseListNoBlocRouteState<BookCommitDet
     title = "";
     titleColor = MyColors.title_color;
     centerTitle = false;
-    appBarElevation = 0.0;
+    appBarElevation = 0.5;
     titleBarBg = Colors.white;
     statusTextDarkColor = false;
     showStartCenterLoading = true;
@@ -150,6 +151,7 @@ class _BookCommitDetailRouteState extends BaseListNoBlocRouteState<BookCommitDet
                 likeNumber: 0,
                 likeUserId: [],
                 parentId: parentCommitBean.id,
+                parentContent: parentCommitBean.content,
                 bookId: parentCommitBean.bookId,
                 bookCover: parentCommitBean.bookCover,
                 bookAuthor: parentCommitBean.bookAuthor,
@@ -302,7 +304,11 @@ class _BookCommitDetailRouteState extends BaseListNoBlocRouteState<BookCommitDet
             
             GestureDetector(
               onTap: (){
-                bus.emit(EventBusString.COMMIT_TWO_FINISH); //关闭所有评论详情页面
+                if (widget.otherComeIn) {
+                  NavigatorUtil.pushPageByRoute(context, BookInfoRoute(parentCommitBean.bookId));
+                } else {
+                  bus.emit(EventBusString.COMMIT_TWO_FINISH); //关闭所有评论详情页面
+                }
               },
               child: Container(
                 width: double.infinity,

@@ -5,10 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/bean/dao/read_book/BookCommentDao.dart';
+import 'package:flutter_base/bean/dao/read_book/BookLookHistoryDao.dart';
 import 'package:flutter_base/bean/read_book/book_detail_info_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/book_rack_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/book_real_info_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/book_send_comment_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/rank_bean_entity.dart';
 import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/net/network.dart';
@@ -111,6 +113,17 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
       BookCommentDao().findAllDataByBookId(bookId, callBack: (data){
         bookCommitModel.addAll(data);
       });
+      BookLookHistoryDao().insertData(RankBeanRankingBook(
+        sId: bookId,
+        title: mBookInfo.title,
+        author: mBookInfo.author,
+        cover: mBookInfo.cover,
+        majorCate: mBookInfo.majorCate,
+        shortIntro: mBookInfo.longIntro,
+        userId: user.id,
+        latelyFollower: mBookInfo.latelyFollower,
+        time: Util.getNowTime(),
+      ));
     }).catchError((e){
       setState(() {
         loadStatus = Status.fail;
@@ -141,18 +154,6 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
     }
     return list;
   }
-
-//  IconData getIconByScore(int i, double score) {
-//    IconData iconData = Icons.star;
-//    if (score <= i * 2) {
-//      iconData = Icons.star_border;
-//    } else if(score < (i + 1) * 2) {
-//      iconData = Icons.star_half;
-//    } else {
-//      iconData = Icons.star;
-//    }
-//    return iconData;
-//  }
 
   @override
   Widget getBottomNavigationBar() {

@@ -7,6 +7,7 @@ import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/res/color.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/book_read/book_info_route.dart';
+import 'package:flutter_base/routes/book_read/book_look_history_route.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
@@ -54,6 +55,11 @@ class _BookRackRouteState extends BaseRouteState<BookRackRoute> {
         });
       });
     }
+  }
+
+  @override
+  void onRightButtonClick() {
+    NavigatorUtil.pushPageByRoute(widget.parentContext, BookLookHistoryRoute());
   }
 
   @override

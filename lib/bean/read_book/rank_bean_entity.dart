@@ -119,7 +119,10 @@ class RankBeanRankingBook extends BaseBean {
 	String lastChapter;
 	List<String> tags;
 
-	RankBeanRankingBook({this.cover, this.site, this.majorCate, this.author, this.minorCate, this.allowMonthly, this.retentionRatio, this.latelyFollower, this.sId, this.banned, this.title, this.shortIntro, this.sizeType, this.superScript, this.contentType, this.lastChapter, this.tags});
+	String time; //时间
+	int userId;
+
+	RankBeanRankingBook({this.cover, this.site, this.majorCate, this.author, this.minorCate, this.allowMonthly, this.retentionRatio, this.latelyFollower, this.sId, this.banned, this.title, this.shortIntro, this.sizeType, this.superScript, this.contentType, this.lastChapter, this.tags, this.time, this.userId});
 
 	RankBeanRankingBook.fromJson(Map<String, dynamic> json) {
 		cover = json['cover'];
@@ -141,6 +144,8 @@ class RankBeanRankingBook extends BaseBean {
 		if (json['tags'] != null) {
 			tags = new List<String>();(json['tags'] as List).forEach((v) { tags.add(v); });
 		}
+		time = json['time'];
+		userId = json['userId'];
 	}
 
 	Map<String, dynamic> toJson() {
@@ -164,6 +169,22 @@ class RankBeanRankingBook extends BaseBean {
 		if (this.tags != null) {
 			data['tags'] =  this.tags.map((v) => v.toString()).toList();
 		}
+		return data;
+	}
+
+
+	//阅读历史存入数据库
+	Map<String, dynamic> toSql() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['cover'] = this.cover;
+		data['majorCate'] = this.majorCate;
+		data['author'] = this.author;
+		data['latelyFollower'] = this.latelyFollower;
+		data['_id'] = this.sId;
+		data['title'] = this.title;
+		data['shortIntro'] = this.shortIntro;
+		data['time'] = this.time;
+		data['userId'] = this.userId;
 		return data;
 	}
 }
