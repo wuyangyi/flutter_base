@@ -14,11 +14,11 @@ import 'base_route.dart';
 
 ///
 /// 集成上拉加载，下拉刷新的基类
-abstract class BaseListRoute extends BaseRoute {
-  const BaseListRoute({Key key}) : super(key: key);
+abstract class BaseListNoBlocRoute extends BaseRoute {
+  const BaseListNoBlocRoute({Key key}) : super(key: key);
 }
 
-abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B extends BlocListBase> extends BaseRouteState<T> {
+abstract class BaseListNoBlocRouteState<T extends BaseListNoBlocRoute, D extends BaseBean> extends BaseRouteState<T> {
   List<D> mListData = [];
   /*
    * 是否需要下上拉加载 默认为true
@@ -61,10 +61,16 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
    */
   bool isLoadingMore = false;
 
-  B bloc;
 
   bool isShowFloatBtn = false; //显示悬浮按钮
   RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  int page = 0;
+
+  //初始化分页
+  void initPage() {
+    page = 0;
+  }
 
   @override
   void initState() {
@@ -91,22 +97,15 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
 
   @override
   Widget build(BuildContext context) {
-    bloc = BlocProvider.of<B>(context);
     if (isFirstInit) {
       isFirstInit = false;
       Observable.just(1).delay(new Duration(seconds: 1)).listen((_) {
         onRefresh();
       });
     }
-    return StreamBuilder(
-      stream: bloc.subjectStream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        onLoadSuccess(snapshot.data, snapshot.hasError);
-        return buildListBody(
-          context,
-          child: getListChild(),
-        );
-      },
+    return buildListBody(
+      context,
+      child: getListChild(),
     );
   }
 
@@ -116,7 +115,7 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
   }
 
   /*
-   * 每个item的控件样式
+   * 每个item的控件样式(得自己写)
    */
   Widget getItemBuilder(BuildContext context, int index) {
     return Container();
@@ -148,14 +147,14 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
             return getListDriver(context, index);
           },
           itemBuilder: (context, index) {
-            return getItemView(context, index);
+            return _getItemView(context, index);
           },
         ),
       ),
     );
   }
 
-  getItemView(BuildContext context, int index) {
+  Widget _getItemView(BuildContext context, int index) {
     if (index < getHeadCount()) {
       return getHeadOrFloorView(true)[index];
     } else if (index < getHeadCount()+mListData.length) {
@@ -173,13 +172,29 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
   Future onLoadMore() async {
     print("加载更多");
     isLoadingMore = true;
-    bloc.onLoadMore(userId: user.id);
+    _initData();
   }
   @override
   Future onRefresh() async {
     super.onRefresh();
-    bloc.onRefresh(userId: user.id);
+    initPage();
+    _initData();
   }
+
+  //请求数据处理
+  void _initData() async {
+    try{
+      List<D> list = await getData();
+      onLoadSuccess(list, false);
+      page++;
+    }catch(e){
+      onLoadSuccess([], true);
+      page--;
+    }
+  }
+
+  //请求数据
+  Future getData();
 
   /*
    * 加载完成后的回调
@@ -209,7 +224,11 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
       } else if (data.isEmpty) {
         loadMoreStatus = Status.empty;
         if (isRefresh) {
-          loadStatus = Status.empty;
+          if (getHeadCount() == 0 && getFloorCount() == 0) {
+            loadStatus = Status.empty;
+          } else {
+            loadStatus = Status.success;
+          }
         }
       } else {
         if (data.length < AppConfig.PAGE_LIMIT) {
@@ -225,6 +244,9 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
     }
     isRefresh = false;
     isLoadingMore = false;
+    print("loadstatus:$loadStatus");
+    setState(() {
+    });
   }
 
   /*
@@ -349,7 +371,6 @@ abstract class BaseListRouteState<T extends BaseListRoute, D extends BaseBean, B
 
   @override
   void dispose() {
-    bloc?.dispose();
     super.dispose();
     controller.dispose();
   }

@@ -11,8 +11,9 @@ class BookItem extends StatelessWidget {
   final RankBeanRankingBook data;
   Function onTap;
   int index;
+  final BuildContext parentContext;
 
-  BookItem(this.data, {Key key, this.onTap, this.index = -1}) : super(key: key);
+  BookItem(this.data, {Key key, this.onTap, this.index = -1, this.parentContext}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class BookItem extends StatelessWidget {
             if (onTap != null) {
               onTap();
             } else {
-              NavigatorUtil.pushPageByRoute(context, BookInfoRoute(data.sId));
+              NavigatorUtil.pushPageByRoute(parentContext ?? context, BookInfoRoute(data.sId));
             }
           },
           child: Container(

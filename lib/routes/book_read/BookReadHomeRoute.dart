@@ -54,8 +54,8 @@ class _BookReadHomeRouteState extends BaseRouteState<BookReadHomeRoute> {
      */
     tabImages = [
       [
-        Icon(Icons.chrome_reader_mode, color: Colors.black45,),
-        Icon(Icons.chrome_reader_mode, color: MyColors.main_color,),
+        Icon(Icons.import_contacts, color: Colors.black45,),
+        Icon(Icons.import_contacts, color: MyColors.main_color,),
       ],
       [
         Icon(Icons.local_mall, color: Colors.black45,),

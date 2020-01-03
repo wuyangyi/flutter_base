@@ -1,20 +1,29 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
+import 'package:flutter_base/bean/dao/read_book/BookCommentDao.dart';
 import 'package:flutter_base/bean/read_book/book_detail_info_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/book_rack_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/book_real_info_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/book_send_comment_bean_entity.dart';
 import 'package:flutter_base/config/app_config.dart';
+import 'package:flutter_base/config/profilechangenotifier.dart';
 import 'package:flutter_base/net/network.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/routes/book_read/book_catalogue_route.dart';
+import 'package:flutter_base/routes/book_read/book_commit_detail_route.dart';
 import 'package:flutter_base/routes/book_read/read_book_content_route.dart';
+import 'package:flutter_base/routes/book_read/write_commit_route.dart';
 import 'package:flutter_base/utils/image_color_util.dart';
 import 'package:flutter_base/utils/navigator_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:flutter_base/widgets/status_widget.dart';
 import 'package:flutter_base/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 //小说详情页面
 class BookInfoRoute extends BaseRoute {
@@ -47,6 +56,8 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
   final String bookId;
   BookDetailInfoBeanEntity mBookInfo;
   BookRealInfoBeanEntity mBookRealInfo;
+  BookRackModel bookRackModel; //书架
+  BookCommitModel bookCommitModel; //评论
 
   ScrollController _scrollController = ScrollController();
   Color topBgColor = Colors.white;
@@ -56,6 +67,8 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
   @override
   void initState() {
     super.initState();
+    bookRackModel = Provider.of<BookRackModel>(context, listen: false);
+    bookCommitModel = Provider.of<BookCommitModel>(context, listen: false);
     initData();
     _scrollController.addListener((){
       if (_scrollController.position.pixels < 90 && showToolBarTitle) {
@@ -70,6 +83,11 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
         });
       }
     });
+  }
+
+  @override
+  void onRightButtonClick() {
+    Share.share(AppConfig.SHARE_TITLE);
   }
 
   @override
@@ -90,6 +108,9 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
           topBgColor = Color.fromARGB(150, color[0], color[1], color[2]);
         });
       });
+      BookCommentDao().findAllDataByBookId(bookId, callBack: (data){
+        bookCommitModel.addAll(data);
+      });
     }).catchError((e){
       setState(() {
         loadStatus = Status.fail;
@@ -101,40 +122,37 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
     });
   }
 
-  List<Widget> getScoreWidget() {
+  List<Widget> getScoreWidget(String title, double score, {TextStyle textStyle, double imageSize}) {
     List<Widget> list = [];
     list.add(Text(
-      mBookInfo.rating.score.toStringAsFixed(1),
-      style: TextStyle(
+      title,
+      style: textStyle ?? TextStyle(
         color: MyColors.text_normal,
         fontSize: 16.0,
       ),
     ));
     list.add(Gaps.hGap5);
     for(int i = 0; i < 5; i++) {
-      list.add(Padding(
-        padding: EdgeInsets.only(bottom: 2.0),
-        child: Icon(
-          getIconByScore(i),
-          size: 13.0,
-          color: Colors.orangeAccent,
-        ),
+      list.add(Icon(
+        Util.getIconByScore(i, score),
+        size: imageSize ?? 13.0,
+        color: Colors.orangeAccent,
       ));
     }
     return list;
   }
 
-  IconData getIconByScore(int i) {
-    IconData iconData = Icons.star;
-    if (mBookInfo.rating.score <= i * 2) {
-      iconData = Icons.star_border;
-    } else if(mBookInfo.rating.score < (i + 1) * 2) {
-      iconData = Icons.star_half;
-    } else {
-      iconData = Icons.star;
-    }
-    return iconData;
-  }
+//  IconData getIconByScore(int i, double score) {
+//    IconData iconData = Icons.star;
+//    if (score <= i * 2) {
+//      iconData = Icons.star_border;
+//    } else if(score < (i + 1) * 2) {
+//      iconData = Icons.star_half;
+//    } else {
+//      iconData = Icons.star;
+//    }
+//    return iconData;
+//  }
 
   @override
   Widget getBottomNavigationBar() {
@@ -147,7 +165,15 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
             flex: 1,
             child: GestureDetector(
               onTap: (){
-                showToast("正在建设中~");
+                bookRackModel.upState(new BookRackBeanEntity(
+                  cover: mBookInfo.cover,
+                  bookId: mBookInfo.sId,
+                  bookName: mBookInfo.title,
+                  userId: user.id,
+                ));
+                setState(() {
+                });
+                showToast(bookRackModel.getStateById(mBookInfo.sId) ? "已添加到书架" : "已从书架移除");
               },
               child: Container(
                 alignment: Alignment.center,
@@ -163,12 +189,12 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Icon(
-                      Icons.add,
+                      bookRackModel.getStateById(mBookInfo?.sId ?? "") ? Icons.remove : Icons.add,
                       color: MyColors.main_color,
                     ),
 
                     Text(
-                      "追更新",
+                      bookRackModel.getStateById(mBookInfo?.sId ?? "") ? "取消" : "追书",
                       style: TextStyle(
                         color: MyColors.main_color,
                         fontSize: 16.0,
@@ -206,7 +232,7 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
             flex: 1,
             child: GestureDetector(
               onTap: (){
-                showToast("正在建设中~");
+                NavigatorUtil.pushPageByRoute(context, WriteCommitRoute(mBookInfo));
               },
               child: Container(
                 alignment: Alignment.center,
@@ -448,7 +474,7 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       mainAxisAlignment: MainAxisAlignment.start,
-                                      children: getScoreWidget(),
+                                      children: getScoreWidget(mBookInfo.rating.score.toStringAsFixed(1), mBookInfo.rating.score),
                                     ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -561,7 +587,7 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
                                   return Container(
                                     padding: EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
                                     decoration: BoxDecoration(
-                                      color: MyColors.lineColor,
+                                      color: MyColors.home_body_bg,
                                       borderRadius: BorderRadius.circular(20.0),
                                     ),
                                     child: Text(
@@ -670,7 +696,7 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
                               ),
                             ),
 
-                            Container(
+                            bookCommitModel.bookCommitList.isEmpty ? Container(
                               padding: EdgeInsets.only(top: 15.0,bottom: 15.0),
                               width: double.infinity,
                               alignment: Alignment.center,
@@ -679,6 +705,175 @@ class _BookInfoRouteState extends BaseRouteState<BookInfoRoute> {
                                 width: 150,
                                 height: 150,
                               ),
+                            ) : ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.all(0),
+                              itemCount: bookCommitModel.bookCommitList.length,
+                              separatorBuilder: (context, index){
+                                return Container(
+                                  width: double.infinity,
+                                  height: 0.5,
+                                  color: MyColors.loginDriverColor,
+                                  margin: EdgeInsets.only(left: 70, right: 20.0),
+                                );
+                              },
+                              itemBuilder: (c, index){
+                                BookSendCommentBeanEntity commitItem = bookCommitModel.bookCommitList[index];
+                                return Material(
+                                  color: Colors.white,
+                                  child: Ink(
+                                    child: InkWell(
+                                      onTap: (){
+                                        NavigatorUtil.pushPageByRoute(context, BookCommitDetailRoute(selectIndex: index,));
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0,),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            ClipOval(
+                                              child: commitItem?.sendUser?.logo == null ? Image.asset(Util.getImgPath(
+                                                Util.getUserHeadImageName(commitItem?.sendUser?.sex),),
+                                                width: 35.0,
+                                                height: 35.0,
+                                              ) : Image.file(File(commitItem?.sendUser?.logo), width: 35.0,
+                                                height: 35.0,),
+                                            ),
+
+                                            Gaps.hGap15,
+
+                                            Expanded(
+                                              flex: 1,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    commitItem?.sendUser?.userName ?? "",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14.0,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: getScoreWidget("评分", commitItem.grade.toDouble(), textStyle: TextStyle(fontSize: 12.0, color: MyColors.text_normal), imageSize: 15.0),
+                                                  ),
+
+                                                  Gaps.vGap5,
+
+                                                  Text(
+                                                    commitItem.content,
+                                                    style: TextStyle(
+                                                      color: MyColors.title_color,
+                                                      fontSize: 12.0,
+                                                    ),
+                                                  ),
+
+                                                  Gaps.vGap10,
+
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Text(
+                                                          Util.getTimeForNow(commitItem.sendTime),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                            color: MyColors.text_normal,
+                                                            fontSize: 11.0,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      GestureDetector(
+                                                        onTap: (){
+                                                          bookCommitModel.addGood(commitItem.id, user.id);
+                                                          setState(() {
+
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          margin: EdgeInsets.only(left: 5),
+                                                          padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                                                          decoration: BoxDecoration(
+                                                            color: MyColors.home_body_bg,
+                                                            borderRadius: BorderRadius.circular(20.0),
+                                                          ),
+                                                          child: Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: <Widget>[
+                                                              Image.asset(
+                                                                Util.getImgPath(Util.checkGood(commitItem.likeUserId, user.id) ? "ico_give_like_cancel" : "ico_give_like"),
+                                                                height: 15.0,
+                                                                fit: BoxFit.fill,
+                                                              ),
+                                                              Gaps.hGap10,
+                                                              Text(
+                                                                "${commitItem.likeNumber}",
+                                                                style: TextStyle(
+                                                                  color: Util.checkGood(commitItem.likeUserId, user.id) ? MyColors.main_color : MyColors.text_normal_5,
+                                                                  fontSize: 12.0,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      GestureDetector(
+                                                        onTap: (){
+                                                          NavigatorUtil.pushPageByRoute(context, BookCommitDetailRoute(selectIndex: index,));
+                                                        },
+                                                        child: Container(
+                                                          margin: EdgeInsets.only(left: 5),
+                                                          padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                                                          decoration: BoxDecoration(
+                                                            color: MyColors.home_body_bg,
+                                                            borderRadius: BorderRadius.circular(20.0),
+                                                          ),
+                                                          child: Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: <Widget>[
+                                                              Image.asset(
+                                                                Util.getImgPath("ico_commit"),
+                                                                height: 15.0,
+                                                                fit: BoxFit.fill,
+                                                              ),
+                                                              Gaps.hGap10,
+                                                              Text(
+                                                                "${commitItem.commitNumber}",
+                                                                style: TextStyle(
+                                                                  color: MyColors.text_normal_5,
+                                                                  fontSize: 12.0,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
 
                           ],

@@ -34,6 +34,7 @@ import 'package:flutter_base/utils/toast_util.dart';
 import 'package:flutter_base/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 import '../about_us_route.dart';
 import '../login_route.dart';
@@ -74,6 +75,12 @@ class _HomeRouteState extends BaseRouteState<HomeRoute> {
     bodyColor = MyColors.home_body_bg;
     appBarElevation = 0.0;
     leading = Container();
+    setRightButtonFromIcon(Icons.share);
+  }
+  
+  @override
+  void onRightButtonClick() {
+    Share.share(AppConfig.SHARE_TITLE);
   }
 
   @override

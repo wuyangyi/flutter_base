@@ -58,7 +58,7 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
         title: "分类",
         icon: Icons.widgets,
         color: Colors.indigoAccent,
-        route: null,
+        route: Container(),
     ),
     HomeMenuItemBean(
         title: "排行",
@@ -276,13 +276,13 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
               width: (MediaQuery.of(context).size.width - 30.0) / homeMenuItems.length,
               child: GestureDetector(
                 onTap: (){
+                  if (item.title == "分类") {
+                    bus.emit(EventBusString.READ_BOOK_HOME_PAGE_CHANGE, 2);
+                    return;
+                  }
                   if (item.route != null) {
                     NavigatorUtil.pushPageByRoute(widget.parentContext, item.route);
                   } else {
-                    if (item.title == "分类") {
-                      bus.emit(EventBusString.READ_BOOK_HOME_PAGE_CHANGE, 2);
-                      return;
-                    }
                     showToast("正在建设中~");
                   }
                 },
@@ -300,11 +300,11 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
                         decoration: BoxDecoration(
 //                                      color: item.color,
                           borderRadius: BorderRadius.circular(5),
-                          border: Border.all(width: 1.0, color: item.color),
+                          border: Border.all(width: 1.0, color: item.route == null ? MyColors.lineColor : item.color),
                         ),
                         child: Icon(
                           item.icon,
-                          color: item.color,
+                          color: item.route == null ? MyColors.lineColor : item.color,
                           size: 22,
                         ),
                       ),
@@ -312,7 +312,7 @@ class _BookMallRouteState extends BaseRouteState<BookMallRoute> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: MyColors.title_color,
+                          color: item.route == null ? MyColors.lineColor : MyColors.title_color,
                           fontSize: 13.0,
                         ),
                       ),

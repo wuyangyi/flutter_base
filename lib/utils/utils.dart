@@ -328,5 +328,46 @@ class Util {
     return formatter.format(dateTime);
   }
 
+  //获得相对于今天显示的时间
+  static String getTimeForNow(String time) {
+    DateTime oldTime = DateTime.parse(time);
+    DateTime nowTime = DateTime.now();
+    DateTime yestoDay = nowTime.add(Duration(days: -1));
+    String t = "${oldTime.year}年${oldTime.month}月${oldTime.day}日";
+    if (oldTime.year == nowTime.year) {
+      if (oldTime.month == nowTime.month && oldTime.day == oldTime.day) {
+        t = "今天";
+      } else {
+        t = "${oldTime.month}月${oldTime.day}日";
+      }
+    } else if(yestoDay.year == nowTime.year && yestoDay.month == nowTime.month && yestoDay.day == nowTime.day) {
+      t = "昨天";
+    }
+    return t;
+  }
+
+  //当前评论是否点赞
+  static bool checkGood(List<int> users, int userId) {
+    bool good = false;
+    users.forEach((item){
+      if (item == userId) {
+        good = true;
+      }
+    });
+    return good;
+  }
+
+  //根据分数获取平分图片
+  static IconData getIconByScore(int i, double score) {
+    IconData iconData = Icons.star;
+    if (score <= i * 2) {
+      iconData = Icons.star_border;
+    } else if(score < (i + 1) * 2) {
+      iconData = Icons.star_half;
+    } else {
+      iconData = Icons.star;
+    }
+    return iconData;
+  }
 
 }

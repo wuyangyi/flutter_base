@@ -11,7 +11,7 @@ description: flutter基础封装，集成下拉刷新上拉加载，异步网络
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -47,6 +47,7 @@ dependencies:
   permission_handler: ^4.0.0
 #  amap_location: #高德地图
   quantize_dart: ^1.0.2
+  share: ^0.6.3 #分享 https://pub.dev/packages/share
 
 
 dev_dependencies:
@@ -324,3 +325,6 @@ flutter:
     - images/ico_read_book_banner3.png
     - images/ico_man_top.png
     - images/ico_woman_top.png
+    - images/ico_give_like.png
+    - images/ico_give_like_cancel.png
+    - images/ico_commit.png

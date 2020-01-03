@@ -14,7 +14,9 @@ import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/bean/official_accounts_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
 import 'package:flutter_base/bean/read_book/book_detail_info_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/book_rack_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/book_real_info_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/book_send_comment_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/classify_bean_entity.dart';
 import 'package:flutter_base/bean/read_book/classify_bean_two_entity.dart';
 import 'package:flutter_base/bean/read_book/hot_search_bean_entity.dart';
@@ -68,8 +70,12 @@ class EntityFactory {
       return ProfileEntity.fromJson(json) as T;
     } else if (T.toString() == "BookDetailInfoBeanEntity") {
       return BookDetailInfoBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "BookRackBeanEntity") {
+      return BookRackBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "BookRealInfoBeanEntity") {
       return BookRealInfoBeanEntity.fromJson(json) as T;
+    } else if (T.toString() == "BookSendCommentBeanEntity") {
+      return BookSendCommentBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "ClassifyBeanEntity") {
       return ClassifyBeanEntity.fromJson(json) as T;
     } else if (T.toString() == "ClassifyBeanTwoEntity") {

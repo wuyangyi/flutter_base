@@ -11,9 +11,10 @@ class AppConfig {
   static final bool IS_DEBUG = false; //是否是debug模式
 
   static final String APP_NAME = "小小工具箱";
-  static final String APPVERSION = "1.0.0"; //版本号
+  static final String APPVERSION = "1.0.1"; //版本号
   static final String APPCLIENT = "android"; //android端
   static final int PAGE_LIMIT = 20; //分页每页的数量
+  static final String SHARE_TITLE = "小小工具箱 https://fir.im/q82j"; //分享时显示的内容
 
   //请求错误提示
   static final String MSG_ERROR = "网络异常";

@@ -6,21 +6,20 @@ import 'package:flutter_base/widgets/widgets.dart';
 
 ///加载状态占位
 class StatusView extends StatefulWidget {
-  final int status;
+  int status;
   final GestureTapCallback onTap;
   final bool enableEmptyClick;
 
-  const StatusView({Key key, this.status, this.onTap, this.enableEmptyClick = false}) : super(key: key);
+  StatusView({Key key, this.status, this.onTap, this.enableEmptyClick = false});
   @override
-  _StatusViewState createState() => _StatusViewState(status);
+  _StatusViewState createState() => _StatusViewState();
 }
 
 class _StatusViewState extends State<StatusView> {
-  int status;
-  _StatusViewState(this.status);
+  _StatusViewState();
   @override
   Widget build(BuildContext context) {
-    switch (status) {
+    switch (widget.status) {
       case Status.fail: //失败  显示网络异常
         return new Container(
           width: double.infinity,
@@ -32,7 +31,7 @@ class _StatusViewState extends State<StatusView> {
                   return;
                 }
                 setState(() {
-                  status = Status.loading;
+                  widget.status = Status.loading;
                 });
                 if(widget.onTap != null) {
                   widget.onTap();
@@ -70,7 +69,7 @@ class _StatusViewState extends State<StatusView> {
                   return;
                 }
                 setState(() {
-                  status = Status.loading;
+                  widget.status = Status.loading;
                 });
                 if(widget.onTap != null) {
                   widget.onTap();

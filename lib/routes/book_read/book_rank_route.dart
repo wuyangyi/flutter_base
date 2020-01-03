@@ -94,9 +94,9 @@ class _BookRankRouteState extends BaseRouteState<BookRankRoute> with SingleTicke
             child: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                RankContentView(mTypeData?.male ?? [], leftIndex: topIndex == 0 ? leftIndex : 0,),
-                RankContentView(mTypeData?.female ?? [], leftIndex: topIndex == 1 ? leftIndex : 0,),
-                RankContentView(mTypeData?.epub ?? [], leftIndex: topIndex == 2 ? leftIndex : 0,),
+                RankContentView(mTypeData?.male ?? [], leftIndex: topIndex == 0 ? leftIndex : 0, parentContext: context,),
+                RankContentView(mTypeData?.female ?? [], leftIndex: topIndex == 1 ? leftIndex : 0, parentContext: context,),
+                RankContentView(mTypeData?.epub ?? [], leftIndex: topIndex == 2 ? leftIndex : 0, parentContext: context,),
               ],
             ),
           ),

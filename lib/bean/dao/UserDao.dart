@@ -31,7 +31,9 @@ class UserDao extends BaseDBProvider {
       coinInfo TEXT,
       synopsis TEXT,
       age INTEGER,
-      info_bg TEXT)
+      info_bg TEXT,
+      chatColor INTEGER,
+      robotColor INTEGER)
     ''';
   }
 

@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_base/base/base_route.dart';
 import 'package:flutter_base/config/app_config.dart';
 import 'package:flutter_base/res/index.dart';
 import 'package:flutter_base/utils/utils.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class AboutUsRoute extends BaseRoute {
   @override
@@ -16,6 +19,19 @@ class _AboutUsRouteState extends BaseRouteState<AboutUsRoute> {
     title = "关于我们";
     showStartCenterLoading = false;
     bodyColor = MyColors.home_bg;
+  }
+
+  Uint8List bytes;
+
+  Future _generateBarCode() async {
+    Uint8List result = await scanner.generateBarCode('https://github.com/wuyangyi/flutter_base');
+    this.setState(() => this.bytes = result);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _generateBarCode();
   }
 
   @override
@@ -77,6 +93,19 @@ class _AboutUsRouteState extends BaseRouteState<AboutUsRoute> {
                   style: TextStyle(
                     fontSize: 12.0,
                     color: MyColors.buttonNoSelectColor,
+                  ),
+                ),
+
+                Gaps.vGap10,
+
+                bytes == null ? Container() : Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                  child: Image.memory(
+                    bytes,
+                    width: 150,
+                    height: 150,
                   ),
                 ),
               ],

@@ -32,9 +32,10 @@ class _BookMoreRouteState extends BaseRouteState<BookMoreRoute> {
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
         itemCount: widget?.data?.books == null ? 0 : widget.data.books.length + 1,
-        itemBuilder: (context, index){
+        itemBuilder: (c, index){
           return index < widget.data.books.length ? BookItem(
             widget.data.books[index],
+            parentContext: context,
           ) : ListBottomLine();
         },
       ),

@@ -124,8 +124,8 @@ class _BookClassifyTwoRouteState extends BaseListRouteState<BookClassifyTwoRoute
   }
 
   @override
-  Widget getItemBuilder(BuildContext context, int index) {
-    return BookItem(mListData[index - getHeadCount()]);
+  Widget getItemBuilder(BuildContext c, int index) {
+    return BookItem(mListData[index - getHeadCount()], parentContext: context,);
   }
 
 }

@@ -159,6 +159,15 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
     return null;
   }
 
+  //在内容之下的控件
+  Widget addOtherWidgetToBottom() {
+    return Container(
+      width: 0,
+      height: 0,
+      color: Colors.transparent,
+    );
+  }
+
   //内容或者加载
   Widget _buildContext(Widget child, BuildContext context) {
     if (showStartCenterLoading && loadStatus != Status.success) {
@@ -174,7 +183,17 @@ abstract class BaseRouteState<T extends BaseRoute> extends State<T> {
     } else {
       return Stack(
         children: <Widget>[
-          child,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: child,
+              ),
+              addOtherWidgetToBottom(),
+            ],
+          ),
           Offstage(
             offstage: !isLoading,
             child: Container(

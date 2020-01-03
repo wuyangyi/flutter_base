@@ -11,8 +11,9 @@ class RankContentView extends StatefulWidget {
 
   final List<RankTypeBeanFemale> data;
   int leftIndex;
+  final BuildContext parentContext;
 
-  RankContentView(this.data, {this.leftIndex = 0});
+  RankContentView(this.data, {this.leftIndex = 0, this.parentContext});
 
   @override
   _RankContentViewState createState() => _RankContentViewState(data != null && leftIndex < data.length ? data[leftIndex] : null);
@@ -120,6 +121,7 @@ class _RankContentViewState extends State<RankContentView> {
                   return BookItem(
                     mRankBeanEntity.ranking.books[index],
                     index: index,
+                    parentContext: widget?.parentContext,
                   );
                 },
               ),

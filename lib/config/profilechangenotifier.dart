@@ -6,10 +6,14 @@ import 'package:flutter_base/bean/FlieInfoBean.dart';
 import 'package:flutter_base/bean/dao/music/MyLikeMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/MyLocalMusicDao.dart';
 import 'package:flutter_base/bean/dao/music/PlayMusicInfoDao.dart';
+import 'package:flutter_base/bean/dao/read_book/BookCommentDao.dart';
+import 'package:flutter_base/bean/dao/read_book/BookRackDao.dart';
 import 'package:flutter_base/bean/music/PlayMusicInfo.dart';
 import 'package:flutter_base/bean/my_book_bean_entity.dart';
 import 'package:flutter_base/bean/my_tally_bean_entity.dart';
 import 'package:flutter_base/bean/profile_entity.dart';
+import 'package:flutter_base/bean/read_book/book_rack_bean_entity.dart';
+import 'package:flutter_base/bean/read_book/book_send_comment_bean_entity.dart';
 import 'package:flutter_base/bean/run/run_info_bean_entity.dart';
 import 'package:flutter_base/bean/run/week_run_bean_entity.dart';
 import 'package:flutter_base/bean/user_bean_entity.dart';
@@ -482,5 +486,112 @@ class RunWeekModel extends ChangeNotifier {
       }
     });
     return double.parse(path.toStringAsFixed(2));
+  }
+}
+
+
+//书架
+class BookRackModel extends ChangeNotifier {
+  List<BookRackBeanEntity> _bookRackList = [];
+
+  List<BookRackBeanEntity> get bookRackList => _bookRackList;
+
+  void add(BookRackBeanEntity data) {
+    _bookRackList.add(data);
+    notifyListeners();
+    BookRackDao().insertData(data);
+  }
+
+  void addAll(List<BookRackBeanEntity> data) {
+    _bookRackList.addAll(data);
+    notifyListeners();
+  }
+
+  void removeAll(int userId) {
+    _bookRackList.clear();
+    notifyListeners();
+    BookRackDao().removeAll(userId);
+  }
+
+  void removeByBookId(String bookId) {
+    for (int i = 0; i < _bookRackList.length; i++) {
+      if (_bookRackList[i].bookId == bookId) {
+        _bookRackList.removeAt(i);
+        break;
+      }
+    }
+    notifyListeners();
+    BookRackDao().removeById(bookId);
+  }
+
+  bool getStateById(String bookId) {
+    bool isAdd = false;
+    for (int i = 0; i < _bookRackList.length; i++) {
+      if (_bookRackList[i].bookId == bookId) {
+        isAdd = true;
+      }
+    }
+    return isAdd;
+  }
+
+  void upState(BookRackBeanEntity data) {
+    if (getStateById(data.bookId)) {
+      removeByBookId(data.bookId);
+    } else {
+      add(data);
+    }
+  }
+}
+
+//书的评论
+class BookCommitModel extends ChangeNotifier {
+  List<BookSendCommentBeanEntity> _bookCommitList = [];
+
+  List<BookSendCommentBeanEntity> get bookCommitList => _bookCommitList;
+
+  void add(BookSendCommentBeanEntity data) {
+    _bookCommitList.add(data);
+    notifyListeners();
+  }
+
+  void addAll(List<BookSendCommentBeanEntity> data) {
+    _bookCommitList.clear();
+    _bookCommitList.addAll(data);
+    notifyListeners();
+  }
+
+  void addCommit(int id) {
+    for(int i = 0; i < _bookCommitList.length; i++) {
+      if (_bookCommitList[i].id == id) {
+        _bookCommitList[i].commitNumber++;
+        BookCommentDao().upData(_bookCommitList[i]);
+      }
+    }
+    notifyListeners();
+  }
+
+  void addGood(int id, int userId) {
+    for(int i = 0; i < _bookCommitList.length; i++) {
+      if (_bookCommitList[i].id == id) {
+        bool isGood = false;
+        if (_bookCommitList[i].likeUserId != null) {
+          for (int j = 0; j < _bookCommitList[i].likeUserId.length; j++) {
+            if (_bookCommitList[i].likeUserId[j] == userId) {
+              isGood = true;
+              _bookCommitList[i].likeUserId.removeAt(j);
+              _bookCommitList[i].likeNumber--;
+              BookCommentDao().upData(_bookCommitList[i]);
+              break;
+            }
+          }
+        }
+        if (!isGood) {
+          _bookCommitList[i].likeUserId.add(userId);
+          _bookCommitList[i].likeNumber++;
+          BookCommentDao().upData(_bookCommitList[i]);
+        }
+      }
+    }
+    notifyListeners();
   }
 }

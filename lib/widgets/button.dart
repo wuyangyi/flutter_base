@@ -195,6 +195,68 @@ class MyItemButton extends StatelessWidget {
   }
 }
 
+//评分
+class GoodWidget extends StatefulWidget {
+  final Function onTap;
+  final double height;
+  int selectIndex;
+
+  GoodWidget({Key key, this.onTap, this.height = 30.0, this.selectIndex = -1}) : super(key: key);
+  @override
+  _GoodWidgetState createState() => _GoodWidgetState();
+}
+
+class _GoodWidgetState extends State<GoodWidget> {
+
+  var goodList = [
+    ["ico_like", "ico_dislike"],
+    ["ico_like", "ico_dislike"],
+    ["ico_like", "ico_dislike"],
+    ["ico_like", "ico_dislike"],
+    ["ico_like", "ico_dislike"],
+  ];
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: widget.height,
+      alignment: Alignment.center,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.all(0.0),
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        separatorBuilder: (context, index) {
+          return Container(
+            width: 10.0,
+            height: 10.0,
+            color: Colors.transparent,
+          );
+        },
+        itemCount: goodList.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: (){
+              setState(() {
+                widget.selectIndex = index;
+              });
+              if (widget.onTap != null) {
+                widget.onTap(widget.selectIndex);
+              }
+            },
+            child: Image.asset(
+              Util.getImgPath(widget.selectIndex < index ? goodList[index][1] : goodList[index][0]),
+              height: double.infinity,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
 
 class GoodInput extends StatefulWidget {
   final String leftText;

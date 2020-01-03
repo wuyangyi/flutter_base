@@ -54,7 +54,7 @@ class MyBookDao extends BaseDBProvider{
   //分页查询
   Future<List<MyBookBeanEntity>> findData(int page) async {
     var db = await getDataBase();
-    int offset = page * limit + 1;
+    int offset = page * limit;
     List<Map> result = await db.query(
       name,
       limit: limit,

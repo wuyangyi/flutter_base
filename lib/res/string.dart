@@ -21,6 +21,12 @@ class EventBusString {
   static final String MUSIC_PLAY_STATE = "music_play_state";
 
   static final String READ_BOOK_HOME_PAGE_CHANGE = "read_book_home_page_change"; //精品阅读首页tab切换
+
+  //二级评论（点赞数目和评论数目更新）
+  static final String COMMIT_SEND_UPDATA = "COMMIT_SEND_UPDATA";
+
+  //关闭所有二级评论
+  static final String COMMIT_TWO_FINISH = "COMMIT_TWO_FINISH";
 }
 
 class HeroString {

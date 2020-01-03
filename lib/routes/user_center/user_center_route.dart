@@ -27,9 +27,9 @@ class UserCenterRoute extends BaseListRoute {
   _UserCenterRouteState createState() => _UserCenterRouteState();
 }
 
-class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDescInfoBeanDataData, UserCenterBloc> {
-  final double defaultBgHeight = 250.0;
-  double topBgHeight = 250.0; //顶部图片的高度
+class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDescInfoBeanDataData, UserCenterBloc> with SingleTickerProviderStateMixin {
+  static const double defaultBgHeight = 250.0;
+  double topBgHeight = defaultBgHeight; //顶部图片的高度
   UserBeanEntity user;
   double _opacity = 0.0; //顶部名字透明度
   bool isScrollTop = true; //是否在顶部
@@ -46,9 +46,19 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
     loadStatus = Status.loading;
   }
 
+  AnimationController animationController;
+  Animation<double> animation;
+
   @override
   void initState() {
     super.initState();
+    animationController = new AnimationController(
+        duration: const Duration(milliseconds: 800), vsync: this);
+    animation = new Tween(begin: 1.0, end: 0.0).animate(animationController)
+      ..addListener(() {
+        double m = topBgHeight - defaultBgHeight;
+        updatePicHeight(m * animationController.value);
+      });
     controller.addListener((){
       if (controller.offset < topBgHeight / 2) {
         _opacity = 0.0;
@@ -61,6 +71,21 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
       setState(() {
 
       });
+    });
+  }
+
+  Offset downOffset;
+
+  @override
+  void dispose() {
+    animationController.stop();
+    animationController.dispose();
+    super.dispose();
+  }
+
+  void updatePicHeight(double height) {
+    setState(() {
+      topBgHeight = defaultBgHeight + height;
     });
   }
 
@@ -81,12 +106,28 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           onLoadSuccess(snapshot.data, snapshot.hasError);
           return buildBody(context,
-            body: GestureDetector(
+            body: Listener(
+              onPointerDown: (e){
+                downOffset = e.position;
+              },
+              onPointerMove: (result) {
+                if (controller.position.pixels <= 0 && result.position.dy > downOffset.dy && downOffset != null) {
+                  double m = result.position.dy - downOffset.dy;
+                  if(m > MediaQuery.of(context).size.height) {
+                    m = MediaQuery.of(context).size.height;
+                  }
+                  updatePicHeight(m / MediaQuery.of(context).size.height * defaultBgHeight / 2);
+                }
+              },
+              onPointerUp: (_) {
+                animationController.forward(from: 0);
+              },
               child: CustomScrollView(
                 controller: controller,
+                physics: ClampingScrollPhysics(),
                 slivers: <Widget>[
                   SliverAppBar(
-                    pinned: true,
+                    pinned: true, //pinned代表是否会在顶部保留AppBar,floating代表是否会发生下拉立即出现SliverAppBar,  snap必须与floating:true联合使用，表示显示SliverAppBar之后，如果没有完全拉伸，是否会完全神展开
                     elevation: 0,
                     centerTitle: true,
                     expandedHeight: topBgHeight,
@@ -151,43 +192,46 @@ class _UserCenterRouteState extends BaseListRouteState<UserCenterRoute, MyCoinDe
                             }
                           }
                         },
-                        child: Container(
+                        child: Stack(
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: user.infoBg.contains("/") ? FileImage(File(user.infoBg)) : AssetImage(Util.getImgPath(user.infoBg)),
-                              fit: BoxFit.cover,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.center,
+                              child: user.infoBg.contains("/") ? Image.file(File(user.infoBg,), height: double.infinity, fit: BoxFit.cover,) : Image.asset(Util.getImgPath(user.infoBg), height: double.infinity, fit: BoxFit.cover,),
                             ),
-                          ),
-                          child: Column(
-                            //控件里面内容主轴负轴居中显示
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            //主轴高度最小
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ClipOval(
-                                // 如果已登录，则显示用户头像；若未登录，则显示默认头像
-                                child: user?.logo != null ? Image.file(File(user.logo), width: 60.0, height: 60.0,) : Image.asset(Util.getImgPath(Util.getUserHeadImageName(user?.sex)), width: 60.0, height: 60.0,),
+                            Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                //控件里面内容主轴负轴居中显示
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                //主轴高度最小
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ClipOval(
+                                    // 如果已登录，则显示用户头像；若未登录，则显示默认头像
+                                    child: user?.logo != null ? Image.file(File(user.logo), width: 60.0, height: 60.0,) : Image.asset(Util.getImgPath(Util.getUserHeadImageName(user?.sex)), width: 60.0, height: 60.0,),
+                                  ),
+                                  Gaps.vGap10,
+                                  Text(
+                                    user?.name ?? user?.phone,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                  Gaps.vGap10,
+                                  Text(
+                                    ObjectUtil.isEmpty(user.coinInfo) ? "" : "积分：${user.coinInfo.coinCount}   排行：${user.coinInfo.rank}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.0,
+                                    ),
+                                  )
+                                ],
                               ),
-                              Gaps.vGap10,
-                              Text(
-                                user?.name ?? user?.phone,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                              Gaps.vGap10,
-                              Text(
-                                ObjectUtil.isEmpty(user.coinInfo) ? "" : "积分：${user.coinInfo.coinCount}   排行：${user.coinInfo.rank}",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
