@@ -332,15 +332,17 @@ class Util {
   static String getTimeForNow(String time) {
     DateTime oldTime = DateTime.parse(time);
     DateTime nowTime = DateTime.now();
-    DateTime yestoDay = nowTime.add(Duration(days: -1));
+    DateTime yesterday = nowTime.add(Duration(days: -1));
     String t = "${oldTime.year}年${oldTime.month}月${oldTime.day}日";
     if (oldTime.year == nowTime.year) {
-      if (oldTime.month == nowTime.month && oldTime.day == oldTime.day) {
+      if (oldTime.month == nowTime.month && oldTime.day == nowTime.day) {
         t = "今天";
+      } else if (oldTime.month == yesterday.month && oldTime.day == yesterday.day) {
+        t = "昨天";
       } else {
         t = "${oldTime.month}月${oldTime.day}日";
       }
-    } else if(yestoDay.year == nowTime.year && yestoDay.month == nowTime.month && yestoDay.day == nowTime.day) {
+    } else if(yesterday.year == nowTime.year && yesterday.month == nowTime.month && yesterday.day == nowTime.day) {
       t = "昨天";
     }
     return t;
