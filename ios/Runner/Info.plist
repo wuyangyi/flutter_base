@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>小小工具箱</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -11,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>flutter_base</string>
+	<string>小小工具箱</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -32,8 +34,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UISupportedInterfaceOrientations~ipad</
-	key>
+	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
@@ -42,5 +43,54 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	 <!-- Permission options for the `location` group -->
+	 <key>NSCameraUsageDescription</key>
+     <string>需要您的同意,APP才能访问相机</string>
+
+     <key>NSLocationUsageDescription</key>
+     <string>需要您的同意, APP才能访问位置</string>
+
+     <key>NSMotionUsageDescription</key>
+     <string>需要您的同意, APP才能访问运动与健身</string>
+
+     <key>NSPhotoLibraryUsageDescription</key>
+     <string>需要您的同意,APP才能访问相册</string>
+
+     <key>NSLocationWhenInUseUsageDescription</key>
+     <string>Need location when in use</string>
+
+     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+     <string>Always and when in use!</string>
+
+     <key>NSLocationAlwaysUsageDescription</key>
+     <string>Can I haz location always?</string>
+
+     <!-- Permission options for the `mediaLibrary` group -->
+     <key>NSAppleMusicUsageDescription</key>
+     <string>Music!</string>
+
+     <key>kTCCServiceMediaLibrary</key>
+     <string>media</string>
+
+     <!-- Permission options for the `calendar` group -->
+     <key>NSCalendarsUsageDescription</key>
+     <string>Calendars</string>
+
+     <!-- Permission options for the `contacts` group -->
+     <key>NSContactsUsageDescription</key>
+     <string>contacts</string>
+
+     <!-- Permission options for the `microphone` group -->
+     <key>NSMicrophoneUsageDescription</key>
+     <string>microphone</string>
+
+     <!-- Permission options for the `speech` group -->
+     <key>NSSpeechRecognitionUsageDescription</key>
+     <string>speech</string>
+
+     <!-- Permission options for the `reminder` group -->
+     <key>NSRemindersUsageDescription</key>
+     <string>reminders</string>
 </dict>
 </plist>

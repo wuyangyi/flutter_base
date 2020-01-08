@@ -2,19 +2,8 @@ package com.example.flutter_base;
 
 import android.view.View;
 
-import com.baidu.mapapi.map.MapView;
-import com.baseflow.permissionhandler.PermissionHandlerPlugin;
-import com.shinow.qrscan.QrscanPlugin;
-import com.tekartik.sqflite.SqflitePlugin;
-
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMessageCodec;
-import io.flutter.plugins.imagepicker.ImagePickerPlugin;
-import io.flutter.plugins.pathprovider.PathProviderPlugin;
-import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
-import io.flutter.plugins.webviewflutter.WebViewFlutterPlugin;
-import io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin;
-import xyz.luan.audioplayers.AudioplayersPlugin;
 
 /**
  * author: wuyangyi

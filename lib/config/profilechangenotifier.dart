@@ -300,7 +300,12 @@ class PlayMusicInfoModel extends ChangeNotifier{
     });
     audioPlayer.onAudioPositionChanged.listen((Duration p){
       _playMusicInfo.playTime = p.inSeconds;
-      _playMusicInfo.value = (_playMusicInfo.playTime / _playMusicInfo?.maxTime ?? 0) ?? 0;
+      if (_playMusicInfo?.playTime == null || _playMusicInfo?.maxTime == null) {
+        _playMusicInfo.value = 0.0;
+      } else {
+        _playMusicInfo.value = (_playMusicInfo.playTime / _playMusicInfo?.maxTime) ?? 0;
+      }
+
       notifyListeners();
       bus.emit(EventBusString.MUSIC_PROGRESS, _playMusicInfo.value);
     });
