@@ -36,12 +36,15 @@ class BookItem extends StatelessWidget {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(3.0),
-                  child: CachedNetworkImage(
-                    height: double.infinity,
-                    imageUrl: AppConfig.READ_BOOK_BASE_URL_USE+data.cover,
-                    fit: BoxFit.fill,
-                    placeholder: (context, url) => new ProgressView(),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                  child: AspectRatio(
+                    aspectRatio: 136 / 190,
+                    child: CachedNetworkImage(
+                      height: double.infinity,
+                      imageUrl: AppConfig.READ_BOOK_BASE_URL_USE+data.cover,
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) => new ProgressView(),
+                      errorWidget: (context, url, error) => new Icon(Icons.error),
+                    ),
                   ),
                 ),
                 Gaps.hGap10,

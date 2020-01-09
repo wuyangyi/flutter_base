@@ -186,12 +186,16 @@ class _RunHomeRouteState extends BaseRouteState<RunHomeRoute> {
                           text: "进入跑步",
                           radios: 25.0,
                           onTop: () async {
-                            initMap();
-                            bool need = await NavigatorUtil.pushPageByRoute(context, RunningRoute());
-                            if (need) {
-                              setState(() {
-                                initWeekData();
-                              });
+                            if (Theme.of(context).platform == TargetPlatform.android) {
+                              initMap();
+                              bool need = await NavigatorUtil.pushPageByRoute(context, RunningRoute());
+                              if (need) {
+                                setState(() {
+                                  initWeekData();
+                                });
+                              }
+                            } else {
+                              showToast("暂不支持当前设备");
                             }
                           },
                         ),

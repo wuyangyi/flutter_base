@@ -247,8 +247,10 @@ class WeatherLinePainter extends CustomPainter{
       image = images[7];
     } else if (type == "大雪") {
       image = images[8];
+    } else if (type == "雨夹雪") {
+      image = images[6];
     } else {
-      image = images[0];
+      image = images[2];
     }
     return image;
   }

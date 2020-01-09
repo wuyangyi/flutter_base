@@ -71,7 +71,7 @@ SPEC CHECKSUMS:
   permission_handler: 0fb88b8a3c23e31e5de45b8f1bb8b7de28cf8941
   share: bae0a282aab4483288913fc4dc0b935d4b491f2e
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
-  sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
+  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   webview_flutter: db3aba222b23e4dc432e0c5882834123dc50ff9f
 
 PODFILE CHECKSUM: 7144226270d9b36b85f828d23a47e7e0c49ba5fa

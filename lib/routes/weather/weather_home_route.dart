@@ -208,6 +208,9 @@ class _WeatherHomeRouteState extends BaseRouteState<WeatherHomeRoute> {
       case "大雪":
         bgWidget = SnowView(type: 2,);
         break;
+      case "雨夹雪":
+        bgWidget = SnowView(type: 0,);
+        break;
     }
     return bgWidget;
   }

@@ -291,7 +291,7 @@ class PlayMusicInfoModel extends ChangeNotifier{
 
   //用于启动初始化
   void initPlay(){
-    if (_playMusicInfo == null) {
+    if (_playMusicInfo == null || _playMusicInfo.musicPath == null) {
       return;
     }
     audioPlayer.onDurationChanged.listen((Duration d){
