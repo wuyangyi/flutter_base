@@ -9,7 +9,7 @@ class DBManager {
   static const int _VERSION = 1;
 
   //数据库名称
-  static const String _DB_NAME = "haitou_flutter_db";
+  static const String _DB_NAME = "flutter_base_db";
 
   //数据库实例
   static Database _database;

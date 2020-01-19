@@ -9,6 +9,8 @@ class ExpansionLayout extends StatefulWidget {
     this.children = const <Widget>[],
     this.isExpanded,
     this.backgroundColor,
+    this.alignment = Alignment.center,
+    this.duration = _kExpand,
   }) : super(key: key);
 
   final ValueChanged<bool> onExpansionChanged;
@@ -18,6 +20,8 @@ class ExpansionLayout extends StatefulWidget {
   final bool isExpanded;
 
   final Color backgroundColor;
+  final AlignmentGeometry alignment; //优先出来的方向（默认居中）
+  final Duration duration; //动画时间(默认200毫秒)
 
 
   @override
@@ -26,7 +30,7 @@ class ExpansionLayout extends StatefulWidget {
 
 class _ExpansionLayoutState extends State<ExpansionLayout>
     with SingleTickerProviderStateMixin {
-//折叠展开的动画，主要是控制height
+  //折叠展开的动画，主要是控制height
   static final Animatable<double> _easeInTween =
   CurveTween(curve: Curves.easeIn);
   AnimationController _controller;
@@ -38,7 +42,7 @@ class _ExpansionLayoutState extends State<ExpansionLayout>
   void initState() {
     super.initState();
     //初始化控制器以及出事状态
-    _controller = AnimationController(duration: _kExpand, vsync: this);
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
     _isExpanded = widget.isExpanded;
     if (_isExpanded) _controller.value = 1.0;
@@ -76,6 +80,7 @@ class _ExpansionLayoutState extends State<ExpansionLayout>
         children: <Widget>[
           ClipRect(
             child: Align(
+              alignment: widget.alignment,
               heightFactor: _heightFactor.value,
               child: child,
             ),

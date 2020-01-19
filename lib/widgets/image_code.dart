@@ -54,6 +54,7 @@ class _CodeReviewState extends State<CodeReview> {
   double _height;
   List<Offset> _lineOffsets = <Offset>[];
   Color _ranColor = randomColor();
+  List<Widget> _listWidget = [];
 
   void _randLines() {
     _lineOffsets.clear();
@@ -84,12 +85,12 @@ class _CodeReviewState extends State<CodeReview> {
     getRandomString();
     _width = _textLength.toDouble() * 22;
     _height = 36;
-
+    _initAllSubString();
     _randLines();
   }
 
   void getRandomString() {
-    _ranStr = randomAlphaNumeric(_textLength);
+    _ranStr = randomNumeric(_textLength);
     widget.codeContract.setText(_ranStr);
   }
 
@@ -98,7 +99,15 @@ class _CodeReviewState extends State<CodeReview> {
     widget.onTap(_ranStr);
     setState(() {
       _randLines();
+      _initAllSubString();
     });
+  }
+
+  _initAllSubString() {
+    _listWidget.clear();
+    for(int i = 0; i < _textLength; i++){
+      _listWidget.add(_subString(i));
+    }
   }
 
   Container _subString(index) {
@@ -148,8 +157,8 @@ class _CodeReviewState extends State<CodeReview> {
               height: _height,
               child: Row(
 //                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_textLength, (int index) {
-                  return _subString(index);
+                children: List.generate(_listWidget.length, (int index) {
+                  return _listWidget[index];
                 }),
               ),
             ),

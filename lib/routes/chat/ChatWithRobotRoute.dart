@@ -800,6 +800,7 @@ class _ChatWithRobotRouteState extends BaseRouteState<ChatWithRobotRoute> {
           ),
           ExpansionLayout(
             isExpanded: _showMenu,
+            alignment: Alignment.topCenter,
             children: <Widget>[
               menuWidget,
             ],
