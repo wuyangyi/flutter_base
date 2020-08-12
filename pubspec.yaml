@@ -39,7 +39,7 @@ dependencies:
   azlistview: ^0.1.2 #AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
   random_string: ^1.1.0
   image_picker: ^0.6.1+10 #图片选择或者视频选择
-  intl: ^0.15.7 #国际化
+  intl: ^0.16.0 #国际化
   flukit: ^1.0.2 #轮播图
   qrscan: ^0.2.17 #扫一扫（只支持android） //https://github.com/leyan95/qrcode_scanner
   audioplayers: ^0.13.6 #音乐播放 https://github.com/luanpotter/audioplayers

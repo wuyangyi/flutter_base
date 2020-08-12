@@ -1763,6 +1763,11 @@ class MyEditableTextState extends State<MyEditableText> with AutomaticKeepAliveC
       withComposing: !widget.readOnly,
     );
   }
+
+  @override
+  void connectionClosed() {
+    // TODO: implement connectionClosed
+  }
 }
 
 class _Editable extends LeafRenderObjectWidget {
